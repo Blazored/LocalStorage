@@ -25,10 +25,3 @@ steps:
     packagesToPack: src/Blazored.LocalStorage/Blazored.LocalStorage.csproj
     configuration: $(buildConfiguration)
     verbosityPack: Detailed
-
-- task: NuGetCommand@2
-  displayName: 'Publishing to Nuget...'
-  inputs:
-    command: push
-    nuGetFeedType: external
-    publishFeedCredentials: 'Nuget'
