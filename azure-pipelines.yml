@@ -25,3 +25,6 @@ steps:
     packagesToPack: src/Blazored.LocalStorage/Blazored.LocalStorage.csproj
     configuration: $(buildConfiguration)
     verbosityPack: Detailed
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publishing Build Artifacts...'
