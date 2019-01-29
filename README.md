@@ -1,15 +1,11 @@
-# BlazoredLocalStorage
+# Blazored LocalStorage
 A library to provide access to local storage in Blazor applications
-
-[![NuGet](https://img.shields.io/nuget/v/BlazoredLocalStorage.svg?style=flat-square)](https://www.nuget.org/packages/BlazoredLocalStorage/)
-
-[![Build Status](https://dev.azure.com/chrissainty/BlazoredLocalStorage/_apis/build/status/chrissainty.BlazoredLocalStorage?branchName=master)](https://dev.azure.com/chrissainty/BlazoredLocalStorage/_build/latest?definitionId=2?branchName=master)
 
 ### Installing
 
 You can install from Nuget using the following command:
 
-`Install-Package BlazoredLocalStorage`
+`Install-Package Blazored.LocalStorage`
 
 Or via the Visual Studio package manger.
 
@@ -20,7 +16,7 @@ First, you will need to register local storage with the service collection in yo
 ```c#
 public void ConfigureServices(IServiceCollection services)
 {
-    services.AddLocalStorage();
+    services.AddBlazoredLocalStorage();
 }
 ``` 
 
@@ -28,7 +24,7 @@ public void ConfigureServices(IServiceCollection services)
 This is an example of using local storage in a .cshtml file 
 
 ```c#
-@inject Blazored.Storage.ILocalStorage localStorage
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 
 @functions {
 
