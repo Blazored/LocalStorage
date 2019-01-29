@@ -1,0 +1,34 @@
+trigger:
+- master
+
+pool:
+  vmImage: 'vs2017-win2016'
+
+variables:
+  buildConfiguration: 'Release'
+
+steps:
+- task: DotNetCoreInstaller@0
+  displayName: 'Installing .NET Core SDK...'
+  inputs:
+    version: 2.2.100
+
+- task: NuGetToolInstaller@0
+  displayName: 'Installing Nuget Tools...'
+  inputs:
+    versionSpec: '4.9.2'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Generating Nuget Package... '
+  inputs:
+    command: pack
+    packagesToPack: src/Blazored.LocalStorage/Blazored.LocalStorage.csproj
+    configuration: $(buildConfiguration)
+    verbosityPack: Detailed
+
+- task: NuGetCommand@2
+  displayName: 'Publishing to Nuget...'
+  inputs:
+    command: push
+    nuGetFeedType: external
+    publishFeedCredentials: 'Nuget'
