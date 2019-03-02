@@ -6,12 +6,19 @@ namespace Blazored.LocalStorage
 {
     public class LocalStorageService : ILocalStorageService
     {
+        private readonly IJSRuntime _jSRuntime;
+
+        public LocalStorageService(IJSRuntime jSRuntime)
+        {
+            _jSRuntime = jSRuntime;
+        }
+
         public Task SetItem(string key, object data)
         {
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentNullException(nameof(key));
 
-            return JSRuntime.Current.InvokeAsync<object>("Blazored.LocalStorage.SetItem", key, Json.Serialize(data));
+            return _jSRuntime.InvokeAsync<object>("Blazored.LocalStorage.SetItem", key, Json.Serialize(data));
         }
 
         public async Task<T> GetItem<T>(string key)
@@ -19,7 +26,7 @@ namespace Blazored.LocalStorage
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentNullException(nameof(key));
 
-            var serialisedData = await JSRuntime.Current.InvokeAsync<string>("Blazored.LocalStorage.GetItem", key);
+            var serialisedData = await _jSRuntime.InvokeAsync<string>("Blazored.LocalStorage.GetItem", key);
 
             if (serialisedData == null)
                 return default(T);
@@ -32,13 +39,13 @@ namespace Blazored.LocalStorage
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentNullException(nameof(key));
 
-            return JSRuntime.Current.InvokeAsync<object>("Blazored.LocalStorage.RemoveItem", key);
+            return _jSRuntime.InvokeAsync<object>("Blazored.LocalStorage.RemoveItem", key);
         }
 
-        public Task Clear() => JSRuntime.Current.InvokeAsync<object>("Blazored.LocalStorage.Clear");
+        public Task Clear() => _jSRuntime.InvokeAsync<object>("Blazored.LocalStorage.Clear");
 
-        public Task<int> Length() => JSRuntime.Current.InvokeAsync<int>("Blazored.LocalStorage.Length");
+        public Task<int> Length() => _jSRuntime.InvokeAsync<int>("Blazored.LocalStorage.Length");
 
-        public Task<string> Key(int index) => JSRuntime.Current.InvokeAsync<string>("Blazored.LocalStorage.Key", index);
+        public Task<string> Key(int index) => _jSRuntime.InvokeAsync<string>("Blazored.LocalStorage.Key", index);
     }
 }
