@@ -56,6 +56,8 @@ The APIs available are
  - Length()
  - Key()
 
- **All APIs are now _async_**
+ **All APIs in `ILocalStorageService` are _async_**
+
+If you are using Blazor (not Razor Components), you can choose to instead inject `Blazored.LocalStorage.ISyncStorageService` to opt into a synchronous API that allows you to avoid use of `async`/`await`.  For either interface, the method names are the same.
 
 **Note:** Blazored.LocalStorage methods will handle the serialisation and de-serialisation of the data for you.

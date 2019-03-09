@@ -6,7 +6,9 @@ namespace Blazored.LocalStorage
     {
         public static IServiceCollection AddBlazoredLocalStorage(this IServiceCollection services)
         {
-            return services.AddScoped<ILocalStorageService, LocalStorageService>();
+            return services
+                .AddScoped<ILocalStorageService, LocalStorageService>()
+                .AddScoped<ISyncLocalStorageService, LocalStorageService>();
         }
     }
 }

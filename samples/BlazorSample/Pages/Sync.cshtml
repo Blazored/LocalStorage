@@ -1,0 +1,94 @@
+﻿@page "/sync"
+@inject ISyncLocalStorageService localStorage
+
+<h1>Non Async Local Storage</h1>
+
+<div class="row mb-5">
+
+    <div class="col-md-4">
+        <h5>Add Item to local storage</h5>
+        <div class="input-group">
+            <input class="form-control" type="text" placeholder="Enter a value" bind="@Name" />
+            <div class="input-group-append">
+                <button class="btn btn-primary" onclick="@SaveName">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <h5>Remove item from local storage</h5>
+        <button class="btn btn-primary" onclick=@RemoveName>Remove Item</button>
+    </div>
+
+    <div class="col-md-4">
+        <h5>Clear local storage</h5>
+        <button class="btn btn-primary" onclick=@ClearLocalStorage>Clear All</button>
+    </div>
+</div>
+
+<div class="row">
+
+    <div class="col-md-4">
+        <h5>Value Read from local storage</h5>
+        @NameFromLocalStorage
+    </div>
+
+    <div class="col-md-4">
+        <h5>Items in local storage</h5>
+        @ItemsInLocalStorage
+    </div>
+</div>
+
+@functions {
+
+string NameFromLocalStorage { get; set; }
+int ItemsInLocalStorage { get; set; }
+string Name { get; set; }
+
+protected override async Task OnInitAsync()
+{
+    await GetNameFromLocalStorage();
+    await GetLocalStorageLength();
+}
+
+async Task SaveName()
+{
+    localStorage.SetItem("name", Name);
+    await GetNameFromLocalStorage();
+    await GetLocalStorageLength();
+
+    Name = "";
+}
+
+async Task GetNameFromLocalStorage()
+{
+    NameFromLocalStorage = localStorage.GetItem<string>("name");
+
+    if (string.IsNullOrEmpty(NameFromLocalStorage))
+        NameFromLocalStorage = "Nothing Saved";
+}
+
+async Task RemoveName()
+{
+    localStorage.RemoveItem("name");
+    await GetNameFromLocalStorage();
+    await GetLocalStorageLength();
+}
+
+async Task ClearLocalStorage()
+{
+    Console.WriteLine("Calling Clear...");
+    localStorage.Clear();
+    Console.WriteLine("Getting name from local storage...");
+    await GetNameFromLocalStorage();
+    Console.WriteLine("Calling Get Length...");
+    await GetLocalStorageLength();
+}
+
+async Task GetLocalStorageLength()
+{
+    Console.WriteLine(localStorage.Length());
+    ItemsInLocalStorage = localStorage.Length();
+}
+
+}
