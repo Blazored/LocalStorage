@@ -10,7 +10,7 @@ There is currently an issue with [ASP.NET Core Razor Components apps](https://de
 
 You can still use this package, however, you will need to manually add the JavaScript file to your Razor Components `wwwroot` folder. Then you will need to reference it in your `index.html`.
 
-Alternativly, there is a great package by [Mister Magoo](https://github.com/SQL-MisterMagoo/BlazorEmbedLibrary) which offers a solution to this problem without having to manually copy files.
+Alternatively, there is a great package by [Mister Magoo](https://github.com/SQL-MisterMagoo/BlazorEmbedLibrary) which offers a solution to this problem without having to manually copy files.
 
 ### Installing
 
