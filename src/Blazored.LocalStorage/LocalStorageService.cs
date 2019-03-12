@@ -15,7 +15,7 @@ namespace Blazored.LocalStorage
             _jSInProcessRuntime = jSRuntime as IJSInProcessRuntime;
         }
 
-        public Task SetItem(string key, object data)
+        public async Task SetItem(string key, object data)
         {
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentNullException(nameof(key));
@@ -23,13 +23,13 @@ namespace Blazored.LocalStorage
             RaiseOnChanging(key, data, out ChangingEventArgs e);
 
             if (e.Cancel)
-                return Task.CompletedTask;
+                return;
 
-            var jsResult = _jSRuntime.InvokeAsync<object>("Blazored.LocalStorage.SetItem", key, Json.Serialize(data));
+            _ = await _jSRuntime.InvokeAsync<object>("Blazored.LocalStorage.SetItem", key, Json.Serialize(data));
 
             RaiseOnChanged(key, e.OldValue, data);
 
-            return jsResult;
+            return;
         }
 
         public async Task<T> GetItem<T>(string key)
