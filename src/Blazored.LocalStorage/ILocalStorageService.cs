@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace Blazored.LocalStorage
 {
@@ -15,5 +16,8 @@ namespace Blazored.LocalStorage
         Task RemoveItem(string key);
 
         Task SetItem(string key, object data);
+
+        event EventHandler<ChangingEventArgs> Changing;
+        event EventHandler<ChangedEventArgs> Changed;
     }
 }
