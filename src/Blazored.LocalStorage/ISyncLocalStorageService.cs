@@ -1,4 +1,6 @@
-﻿namespace Blazored.LocalStorage
+﻿using System;
+
+namespace Blazored.LocalStorage
 {
     public interface ISyncLocalStorageService
     {
@@ -13,5 +15,8 @@
         void RemoveItem(string key);
 
         void SetItem(string key, object data);
+
+        event EventHandler<ChangingEventArgs> Changing;
+        event EventHandler<ChangedEventArgs> Changed;
     }
 }
