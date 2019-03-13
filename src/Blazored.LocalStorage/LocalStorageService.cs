@@ -25,11 +25,9 @@ namespace Blazored.LocalStorage
             if (e.Cancel)
                 return;
 
-            _ = await _jSRuntime.InvokeAsync<object>("Blazored.LocalStorage.SetItem", key, Json.Serialize(data));
+            await _jSRuntime.InvokeAsync<object>("Blazored.LocalStorage.SetItem", key, Json.Serialize(data));
 
             RaiseOnChanged(key, e.OldValue, data);
-
-            return;
         }
 
         public async Task<T> GetItem<T>(string key)
