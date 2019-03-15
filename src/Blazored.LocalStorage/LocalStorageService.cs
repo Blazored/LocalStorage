@@ -20,7 +20,7 @@ namespace Blazored.LocalStorage
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentNullException(nameof(key));
 
-            RaiseOnChanging(key, data, out ChangingEventArgs e);
+            var e = await RaiseOnChangingAsync(key, data);
 
             if (e.Cancel)
                 return;
@@ -64,7 +64,7 @@ namespace Blazored.LocalStorage
             if (_jSInProcessRuntime == null)
                 throw new InvalidOperationException("IJSInProcessRuntime not available");
 
-            RaiseOnChanging(key, data, out ChangingEventArgs e);
+            var e = RaiseOnChangingSync(key, data);
 
             if (e.Cancel)
                 return;
@@ -123,20 +123,33 @@ namespace Blazored.LocalStorage
             return _jSInProcessRuntime.Invoke<string>("Blazored.LocalStorage.Key", index);
         }
 
-        private object GetItem(string key)
-            => ((ISyncLocalStorageService)this).GetItem<object>(key);
-
         public event EventHandler<ChangingEventArgs> Changing;
-        private void RaiseOnChanging(string key, object data, out ChangingEventArgs e)
+        private async Task<ChangingEventArgs> RaiseOnChangingAsync(string key, object data)
         {
-            e = new ChangingEventArgs
+            var e = new ChangingEventArgs
             {
                 Key = key,
-                OldValue = GetItem(key),
+                OldValue = await GetItem<object>(key),
                 NewValue = data
             };
 
             Changing?.Invoke(this, e);
+
+            return e;
+        }
+
+        private ChangingEventArgs RaiseOnChangingSync(string key, object data)
+        {
+            var e = new ChangingEventArgs
+            {
+                Key = key,
+                OldValue = ((ISyncLocalStorageService)this).GetItem<object>(key),
+                NewValue = data
+            };
+
+            Changing?.Invoke(this, e);
+
+            return e;
         }
 
         public event EventHandler<ChangedEventArgs> Changed;
