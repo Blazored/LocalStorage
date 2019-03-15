@@ -9,7 +9,7 @@
     <TypeScriptToolsVersion>3.2</TypeScriptToolsVersion>
 
     <PackageId>Blazored.LocalStorage</PackageId>
-    <Version>1.2.0</Version>
+    <Version>1.2.1</Version>
     <Authors>Chris Sainty</Authors>
     <Description>A library to provide access to local storage in Blazor applications</Description>
     <Copyright>Copyright 2018 (c) Chris Sainty. All rights reserved.</Copyright>
