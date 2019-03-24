@@ -45,10 +45,10 @@
     int ItemsInLocalStorage { get; set; }
     string Name { get; set; }
 
-    protected override async Task OnInitAsync()
+    protected override void OnInit()
     {
-        await GetNameFromLocalStorage();
-        await GetLocalStorageLength();
+        GetNameFromLocalStorage();
+        GetLocalStorageLength();
 
         localStorage.Changed += (sender, e) =>
         {
@@ -56,16 +56,16 @@
         };
     }
 
-    async Task SaveName()
+    void SaveName()
     {
         localStorage.SetItem("name", Name);
-        await GetNameFromLocalStorage();
-        await GetLocalStorageLength();
+        GetNameFromLocalStorage();
+        GetLocalStorageLength();
 
         Name = "";
     }
 
-    async Task GetNameFromLocalStorage()
+    void GetNameFromLocalStorage()
     {
         NameFromLocalStorage = localStorage.GetItem<string>("name");
 
@@ -73,24 +73,24 @@
             NameFromLocalStorage = "Nothing Saved";
     }
 
-    async Task RemoveName()
+    void RemoveName()
     {
         localStorage.RemoveItem("name");
-        await GetNameFromLocalStorage();
-        await GetLocalStorageLength();
+        GetNameFromLocalStorage();
+        GetLocalStorageLength();
     }
 
-    async Task ClearLocalStorage()
+    void ClearLocalStorage()
     {
         Console.WriteLine("Calling Clear...");
         localStorage.Clear();
         Console.WriteLine("Getting name from local storage...");
-        await GetNameFromLocalStorage();
+        GetNameFromLocalStorage();
         Console.WriteLine("Calling Get Length...");
-        await GetLocalStorageLength();
+        GetLocalStorageLength();
     }
 
-    async Task GetLocalStorageLength()
+    void GetLocalStorageLength()
     {
         Console.WriteLine(localStorage.Length());
         ItemsInLocalStorage = localStorage.Length();

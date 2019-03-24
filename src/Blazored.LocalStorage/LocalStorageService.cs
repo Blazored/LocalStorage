@@ -15,7 +15,7 @@ namespace Blazored.LocalStorage
             _jSInProcessRuntime = jSRuntime as IJSInProcessRuntime;
         }
 
-        public async Task SetItem(string key, object data)
+        public async Task SetItemAsync(string key, object data)
         {
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentNullException(nameof(key));
@@ -30,7 +30,7 @@ namespace Blazored.LocalStorage
             RaiseOnChanged(key, e.OldValue, data);
         }
 
-        public async Task<T> GetItem<T>(string key)
+        public async Task<T> GetItemAsync<T>(string key)
         {
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentNullException(nameof(key));
@@ -43,19 +43,19 @@ namespace Blazored.LocalStorage
             return Json.Deserialize<T>(serialisedData);
         }
 
-        public Task RemoveItem(string key)
+        public async Task RemoveItemAsync(string key)
         {
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentNullException(nameof(key));
 
-            return _jSRuntime.InvokeAsync<object>("Blazored.LocalStorage.RemoveItem", key);
+            await _jSRuntime.InvokeAsync<object>("Blazored.LocalStorage.RemoveItem", key);
         }
 
-        public Task Clear() => _jSRuntime.InvokeAsync<object>("Blazored.LocalStorage.Clear");
+        public async Task ClearAsync() => await _jSRuntime.InvokeAsync<object>("Blazored.LocalStorage.Clear");
 
-        public Task<int> Length() => _jSRuntime.InvokeAsync<int>("Blazored.LocalStorage.Length");
+        public async Task<int> LengthAsync() => await _jSRuntime.InvokeAsync<int>("Blazored.LocalStorage.Length");
 
-        public Task<string> Key(int index) => _jSRuntime.InvokeAsync<string>("Blazored.LocalStorage.Key", index);
+        public async Task<string> KeyAsync(int index) => await _jSRuntime.InvokeAsync<string>("Blazored.LocalStorage.Key", index);
 
         void ISyncLocalStorageService.SetItem(string key, object data)
         {
@@ -129,7 +129,7 @@ namespace Blazored.LocalStorage
             var e = new ChangingEventArgs
             {
                 Key = key,
-                OldValue = await GetItem<object>(key),
+                OldValue = await GetItemAsync<object>(key),
                 NewValue = data
             };
 
