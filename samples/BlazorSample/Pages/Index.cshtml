@@ -64,7 +64,7 @@ Welcome to your new app.
 
     async Task SaveName()
     {
-        await localStorage.SetItem("name", Name);
+        await localStorage.SetItemAsync("name", Name);
         await GetNameFromLocalStorage();
         await GetLocalStorageLength();
 
@@ -73,7 +73,7 @@ Welcome to your new app.
 
     async Task GetNameFromLocalStorage()
     {
-        NameFromLocalStorage = await localStorage.GetItem<string>("name");
+        NameFromLocalStorage = await localStorage.GetItemAsync<string>("name");
 
         if (string.IsNullOrEmpty(NameFromLocalStorage))
             NameFromLocalStorage = "Nothing Saved";
@@ -81,7 +81,7 @@ Welcome to your new app.
 
     async Task RemoveName()
     {
-        await localStorage.RemoveItem("name");
+        await localStorage.RemoveItemAsync("name");
         await GetNameFromLocalStorage();
         await GetLocalStorageLength();
     }
@@ -89,7 +89,7 @@ Welcome to your new app.
     async Task ClearLocalStorage()
     {
         Console.WriteLine("Calling Clear...");
-        await localStorage.Clear();
+        await localStorage.ClearAsync();
         Console.WriteLine("Getting name from local storage...");
         await GetNameFromLocalStorage();
         Console.WriteLine("Calling Get Length...");
@@ -98,8 +98,8 @@ Welcome to your new app.
 
     async Task GetLocalStorageLength()
     {
-        Console.WriteLine(await localStorage.Length());
-        ItemsInLocalStorage = await localStorage.Length();
+        Console.WriteLine(await localStorage.LengthAsync());
+        ItemsInLocalStorage = await localStorage.LengthAsync();
     }
 
 }

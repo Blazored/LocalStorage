@@ -32,6 +32,7 @@ public void ConfigureServices(IServiceCollection services)
 ``` 
 
 ### Usage
+
 This is an example of using local storage in a .cshtml file 
 
 ```c#
@@ -41,23 +42,44 @@ This is an example of using local storage in a .cshtml file
 
     protected override async Task OnInitAsync()
     {
-        await localStorage.SetItem("name", "John Smith");
-        var name = await localStorage.GetItem<string>("name");
+        await localStorage.SetItemAsync("name", "John Smith");
+        var name = await localStorage.GetItemAsync<string>("name");
     }
 
 }
 ```
 
-The APIs available are
- - SetItem()
- - GetItem()
- - RemoveItem()
- - Clear()
- - Length()
- - Key()
-
- **All APIs in `ILocalStorageService` are _async_**
-
 If you are using Blazor (not Razor Components), you can choose to instead inject `Blazored.LocalStorage.ISyncStorageService` to opt into a synchronous API that allows you to avoid use of `async`/`await`.  For either interface, the method names are the same.
+
+```c#
+@inject Blazored.LocalStorage.ISyncStorageService localStorage
+
+@functions {
+
+    protected override void OnInit()
+    {
+        localStorage.SetItem("name", "John Smith");
+        var name = localStorage.GetItem<string>("name");
+    }
+
+}
+```
+
+The APIs available are:
+
+- asynchronous via `ILocalStorageService`:
+  - SetItemAsync()
+  - GetItemAsync()
+  - RemoveItemAsync()
+  - ClearAsync()
+  - LengthAsync()
+  - KeyAsync()
+- synchronous via `ISyncStorageService`:
+  - SetItem()
+  - GetItem()
+  - RemoveItem()
+  - Clear()
+  - Length()
+  - Key()
 
 **Note:** Blazored.LocalStorage methods will handle the serialisation and de-serialisation of the data for you.

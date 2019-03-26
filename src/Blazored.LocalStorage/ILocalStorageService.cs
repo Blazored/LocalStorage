@@ -5,17 +5,17 @@ namespace Blazored.LocalStorage
 {
     public interface ILocalStorageService
     {
-        Task Clear();
+        Task ClearAsync();
 
-        Task<T> GetItem<T>(string key);
+        Task<T> GetItemAsync<T>(string key);
 
-        Task<string> Key(int index);
+        Task<string> KeyAsync(int index);
 
-        Task<int> Length();
+        Task<int> LengthAsync();
 
-        Task RemoveItem(string key);
+        Task RemoveItemAsync(string key);
 
-        Task SetItem(string key, object data);
+        Task SetItemAsync(string key, object data);
 
         event EventHandler<ChangingEventArgs> Changing;
         event EventHandler<ChangedEventArgs> Changed;
