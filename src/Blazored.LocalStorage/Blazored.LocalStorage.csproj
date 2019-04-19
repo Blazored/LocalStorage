@@ -29,16 +29,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Remove="content\blazored.LocalStorage.ts" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="content\blazored.LocalStorage.ts" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.Browser" Version="3.0.0-preview3-19153-02" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Build" Version="3.0.0-preview3-19153-02" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Browser" Version="3.0.0-preview4-19216-03" />
+    <PackageReference Include="Microsoft.TypeScript.MsBuild" Version="3.4.3">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
