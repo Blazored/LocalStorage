@@ -51,7 +51,7 @@ Welcome to your new app.
     int ItemsInLocalStorage { get; set; }
     string Name { get; set; }
 
-    protected override async Task OnInitAsync()
+    protected override async Task OnAfterRenderAsync()
     {
         await GetNameFromLocalStorage();
         await GetLocalStorageLength();
@@ -76,7 +76,9 @@ Welcome to your new app.
         NameFromLocalStorage = await localStorage.GetItemAsync<string>("name");
 
         if (string.IsNullOrEmpty(NameFromLocalStorage))
+        {
             NameFromLocalStorage = "Nothing Saved";
+        }
     }
 
     async Task RemoveName()

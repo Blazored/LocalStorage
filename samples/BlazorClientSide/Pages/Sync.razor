@@ -70,7 +70,9 @@
         NameFromLocalStorage = localStorage.GetItem<string>("name");
 
         if (string.IsNullOrEmpty(NameFromLocalStorage))
+        {
             NameFromLocalStorage = "Nothing Saved";
+        }
     }
 
     void RemoveName()
