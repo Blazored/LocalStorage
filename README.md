@@ -31,9 +31,8 @@ public void ConfigureServices(IServiceCollection services)
 }
 ``` 
 
-### Usage
-
-This is an example of using local storage in a .cshtml file 
+### Usage (Client-side Blazor)
+To use Blazored.LocalStorage in client-side Blazor, inject the `ILocalStorageService` per the example below.
 
 ```c#
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
@@ -49,7 +48,7 @@ This is an example of using local storage in a .cshtml file
 }
 ```
 
-If you are using Blazor (not Razor Components), you can choose to instead inject `Blazored.LocalStorage.ISyncStorageService` to opt into a synchronous API that allows you to avoid use of `async`/`await`.  For either interface, the method names are the same.
+With client-side Blazor you also have the option of a synchronous API, if your use case requires it. You can swap the `ILocalStorageService` for `ISyncStorageService` which allows you to avoid use of `async`/`await`. For either interface, the method names are the same.
 
 ```c#
 @inject Blazored.LocalStorage.ISyncStorageService localStorage
@@ -60,6 +59,24 @@ If you are using Blazor (not Razor Components), you can choose to instead inject
     {
         localStorage.SetItem("name", "John Smith");
         var name = localStorage.GetItem<string>("name");
+    }
+
+}
+```
+
+### Usage (Server-side Blazor)
+
+**NOTE:** Due to pre-rendering in server-side Blazor you can't perform any JS interop until the `OnAfterRender` lifecycle method.
+
+```c#
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+
+@functions {
+
+    protected override async Task OnAfterRenderAsync()
+    {
+        await localStorage.SetItemAsync("name", "John Smith");
+        var name = await localStorage.GetItemAsync<string>("name");
     }
 
 }
