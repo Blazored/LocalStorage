@@ -37,7 +37,7 @@ To use Blazored.LocalStorage in client-side Blazor, inject the `ILocalStorageSer
 ```c#
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 
-@functions {
+@code {
 
     protected override async Task OnInitAsync()
     {
@@ -53,7 +53,7 @@ With client-side Blazor you also have the option of a synchronous API, if your u
 ```c#
 @inject Blazored.LocalStorage.ISyncStorageService localStorage
 
-@functions {
+@code {
 
     protected override void OnInit()
     {
