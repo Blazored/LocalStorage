@@ -9,7 +9,7 @@
     <TypeScriptToolsVersion>3.2</TypeScriptToolsVersion>
 
     <PackageId>Blazored.LocalStorage</PackageId>
-    <Version>2.0.5</Version>
+    <Version>2.0.6</Version>
     <Authors>Chris Sainty</Authors>
     <Description>A library to provide access to local storage in Blazor applications</Description>
     <Copyright>Copyright 2018 (c) Chris Sainty. All rights reserved.</Copyright>
@@ -20,6 +20,10 @@
     <PackageTags>Blazor LocalStorage Blazored Razor Components</PackageTags>
     <Company />
   </PropertyGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="wwwroot\blazored-localstorage.ts" />
+  </ItemGroup>
 
   <ItemGroup>
     <!-- .js/.css files will be referenced via <script>/<link> tags; other content files will just be included in the app's 'dist' directory without any tags referencing them -->
@@ -34,10 +38,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <TypeScriptCompile Include="wwwroot\blazored-localstorage.ts" />
   </ItemGroup>
 
 </Project>
