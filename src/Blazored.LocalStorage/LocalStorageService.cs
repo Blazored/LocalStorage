@@ -1,6 +1,6 @@
 ﻿using Microsoft.JSInterop;
 using System;
-using System.Text.Json.Serialization;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Blazored.LocalStorage
@@ -26,7 +26,7 @@ namespace Blazored.LocalStorage
             if (e.Cancel)
                 return;
 
-            await _jSRuntime.InvokeAsync<object>("Blazored.LocalStorage.SetItem", key, JsonSerializer.ToString(data));
+            await _jSRuntime.InvokeAsync<object>("Blazored.LocalStorage.SetItem", key, JsonSerializer.Serialize(data));
 
             RaiseOnChanged(key, e.OldValue, data);
         }
@@ -41,7 +41,7 @@ namespace Blazored.LocalStorage
             if (serialisedData == null)
                 return default(T);
 
-            return JsonSerializer.Parse<T>(serialisedData);
+            return JsonSerializer.Deserialize<T>(serialisedData);
         }
 
         public async Task RemoveItemAsync(string key)
@@ -71,7 +71,7 @@ namespace Blazored.LocalStorage
             if (e.Cancel)
                 return;
 
-            _jSInProcessRuntime.Invoke<object>("Blazored.LocalStorage.SetItem", key, JsonSerializer.ToString(data));
+            _jSInProcessRuntime.Invoke<object>("Blazored.LocalStorage.SetItem", key, JsonSerializer.Serialize(data));
 
             RaiseOnChanged(key, e.OldValue, data);
         }
@@ -89,7 +89,7 @@ namespace Blazored.LocalStorage
             if (serialisedData == null)
                 return default(T);
 
-            return JsonSerializer.Parse<T>(serialisedData);
+            return JsonSerializer.Deserialize<T>(serialisedData);
         }
 
         public void RemoveItem(string key)
