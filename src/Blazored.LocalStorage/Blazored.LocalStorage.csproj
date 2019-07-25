@@ -9,7 +9,7 @@
     <TypeScriptToolsVersion>3.2</TypeScriptToolsVersion>
 
     <PackageId>Blazored.LocalStorage</PackageId>
-    <Version>2.0.3</Version>
+    <Version>2.0.5</Version>
     <Authors>Chris Sainty</Authors>
     <Description>A library to provide access to local storage in Blazor applications</Description>
     <Copyright>Copyright 2018 (c) Chris Sainty. All rights reserved.</Copyright>
@@ -23,9 +23,9 @@
 
   <ItemGroup>
     <!-- .js/.css files will be referenced via <script>/<link> tags; other content files will just be included in the app's 'dist' directory without any tags referencing them -->
-    <EmbeddedResource Include="wwwroot\**\*.js" LogicalName="blazor:js:%(RecursiveDir)%(Filename)%(Extension)" />
-    <EmbeddedResource Include="wwwroot\**\*.css" LogicalName="blazor:css:%(RecursiveDir)%(Filename)%(Extension)" />
-    <EmbeddedResource Include="wwwroot\**" Exclude="**\*.js;**\*.css" LogicalName="blazor:file:%(RecursiveDir)%(Filename)%(Extension)" />
+    <EmbeddedResource Include="content\**\*.js" LogicalName="blazor:js:%(RecursiveDir)%(Filename)%(Extension)" />
+    <EmbeddedResource Include="content\**\*.css" LogicalName="blazor:css:%(RecursiveDir)%(Filename)%(Extension)" />
+    <EmbeddedResource Include="content\**" Exclude="**\*.js;**\*.css" LogicalName="blazor:file:%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,6 +38,7 @@
 
   <ItemGroup>
     <TypeScriptCompile Include="wwwroot\blazored-localstorage.ts" />
+    <TypeScriptCompile Include="content\blazored-localstorage.ts" />
   </ItemGroup>
 
 </Project>
