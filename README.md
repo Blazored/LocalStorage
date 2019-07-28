@@ -17,7 +17,7 @@ Or via the Visual Studio package manger.
 
 If you are using server-side Blazor you will need to add a reference to the Blazored LocalStorage javascript file in your `_Host.cshtml` file.
 
-```
+```html
 <script src="_content/Blazored.LocalStorage/blazored-localstorage.js"></script>
 ```
 
