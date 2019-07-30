@@ -26,7 +26,8 @@
     }
 
     export function Load(): void {
-        const localStorage = {
+        const localStorage:
+        any = {
             LocalStorage: new LocalStorage()
         };
 

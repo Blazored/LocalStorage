@@ -21,13 +21,20 @@
     <Company />
   </PropertyGroup>
 
+  <PropertyGroup>
+    <ResolveStaticWebAssetsInputsDependsOn>
+      CompileTypeScript;
+      $(ResolveStaticWebAssetsInputsDependsOn)
+    </ResolveStaticWebAssetsInputsDependsOn>
+  </PropertyGroup>
+  
   <ItemGroup>
     <TypeScriptCompile Include="wwwroot\blazored-localstorage.ts" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.Browser" Version="3.0.0-preview7.19365.7" />
-    <PackageReference Include="Microsoft.TypeScript.MsBuild" Version="3.5.1">
+    <PackageReference Include="Microsoft.TypeScript.MsBuild" Version="3.6.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
