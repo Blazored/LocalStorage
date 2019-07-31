@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "noImplicitAny": false,
+    "noEmitOnError": true,
+    "removeComments": true,
+    "sourceMap": true,
+    "target": "es6",
+    "outDir": "wwwroot"
+  },
+  "exclude": [
+    "wwwroot"
+  ]
+}

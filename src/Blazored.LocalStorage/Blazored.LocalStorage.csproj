@@ -29,7 +29,7 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <TypeScriptCompile Include="wwwroot\blazored-localstorage.ts" />
+    <TypeScriptCompile Include="Interop\blazored-localstorage.ts" />
   </ItemGroup>
 
   <ItemGroup>
