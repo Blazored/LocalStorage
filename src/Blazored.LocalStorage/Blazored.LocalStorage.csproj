@@ -21,27 +21,20 @@
     <Company />
   </PropertyGroup>
 
+  <PropertyGroup>
+    <ResolveStaticWebAssetsInputsDependsOn>
+      CompileTypeScript;
+      $(ResolveStaticWebAssetsInputsDependsOn)
+    </ResolveStaticWebAssetsInputsDependsOn>
+  </PropertyGroup>
+  
   <ItemGroup>
     <TypeScriptCompile Include="wwwroot\blazored-localstorage.ts" />
   </ItemGroup>
 
   <ItemGroup>
-    <!-- 
-        Explicitly name thie js file because it won't exist when the build target that needs it runs...
-    -->
-    <EmbeddedResource Include="wwwroot\blazored-localstorage.js" LogicalName="blazor:js:%(RecursiveDir)%(Filename)%(Extension)" />
-    <!-- 
-        Don't use the wildcard globbing because you will get duplicate resource errors 
-        - as the js file does exist when the csproj is validated 
-    -->
-    <!-- .js/.css files will be referenced via <script>/<link> tags; other content files will just be included in the app's 'dist' directory without any tags referencing them -->
-    <EmbeddedResource Include="wwwroot\**\*.css" LogicalName="blazor:css:%(RecursiveDir)%(Filename)%(Extension)" />
-    <EmbeddedResource Include="wwwroot\**" Exclude="**\*.js;**\*.css" LogicalName="blazor:file:%(RecursiveDir)%(Filename)%(Extension)" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.Browser" Version="3.0.0-preview7.19365.7" />
-    <PackageReference Include="Microsoft.TypeScript.MsBuild" Version="3.5.1">
+    <PackageReference Include="Microsoft.TypeScript.MsBuild" Version="3.6.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
