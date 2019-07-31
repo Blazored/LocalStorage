@@ -27,6 +27,14 @@
       $(ResolveStaticWebAssetsInputsDependsOn)
     </ResolveStaticWebAssetsInputsDependsOn>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="tsconfig.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="tsconfig.json" />
+  </ItemGroup>
   
   <ItemGroup>
     <TypeScriptCompile Include="Interop\blazored-localstorage.ts" />
