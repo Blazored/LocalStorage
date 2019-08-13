@@ -15,13 +15,11 @@ Or via the Visual Studio package manger.
 
 ### Setup
 
-If you are using server-side Blazor you will need to add a reference to the Blazored LocalStorage javascript file in your `_Host.cshtml` file.
+If need to add a reference to the Blazored LocalStorage javascript file in your `index.html` (Blazor WebAssembly) `_Host.cshtml` (Blazor Server).
 
 ```html
 <script src="_content/Blazored.LocalStorage/blazored-localstorage.js"></script>
 ```
-
-If you are using client-side Blazor this reference will be added automatically for you.
 
 You will then need to register the local storage services with the service collection in your _startup.cs_ file.
 
@@ -32,15 +30,15 @@ public void ConfigureServices(IServiceCollection services)
 }
 ``` 
 
-### Usage (Client-side Blazor)
-To use Blazored.LocalStorage in client-side Blazor, inject the `ILocalStorageService` per the example below.
+### Usage (Blazor WebAssembly)
+To use Blazored.LocalStorage in Blazor WebAssembly, inject the `ILocalStorageService` per the example below.
 
 ```c#
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 
 @code {
 
-    protected override async Task OnInitAsync()
+    protected override async Task OnInitializedAsync()
     {
         await localStorage.SetItemAsync("name", "John Smith");
         var name = await localStorage.GetItemAsync<string>("name");
@@ -49,7 +47,7 @@ To use Blazored.LocalStorage in client-side Blazor, inject the `ILocalStorageSer
 }
 ```
 
-With client-side Blazor you also have the option of a synchronous API, if your use case requires it. You can swap the `ILocalStorageService` for `ISyncStorageService` which allows you to avoid use of `async`/`await`. For either interface, the method names are the same.
+With Blazor WebAssembly you also have the option of a synchronous API, if your use case requires it. You can swap the `ILocalStorageService` for `ISyncStorageService` which allows you to avoid use of `async`/`await`. For either interface, the method names are the same.
 
 ```c#
 @inject Blazored.LocalStorage.ISyncStorageService localStorage
@@ -65,9 +63,9 @@ With client-side Blazor you also have the option of a synchronous API, if your u
 }
 ```
 
-### Usage (Server-side Blazor)
+### Usage (Blazor Server)
 
-**NOTE:** Due to pre-rendering in server-side Blazor you can't perform any JS interop until the `OnAfterRender` lifecycle method.
+**NOTE:** Due to pre-rendering in Blazor Server you can't perform any JS interop until the `OnAfterRender` lifecycle method.
 
 ```c#
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
