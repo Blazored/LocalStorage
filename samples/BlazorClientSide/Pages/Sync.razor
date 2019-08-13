@@ -45,7 +45,7 @@
     int ItemsInLocalStorage { get; set; }
     string Name { get; set; }
 
-    protected override void OnInit()
+    protected override void OnInitialized()
     {
         GetNameFromLocalStorage();
         GetLocalStorageLength();

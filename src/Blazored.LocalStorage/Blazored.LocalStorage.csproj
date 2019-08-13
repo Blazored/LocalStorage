@@ -2,14 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <IsPackable>true</IsPackable>
-    <LangVersion>7.3</LangVersion>
     <RazorLangVersion>3.0</RazorLangVersion>
-    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <RootNamespace>Blazored.LocalStorage</RootNamespace>
     <TypeScriptToolsVersion>3.2</TypeScriptToolsVersion>
 
     <PackageId>Blazored.LocalStorage</PackageId>
-    <Version>2.0.7</Version>
+    <Version>2.0.8</Version>
     <Authors>Chris Sainty</Authors>
     <Description>A library to provide access to local storage in Blazor applications</Description>
     <Copyright>Copyright 2018 (c) Chris Sainty. All rights reserved.</Copyright>
@@ -20,20 +18,14 @@
     <PackageTags>Blazor LocalStorage Blazored Razor Components</PackageTags>
     <Company />
   </PropertyGroup>
-
-  <PropertyGroup>
-    <ResolveStaticWebAssetsInputsDependsOn>
-      CompileTypeScript;
-      $(ResolveStaticWebAssetsInputsDependsOn)
-    </ResolveStaticWebAssetsInputsDependsOn>
-  </PropertyGroup>
   
   <ItemGroup>
     <TypeScriptCompile Include="Interop\blazored-localstorage.ts" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.Browser" Version="3.0.0-preview7.19365.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Components" Version="3.0.0-preview8.19405.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="3.0.0-preview8.19405.7" />
     <PackageReference Include="Microsoft.TypeScript.MsBuild" Version="3.6.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
