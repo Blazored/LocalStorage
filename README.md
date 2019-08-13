@@ -15,7 +15,7 @@ Or via the Visual Studio package manger.
 
 ### Setup
 
-If need to add a reference to the Blazored LocalStorage javascript file in your `index.html` (Blazor WebAssembly) `_Host.cshtml` (Blazor Server).
+You need to add a reference to the Blazored LocalStorage javascript file in your `index.html` (Blazor WebAssembly) `_Host.cshtml` (Blazor Server).
 
 ```html
 <script src="_content/Blazored.LocalStorage/blazored-localstorage.js"></script>
