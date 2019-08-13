@@ -54,7 +54,7 @@ With Blazor WebAssembly you also have the option of a synchronous API, if your u
 
 @code {
 
-    protected override void OnInit()
+    protected override void OnInitialized()
     {
         localStorage.SetItem("name", "John Smith");
         var name = localStorage.GetItem<string>("name");
