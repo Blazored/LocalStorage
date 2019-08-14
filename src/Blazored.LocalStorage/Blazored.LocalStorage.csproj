@@ -18,6 +18,13 @@
     <PackageTags>Blazor LocalStorage Blazored Razor Components</PackageTags>
     <Company />
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="wwwroot\blazored-localstorage.js" />
+    <None Remove="wwwroot\blazored-localstorage.js.map" />
+    <None Remove="Interop\blazored-localstorage.ts" />
+    <None Remove="tsconfig.json" />
+  </ItemGroup>
   
   <ItemGroup>
     <TypeScriptCompile Include="Interop\blazored-localstorage.ts" />
@@ -30,12 +37,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-  </ItemGroup>
-   
-  <ItemGroup>
-    <Content Update="tsconfig.json">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
 
 </Project>
