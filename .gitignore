@@ -3,10 +3,6 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
-# Custom
-src/Blazored.LocalStorage/wwwroot/*.js
-src/Blazored.LocalStorage/wwwroot/*.js.map
-
 # User-specific files
 *.suo
 *.user
