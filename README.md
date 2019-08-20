@@ -15,13 +15,7 @@ Or via the Visual Studio package manger.
 
 ### Setup
 
-You need to add a reference to the Blazored LocalStorage javascript file in your `index.html` (Blazor WebAssembly) `_Host.cshtml` (Blazor Server).
-
-```html
-<script src="_content/Blazored.LocalStorage/blazored-localstorage.js"></script>
-```
-
-You will then need to register the local storage services with the service collection in your _startup.cs_ file.
+You will need to register the local storage services with the service collection in your _startup.cs_ file.
 
 ```c#
 public void ConfigureServices(IServiceCollection services)
