@@ -47,7 +47,7 @@
     int ItemsInLocalStorage { get; set; }
     string Name { get; set; }
 
-    protected override async Task OnAfterRenderAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await GetNameFromLocalStorage();
         await GetLocalStorageLength();
