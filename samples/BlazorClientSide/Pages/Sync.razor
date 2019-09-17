@@ -8,21 +8,21 @@
     <div class="col-md-4">
         <h5>Add Item to local storage</h5>
         <div class="input-group">
-            <input class="form-control" type="text" placeholder="Enter a value" bind="@Name" />
+            <input class="form-control" type="text" placeholder="Enter a value" @bind="Name" />
             <div class="input-group-append">
-                <button class="btn btn-primary" @onclick="@SaveName">Save</button>
+                <button class="btn btn-primary" @onclick="SaveName">Save</button>
             </div>
         </div>
     </div>
 
     <div class="col-md-4">
         <h5>Remove item from local storage</h5>
-        <button class="btn btn-primary" @onclick=@RemoveName>Remove Item</button>
+        <button class="btn btn-primary" @onclick="RemoveName">Remove Item</button>
     </div>
 
     <div class="col-md-4">
         <h5>Clear local storage</h5>
-        <button class="btn btn-primary" @onclick=@ClearLocalStorage>Clear All</button>
+        <button class="btn btn-primary" @onclick="ClearLocalStorage">Clear All</button>
     </div>
 </div>
 
@@ -58,6 +58,7 @@
 
     void SaveName()
     {
+        Console.WriteLine(Name);
         localStorage.SetItem("name", Name);
         GetNameFromLocalStorage();
         GetLocalStorageLength();
