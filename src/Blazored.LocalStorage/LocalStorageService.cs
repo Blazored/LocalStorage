@@ -38,7 +38,7 @@ namespace Blazored.LocalStorage
 
             var serialisedData = await _jSRuntime.InvokeAsync<string>("localStorage.getItem", key);
 
-            if (serialisedData == null)
+            if (string.IsNullOrEmpty(serialisedData))
                 return default(T);
 
             return JsonSerializer.Deserialize<T>(serialisedData);
@@ -57,6 +57,8 @@ namespace Blazored.LocalStorage
         public async Task<int> LengthAsync() => await _jSRuntime.InvokeAsync<int>("eval", "localStorage.length");
 
         public async Task<string> KeyAsync(int index) => await _jSRuntime.InvokeAsync<string>("localStorage.key", index);
+
+        public async Task<bool> ContainKeyAsync(string key) => await _jSRuntime.InvokeAsync<bool>("localStorage.hasOwnProperty", key);
 
         public void SetItem(string key, object data)
         {
@@ -86,7 +88,7 @@ namespace Blazored.LocalStorage
 
             var serialisedData = _jSInProcessRuntime.Invoke<string>("localStorage.getItem", key);
 
-            if (serialisedData == null)
+            if (string.IsNullOrEmpty(serialisedData))
                 return default(T);
 
             return JsonSerializer.Deserialize<T>(serialisedData);
@@ -125,6 +127,14 @@ namespace Blazored.LocalStorage
                 throw new InvalidOperationException("IJSInProcessRuntime not available");
 
             return _jSInProcessRuntime.Invoke<string>("localStorage.key", index);
+        }
+
+        public bool ContainKey(string key)
+        {
+            if (_jSInProcessRuntime == null)
+                throw new InvalidOperationException("IJSInProcessRuntime not available");
+
+            return _jSInProcessRuntime.Invoke<bool>("localStorage.hasOwnProperty", key);
         }
 
         public event EventHandler<ChangingEventArgs> Changing;
