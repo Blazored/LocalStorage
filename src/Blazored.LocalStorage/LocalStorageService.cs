@@ -38,7 +38,7 @@ namespace Blazored.LocalStorage
 
             var serialisedData = await _jSRuntime.InvokeAsync<string>("localStorage.getItem", key);
 
-            if (string.IsNullOrEmpty(serialisedData))
+            if (string.IsNullOrWhiteSpace(serialisedData))
                 return default(T);
 
             return JsonSerializer.Deserialize<T>(serialisedData);
@@ -88,7 +88,7 @@ namespace Blazored.LocalStorage
 
             var serialisedData = _jSInProcessRuntime.Invoke<string>("localStorage.getItem", key);
 
-            if (string.IsNullOrEmpty(serialisedData))
+            if (string.IsNullOrWhiteSpace(serialisedData))
                 return default(T);
 
             return JsonSerializer.Deserialize<T>(serialisedData);
