@@ -37,6 +37,9 @@
         <h5>Items in local storage</h5>
         @ItemsInLocalStorage
     </div>
+    <div class="col-md-4">
+        <h5>Item exist in local storage</h5>@(ItemExist)
+    </div>
 </div>
 
 @code {
@@ -44,6 +47,7 @@
     string NameFromLocalStorage { get; set; }
     int ItemsInLocalStorage { get; set; }
     string Name { get; set; }
+    bool ItemExist { get; set; }
 
     protected override void OnInitialized()
     {
@@ -97,6 +101,7 @@
     {
         Console.WriteLine(localStorage.Length());
         ItemsInLocalStorage = localStorage.Length();
+        ItemExist = localStorage.ContainKey("name");
     }
 
 }
