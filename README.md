@@ -84,7 +84,7 @@ The APIs available are:
   - ClearAsync()
   - LengthAsync()
   - KeyAsync()
-  - ContainsKey()
+  - ContainsKeyAsync()
   
 - synchronous via `ISyncStorageService` (Synchronous methods are **only** available in Blazor WebAssembly):
   - SetItem()
