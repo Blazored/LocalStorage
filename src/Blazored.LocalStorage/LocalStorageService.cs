@@ -96,7 +96,7 @@ namespace Blazored.LocalStorage
             if (string.IsNullOrWhiteSpace(serialisedData))
                 return default(T);
 
-            return JsonSerializer.Deserialize<T>(serialisedData, this._jsonOptions);
+            return JsonSerializer.Deserialize<T>(serialisedData, _jsonOptions);
         }
 
         public void RemoveItem(string key)
