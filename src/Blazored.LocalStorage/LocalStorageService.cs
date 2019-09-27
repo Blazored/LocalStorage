@@ -1,4 +1,5 @@
-﻿using Microsoft.JSInterop;
+﻿using Blazored.LocalStorage.JsonConverters;
+using Microsoft.JSInterop;
 using System;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -10,10 +11,14 @@ namespace Blazored.LocalStorage
         private readonly IJSRuntime _jSRuntime;
         private readonly IJSInProcessRuntime _jSInProcessRuntime;
 
+        private JsonSerializerOptions _jsonOptions;
+
         public LocalStorageService(IJSRuntime jSRuntime)
         {
             _jSRuntime = jSRuntime;
             _jSInProcessRuntime = jSRuntime as IJSInProcessRuntime;
+            _jsonOptions = new JsonSerializerOptions();
+            _jsonOptions.Converters.Add(new TimespanJsonConverter());
         }
 
         public async Task SetItemAsync(string key, object data)
@@ -26,7 +31,7 @@ namespace Blazored.LocalStorage
             if (e.Cancel)
                 return;
 
-            await _jSRuntime.InvokeAsync<object>("localStorage.setItem", key, JsonSerializer.Serialize(data));
+            await _jSRuntime.InvokeAsync<object>("localStorage.setItem", key, JsonSerializer.Serialize(data, _jsonOptions));
 
             RaiseOnChanged(key, e.OldValue, data);
         }
@@ -41,7 +46,7 @@ namespace Blazored.LocalStorage
             if (string.IsNullOrWhiteSpace(serialisedData))
                 return default(T);
 
-            return JsonSerializer.Deserialize<T>(serialisedData);
+            return JsonSerializer.Deserialize<T>(serialisedData, _jsonOptions);
         }
 
         public async Task RemoveItemAsync(string key)
@@ -73,7 +78,7 @@ namespace Blazored.LocalStorage
             if (e.Cancel)
                 return;
 
-            _jSInProcessRuntime.Invoke<object>("localStorage.setItem", key, JsonSerializer.Serialize(data));
+            _jSInProcessRuntime.Invoke<object>("localStorage.setItem", key, JsonSerializer.Serialize(data, _jsonOptions));
 
             RaiseOnChanged(key, e.OldValue, data);
         }
@@ -91,7 +96,7 @@ namespace Blazored.LocalStorage
             if (string.IsNullOrWhiteSpace(serialisedData))
                 return default(T);
 
-            return JsonSerializer.Deserialize<T>(serialisedData);
+            return JsonSerializer.Deserialize<T>(serialisedData, _jsonOptions);
         }
 
         public void RemoveItem(string key)
