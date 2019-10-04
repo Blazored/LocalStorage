@@ -66,7 +66,7 @@ With Blazor WebAssembly you also have the option of a synchronous API, if your u
 
 @functions {
 
-    protected override async Task OnAfterRenderAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await localStorage.SetItemAsync("name", "John Smith");
         var name = await localStorage.GetItemAsync<string>("name");
