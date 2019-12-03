@@ -11,7 +11,7 @@ You can install from NuGet using the following command:
 
 `Install-Package Blazored.LocalStorage`
 
-Or via the Visual Studio package manger.
+Or via the Visual Studio package manager.
 
 ### Setup
 
