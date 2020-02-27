@@ -1,16 +1,19 @@
-﻿using Microsoft.AspNetCore.Blazor.Hosting;
+﻿using Blazored.LocalStorage;
+using Microsoft.AspNetCore.Blazor.Hosting;
+using System.Threading.Tasks;
 
 namespace BlazorClientSide
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
-        }
+            var builder = WebAssemblyHostBuilder.CreateDefault(args);
+            builder.RootComponents.Add<App>("app");
 
-        public static IWebAssemblyHostBuilder CreateHostBuilder(string[] args) =>
-            BlazorWebAssemblyHost.CreateDefaultBuilder()
-                .UseBlazorStartup<Startup>();
+            builder.Services.AddBlazoredLocalStorage();
+
+            await builder.Build().RunAsync();
+        }
     }
 }

@@ -15,12 +15,26 @@ Or via the Visual Studio package manager.
 
 ### Setup
 
-You will need to register the local storage services with the service collection in your _startup.cs_ file.
+You will need to register the local storage services with the service collection in your _Startup.cs_ file in Blazor Server.
 
 ```c#
 public void ConfigureServices(IServiceCollection services)
 {
     services.AddBlazoredLocalStorage();
+}
+``` 
+
+Or in your _Program.cs_ file in Blazor WebAssembly.
+
+```c#
+public static async Task Main(string[] args)
+{
+    var builder = WebAssemblyHostBuilder.CreateDefault(args);
+    builder.RootComponents.Add<App>("app");
+
+    builder.Services.AddBlazoredLocalStorage();
+
+    await builder.Build().RunAsync();
 }
 ``` 
 

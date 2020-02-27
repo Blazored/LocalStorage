@@ -8,10 +8,12 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- task: DotNetCoreInstaller@0
-  displayName: 'Installing .NET Core SDK...'
+- task: UseDotNet@2
+  displayName: 'Use .NET Core sdk'
   inputs:
-    version: 3.0.100-rc1-014190
+    packageType: sdk
+    version: 3.1.101
+    installationPath: $(Agent.ToolsDirectory)/dotnet
 
 - task: NuGetToolInstaller@0
   displayName: 'Installing Nuget Tools...'
