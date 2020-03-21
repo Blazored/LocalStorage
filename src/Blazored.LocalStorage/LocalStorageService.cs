@@ -11,7 +11,7 @@ namespace Blazored.LocalStorage
         private readonly IJSRuntime _jSRuntime;
         private readonly IJSInProcessRuntime _jSInProcessRuntime;
 
-        private JsonSerializerOptions _jsonOptions;
+        private readonly JsonSerializerOptions _jsonOptions;
 
         public LocalStorageService(IJSRuntime jSRuntime)
         {
@@ -47,6 +47,19 @@ namespace Blazored.LocalStorage
                 return default(T);
 
             return JsonSerializer.Deserialize<T>(serialisedData, _jsonOptions);
+        }
+
+        public async Task<object> GetItemAsync(string key, Type type)
+        {
+            if (string.IsNullOrEmpty(key))
+                throw new ArgumentNullException(nameof(key));
+
+            var serialisedData = await _jSRuntime.InvokeAsync<string>("localStorage.getItem", key);
+
+            if (string.IsNullOrWhiteSpace(serialisedData))
+                return default;
+
+            return JsonSerializer.Deserialize(serialisedData, type, _jsonOptions);
         }
 
         public async Task RemoveItemAsync(string key)
@@ -99,11 +112,27 @@ namespace Blazored.LocalStorage
             return JsonSerializer.Deserialize<T>(serialisedData, _jsonOptions);
         }
 
+        public object GetItem(string key, Type type)
+        {
+            if (string.IsNullOrEmpty(key))
+                throw new ArgumentNullException(nameof(key));
+
+            if (_jSInProcessRuntime == null)
+                throw new InvalidOperationException("IJSInProcessRuntime not available");
+
+            var serialisedData = _jSInProcessRuntime.Invoke<string>("localStorage.getItem", key);
+
+            if (string.IsNullOrWhiteSpace(serialisedData))
+                return default;
+
+            return JsonSerializer.Deserialize(serialisedData, type, _jsonOptions);
+        }
+
         public void RemoveItem(string key)
         {
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentNullException(nameof(key));
-                
+
             if (_jSInProcessRuntime == null)
                 throw new InvalidOperationException("IJSInProcessRuntime not available");
 

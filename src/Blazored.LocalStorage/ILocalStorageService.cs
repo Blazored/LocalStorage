@@ -8,6 +8,7 @@ namespace Blazored.LocalStorage
         Task ClearAsync();
 
         Task<T> GetItemAsync<T>(string key);
+        Task<object> GetItemAsync(string key, Type type);
 
         Task<string> KeyAsync(int index);
 

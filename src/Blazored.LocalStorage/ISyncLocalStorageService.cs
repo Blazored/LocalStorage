@@ -8,6 +8,8 @@ namespace Blazored.LocalStorage
 
         T GetItem<T>(string key);
 
+        object GetItem(string key, Type type);
+
         string Key(int index);
 
         /// <summary>
