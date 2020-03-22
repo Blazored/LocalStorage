@@ -31,7 +31,14 @@ namespace Blazored.LocalStorage
             if (e.Cancel)
                 return;
 
-            await _jSRuntime.InvokeAsync<object>("localStorage.setItem", key, JsonSerializer.Serialize(data, _jsonOptions));
+            if (data is string)
+            {
+                await _jSRuntime.InvokeVoidAsync("localStorage.setItem", key, data);
+            }
+            else
+            {
+                await _jSRuntime.InvokeVoidAsync("localStorage.setItem", key, JsonSerializer.Serialize(data, _jsonOptions));
+            }
 
             RaiseOnChanged(key, e.OldValue, data);
         }
@@ -46,6 +53,9 @@ namespace Blazored.LocalStorage
             if (string.IsNullOrWhiteSpace(serialisedData))
                 return default(T);
 
+            if (typeof(T) == typeof(string))
+                return (T)(object)serialisedData;
+
             return JsonSerializer.Deserialize<T>(serialisedData, _jsonOptions);
         }
 
@@ -57,7 +67,7 @@ namespace Blazored.LocalStorage
             await _jSRuntime.InvokeAsync<object>("localStorage.removeItem", key);
         }
 
-        public async Task ClearAsync() => await _jSRuntime.InvokeAsync<object>("localStorage.clear");
+        public async Task ClearAsync() => await _jSRuntime.InvokeVoidAsync("localStorage.clear");
 
         public async Task<int> LengthAsync() => await _jSRuntime.InvokeAsync<int>("eval", "localStorage.length");
 
@@ -78,7 +88,14 @@ namespace Blazored.LocalStorage
             if (e.Cancel)
                 return;
 
-            _jSInProcessRuntime.Invoke<object>("localStorage.setItem", key, JsonSerializer.Serialize(data, _jsonOptions));
+            if (data is string)
+            {
+                _jSInProcessRuntime.InvokeVoid("localStorage.setItem", key, data);
+            }
+            else
+            {
+                _jSInProcessRuntime.InvokeVoid("localStorage.setItem", key, JsonSerializer.Serialize(data, _jsonOptions));
+            }
 
             RaiseOnChanged(key, e.OldValue, data);
         }
@@ -96,6 +113,9 @@ namespace Blazored.LocalStorage
             if (string.IsNullOrWhiteSpace(serialisedData))
                 return default(T);
 
+            if (typeof(T) == typeof(string))
+                return (T)(object)serialisedData;
+
             return JsonSerializer.Deserialize<T>(serialisedData, _jsonOptions);
         }
 
@@ -107,7 +127,7 @@ namespace Blazored.LocalStorage
             if (_jSInProcessRuntime == null)
                 throw new InvalidOperationException("IJSInProcessRuntime not available");
 
-            _jSInProcessRuntime.Invoke<object>("localStorage.removeItem", key);
+            _jSInProcessRuntime.InvokeVoid("localStorage.removeItem", key);
         }
 
         public void Clear()
@@ -115,7 +135,7 @@ namespace Blazored.LocalStorage
             if (_jSInProcessRuntime == null)
                 throw new InvalidOperationException("IJSInProcessRuntime not available");
 
-            _jSInProcessRuntime.Invoke<object>("localStorage.clear");
+            _jSInProcessRuntime.InvokeVoid("localStorage.clear");
         }
 
         public int Length()
