@@ -37,7 +37,8 @@ namespace Blazored.LocalStorage
             }
             else
             {
-                await _jSRuntime.InvokeVoidAsync("localStorage.setItem", key, JsonSerializer.Serialize(data, _jsonOptions));
+                var serialisedData = JsonSerializer.Serialize(data, _jsonOptions);
+                await _jSRuntime.InvokeVoidAsync("localStorage.setItem", key, serialisedData);
             }
 
             RaiseOnChanged(key, e.OldValue, data);
@@ -53,10 +54,15 @@ namespace Blazored.LocalStorage
             if (string.IsNullOrWhiteSpace(serialisedData))
                 return default(T);
 
-            if (typeof(T) == typeof(string))
+            if (serialisedData.StartsWith("{") && serialisedData.EndsWith("}")
+                || serialisedData.StartsWith("\"") && serialisedData.EndsWith("\""))
+            {
+                return JsonSerializer.Deserialize<T>(serialisedData, _jsonOptions);
+            }
+            else
+            {
                 return (T)(object)serialisedData;
-
-            return JsonSerializer.Deserialize<T>(serialisedData, _jsonOptions);
+            }
         }
 
         public async Task RemoveItemAsync(string key)
@@ -64,7 +70,7 @@ namespace Blazored.LocalStorage
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentNullException(nameof(key));
 
-            await _jSRuntime.InvokeAsync<object>("localStorage.removeItem", key);
+            await _jSRuntime.InvokeVoidAsync("localStorage.removeItem", key);
         }
 
         public async Task ClearAsync() => await _jSRuntime.InvokeVoidAsync("localStorage.clear");
@@ -113,17 +119,22 @@ namespace Blazored.LocalStorage
             if (string.IsNullOrWhiteSpace(serialisedData))
                 return default(T);
 
-            if (typeof(T) == typeof(string))
+            if (serialisedData.StartsWith("{") && serialisedData.EndsWith("}")
+                || serialisedData.StartsWith("\"") && serialisedData.EndsWith("\""))
+            {
+                return JsonSerializer.Deserialize<T>(serialisedData, _jsonOptions);
+            }
+            else
+            {
                 return (T)(object)serialisedData;
-
-            return JsonSerializer.Deserialize<T>(serialisedData, _jsonOptions);
+            }
         }
 
         public void RemoveItem(string key)
         {
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentNullException(nameof(key));
-                
+
             if (_jSInProcessRuntime == null)
                 throw new InvalidOperationException("IJSInProcessRuntime not available");
 
