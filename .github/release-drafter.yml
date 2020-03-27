@@ -9,6 +9,8 @@ categories:
       - 'Bug'
   - title: '🧰 Maintenance'
     label: 'Maintenance'
+  - title: '📖 Documentation'
+    label: 'Docs'
 change-template: '- (#$NUMBER) $TITLE - Thanks to @$AUTHOR '
 template: |
   # What's Changed
