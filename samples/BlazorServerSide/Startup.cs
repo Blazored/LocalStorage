@@ -13,7 +13,7 @@ namespace BlazorServerSide
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
-            services.AddServerSideBlazor();
+            services.AddServerSideBlazor(config => config.DetailedErrors = true);
             services.AddBlazoredLocalStorage();
         }
 
