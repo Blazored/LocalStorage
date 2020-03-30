@@ -55,7 +55,8 @@ namespace Blazored.LocalStorage
                 return default(T);
 
             if (serialisedData.StartsWith("{") && serialisedData.EndsWith("}")
-                || serialisedData.StartsWith("\"") && serialisedData.EndsWith("\""))
+                || serialisedData.StartsWith("\"") && serialisedData.EndsWith("\"")
+                || typeof(T) != typeof(string))
             {
                 return JsonSerializer.Deserialize<T>(serialisedData, _jsonOptions);
             }
