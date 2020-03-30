@@ -23,6 +23,9 @@ steps:
 - script: dotnet build --configuration $(buildConfiguration) src/Blazored.LocalStorage/Blazored.LocalStorage.csproj
   displayName: 'Building $(buildConfiguration)...'
 
+- script: dotnet test ./tests/Blazored.LocalStorage.Tests/Blazored.LocalStorage.Tests.csproj --configuration $(buildConfiguration)
+  displayName: 'Testing $(buildConfiguration)...'
+
 - task: DotNetCoreCLI@2
   displayName: 'Generating Nuget Package... '
   inputs:
