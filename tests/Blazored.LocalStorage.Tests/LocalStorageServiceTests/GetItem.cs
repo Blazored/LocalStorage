@@ -9,17 +9,17 @@ using Xunit;
 
 namespace Blazored.LocalStorage.Tests.LocalStorageServiceTests
 {
-    public class GetItemAsync
+    public class GetItem
     {
         private JsonSerializerOptions _jsonOptions;
-        private Mock<JSRuntimeWrapperAsync> _mockJSRuntime;
+        private Mock<JSRuntimeWrapper> _mockJSRuntime;
         private LocalStorageService _sut;
 
         private static string _key = "testKey";
 
-        public GetItemAsync()
+        public GetItem()
         {
-            _mockJSRuntime = new Mock<JSRuntimeWrapperAsync>();
+            _mockJSRuntime = new Mock<JSRuntimeWrapper>();
             _jsonOptions = new JsonSerializerOptions();
             _jsonOptions.Converters.Add(new TimespanJsonConverter());
             _sut = new LocalStorageService(_mockJSRuntime.Object);
@@ -29,7 +29,7 @@ namespace Blazored.LocalStorage.Tests.LocalStorageServiceTests
         [InlineData("stringTest")]
         [InlineData(11)]
         [InlineData(11.11)]
-        public async Task Should_DeserialiseToCorrectType<T>(T value)
+        public void Should_DeserialiseToCorrectType<T>(T value)
         {
             // Arrange
             var serialisedData = "";
@@ -38,11 +38,11 @@ namespace Blazored.LocalStorage.Tests.LocalStorageServiceTests
             else
                 serialisedData = JsonSerializer.Serialize(value, _jsonOptions);
             
-            _mockJSRuntime.Setup(x => x.InvokeAsync<string>("localStorage.getItem", new[] { _key }))
-                          .Returns(() => new ValueTask<string>(serialisedData));
+            _mockJSRuntime.Setup(x => x.Invoke<string>("localStorage.getItem", new[] { _key }))
+                          .Returns(() => serialisedData);
 
             // Act
-            var result = await _sut.GetItemAsync<T>(_key);
+            var result = _sut.GetItem<T>(_key);
 
             // Assert
             Assert.Equal(value, result);
@@ -50,51 +50,51 @@ namespace Blazored.LocalStorage.Tests.LocalStorageServiceTests
         }
 
         [Fact]
-        public async Task Should_DeserialiseValueToNullableInt()
+        public void Should_DeserialiseValueToNullableInt()
         {
             // Arrange
             int? value = 6;
             var serialisedData = JsonSerializer.Serialize(value, _jsonOptions);
 
-            _mockJSRuntime.Setup(x => x.InvokeAsync<string>("localStorage.getItem", new[] { _key }))
-                          .Returns(() => new ValueTask<string>(serialisedData));
+            _mockJSRuntime.Setup(x => x.Invoke<string>("localStorage.getItem", new[] { _key }))
+                          .Returns(() => serialisedData);
 
             // Act
-            var result = await _sut.GetItemAsync<int?>(_key);
+            var result = _sut.GetItem<int?>(_key);
 
             // Assert
             Assert.Equal(value, result);
         }
 
         [Fact]
-        public async Task Should_DeserialiseValueToDecimal()
+        public void Should_DeserialiseValueToDecimal()
         {
             // Arrange
             decimal value = 6.00m;
             var serialisedData = JsonSerializer.Serialize(value, _jsonOptions);
             
-            _mockJSRuntime.Setup(x => x.InvokeAsync<string>("localStorage.getItem", new[] { _key }))
-                          .Returns(() => new ValueTask<string>(serialisedData));
+            _mockJSRuntime.Setup(x => x.Invoke<string>("localStorage.getItem", new[] { _key }))
+                          .Returns(() => serialisedData);
 
             // Act
-            var result = await _sut.GetItemAsync<decimal>(_key);
+            var result = _sut.GetItem<decimal>(_key);
 
             // Assert
             Assert.Equal(value, result);
         }
 
         [Fact]
-        public async Task Should_DeserialiseValueToComplexType()
+        public void Should_DeserialiseValueToComplexType()
         {
             // Arrange
             TestObject value = new TestObject { Id = 1, Name = "John Smith" };
             var serialisedData = JsonSerializer.Serialize(value, _jsonOptions);
 
-            _mockJSRuntime.Setup(x => x.InvokeAsync<string>("localStorage.getItem", new[] { _key }))
-                          .Returns(() => new ValueTask<string>(serialisedData));
+            _mockJSRuntime.Setup(x => x.Invoke<string>("localStorage.getItem", new[] { _key }))
+                          .Returns(() => serialisedData);
 
             // Act
-            var result = await _sut.GetItemAsync<TestObject>(_key);
+            var result = _sut.GetItem<TestObject>(_key);
 
             // Assert
             result.Should().BeEquivalentTo(value);
