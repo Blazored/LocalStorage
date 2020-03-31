@@ -121,7 +121,8 @@ namespace Blazored.LocalStorage
                 return default(T);
 
             if (serialisedData.StartsWith("{") && serialisedData.EndsWith("}")
-                || serialisedData.StartsWith("\"") && serialisedData.EndsWith("\""))
+                || serialisedData.StartsWith("\"") && serialisedData.EndsWith("\"")
+                || typeof(T) != typeof(string))
             {
                 return JsonSerializer.Deserialize<T>(serialisedData, _jsonOptions);
             }
@@ -180,7 +181,7 @@ namespace Blazored.LocalStorage
             var e = new ChangingEventArgs
             {
                 Key = key,
-                OldValue = await GetItemAsync<object>(key),
+                OldValue = await GetItemInternalAsync<object>(key),
                 NewValue = data
             };
 
@@ -189,18 +190,63 @@ namespace Blazored.LocalStorage
             return e;
         }
 
+        private async Task<T> GetItemInternalAsync<T>(string key)
+        {
+            if (string.IsNullOrEmpty(key))
+                throw new ArgumentNullException(nameof(key));
+
+            var serialisedData = await _jSRuntime.InvokeAsync<string>("localStorage.getItem", key);
+
+            if (string.IsNullOrWhiteSpace(serialisedData))
+                return default(T);
+
+            if (serialisedData.StartsWith("{") && serialisedData.EndsWith("}")
+                || serialisedData.StartsWith("\"") && serialisedData.EndsWith("\""))
+            {
+                return JsonSerializer.Deserialize<T>(serialisedData, _jsonOptions);
+            }
+            else
+            {
+                return (T)(object)serialisedData;
+            }
+        }
+
         private ChangingEventArgs RaiseOnChangingSync(string key, object data)
         {
             var e = new ChangingEventArgs
             {
                 Key = key,
-                OldValue = ((ISyncLocalStorageService)this).GetItem<object>(key),
+                OldValue = GetItemInternal<object>(key),
                 NewValue = data
             };
 
             Changing?.Invoke(this, e);
 
             return e;
+        }
+
+        public T GetItemInternal<T>(string key)
+        {
+            if (string.IsNullOrEmpty(key))
+                throw new ArgumentNullException(nameof(key));
+
+            if (_jSInProcessRuntime == null)
+                throw new InvalidOperationException("IJSInProcessRuntime not available");
+
+            var serialisedData = _jSInProcessRuntime.Invoke<string>("localStorage.getItem", key);
+
+            if (string.IsNullOrWhiteSpace(serialisedData))
+                return default(T);
+
+            if (serialisedData.StartsWith("{") && serialisedData.EndsWith("}")
+                || serialisedData.StartsWith("\"") && serialisedData.EndsWith("\""))
+            {
+                return JsonSerializer.Deserialize<T>(serialisedData, _jsonOptions);
+            }
+            else
+            {
+                return (T)(object)serialisedData;
+            }
         }
 
         public event EventHandler<ChangedEventArgs> Changed;
