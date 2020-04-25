@@ -78,7 +78,7 @@ With Blazor WebAssembly you also have the option of a synchronous API, if your u
 ```c#
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 
-@functions {
+@code {
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
