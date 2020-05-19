@@ -38,6 +38,13 @@ public static async Task Main(string[] args)
 }
 ``` 
 
+**NOTE:** To support read/write operations in the ``OnInitializedAsync'' method, the render mode in the __Host.cshtml_ file must be set from "ServerPrerendered" to "Server":
+```xml
+<app>
+    <component type="typeof(App)" render-mode="Server" />
+</app>
+```
+
 ### Usage (Blazor WebAssembly)
 To use Blazored.LocalStorage in Blazor WebAssembly, inject the `ILocalStorageService` per the example below.
 
