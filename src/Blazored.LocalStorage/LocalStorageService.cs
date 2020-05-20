@@ -20,7 +20,7 @@ namespace Blazored.LocalStorage
             _jSInProcessRuntime = jSRuntime as IJSInProcessRuntime;
         }
 
-        public async Task SetItemAsync(string key, object data)
+        public async Task SetItemAsync<T>(string key, T data)
         {
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentNullException(nameof(key));
@@ -81,7 +81,7 @@ namespace Blazored.LocalStorage
 
         public async Task<bool> ContainKeyAsync(string key) => await _jSRuntime.InvokeAsync<bool>("localStorage.hasOwnProperty", key);
 
-        public void SetItem(string key, object data)
+        public void SetItem<T>(string key, T data)
         {
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentNullException(nameof(key));
