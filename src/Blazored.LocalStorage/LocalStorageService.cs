@@ -1,8 +1,9 @@
-﻿using Blazored.LocalStorage.JsonConverters;
-using Microsoft.JSInterop;
-using System;
+﻿using System;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Blazored.LocalStorage.StorageOptions;
+using Microsoft.Extensions.Options;
+using Microsoft.JSInterop;
 
 namespace Blazored.LocalStorage
 {
@@ -10,15 +11,13 @@ namespace Blazored.LocalStorage
     {
         private readonly IJSRuntime _jSRuntime;
         private readonly IJSInProcessRuntime _jSInProcessRuntime;
+        private readonly JsonSerializerOptions _jsonOptions;
 
-        private JsonSerializerOptions _jsonOptions;
-
-        public LocalStorageService(IJSRuntime jSRuntime)
+        public LocalStorageService(IJSRuntime jSRuntime, IOptions<LocalStorageOptions> options)
         {
             _jSRuntime = jSRuntime;
+            _jsonOptions = options.Value.JsonSerializerOptions;
             _jSInProcessRuntime = jSRuntime as IJSInProcessRuntime;
-            _jsonOptions = new JsonSerializerOptions();
-            _jsonOptions.Converters.Add(new TimespanJsonConverter());
         }
 
         public async Task SetItemAsync(string key, object data)
@@ -52,7 +51,7 @@ namespace Blazored.LocalStorage
             var serialisedData = await _jSRuntime.InvokeAsync<string>("localStorage.getItem", key);
 
             if (string.IsNullOrWhiteSpace(serialisedData))
-                return default(T);
+                return default;
 
             if (serialisedData.StartsWith("{") && serialisedData.EndsWith("}")
                 || serialisedData.StartsWith("\"") && serialisedData.EndsWith("\"")
@@ -118,7 +117,7 @@ namespace Blazored.LocalStorage
             var serialisedData = _jSInProcessRuntime.Invoke<string>("localStorage.getItem", key);
 
             if (string.IsNullOrWhiteSpace(serialisedData))
-                return default(T);
+                return default;
 
             if (serialisedData.StartsWith("{") && serialisedData.EndsWith("}")
                 || serialisedData.StartsWith("\"") && serialisedData.EndsWith("\"")
@@ -198,7 +197,7 @@ namespace Blazored.LocalStorage
             var serialisedData = await _jSRuntime.InvokeAsync<string>("localStorage.getItem", key);
 
             if (string.IsNullOrWhiteSpace(serialisedData))
-                return default(T);
+                return default;
 
             if (serialisedData.StartsWith("{") && serialisedData.EndsWith("}")
                 || serialisedData.StartsWith("\"") && serialisedData.EndsWith("\""))
@@ -236,7 +235,7 @@ namespace Blazored.LocalStorage
             var serialisedData = _jSInProcessRuntime.Invoke<string>("localStorage.getItem", key);
 
             if (string.IsNullOrWhiteSpace(serialisedData))
-                return default(T);
+                return default;
 
             if (serialisedData.StartsWith("{") && serialisedData.EndsWith("}")
                 || serialisedData.StartsWith("\"") && serialisedData.EndsWith("\""))

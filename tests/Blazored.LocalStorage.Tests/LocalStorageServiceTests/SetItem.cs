@@ -1,26 +1,30 @@
-﻿using Blazored.LocalStorage.JsonConverters;
+﻿using System.Text.Json;
+using Blazored.LocalStorage.JsonConverters;
+using Blazored.LocalStorage.StorageOptions;
 using Blazored.LocalStorage.Tests.Mocks;
-using FluentAssertions;
+using Microsoft.Extensions.Options;
 using Moq;
-using System.Text.Json;
 using Xunit;
 
 namespace Blazored.LocalStorage.Tests.LocalStorageServiceTests
 {
     public class SetItem
     {
-        private JsonSerializerOptions _jsonOptions;
-        private Mock<JSRuntimeWrapper> _mockJSRuntime;
-        private LocalStorageService _sut;
+        private readonly JsonSerializerOptions _jsonOptions;
+        private readonly Mock<JSRuntimeWrapper> _mockJSRuntime;
+        private readonly Mock<IOptions<LocalStorageOptions>> _mockOptions;
+        private readonly LocalStorageService _sut;
 
-        private static string _key = "testKey";
+        private static readonly string _key = "testKey";
 
         public SetItem()
         {
             _mockJSRuntime = new Mock<JSRuntimeWrapper>();
+            _mockOptions = new Mock<IOptions<LocalStorageOptions>>();
             _jsonOptions = new JsonSerializerOptions();
             _jsonOptions.Converters.Add(new TimespanJsonConverter());
-            _sut = new LocalStorageService(_mockJSRuntime.Object);
+            _mockOptions.Setup(u => u.Value).Returns(new LocalStorageOptions());
+            _sut = new LocalStorageService(_mockJSRuntime.Object, _mockOptions.Object);
         }
 
         [Fact]
