@@ -1,5 +1,5 @@
 ﻿using Blazored.LocalStorage;
-using Microsoft.AspNetCore.Blazor.Hosting;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using System.Threading.Tasks;
 
 namespace BlazorClientSide
