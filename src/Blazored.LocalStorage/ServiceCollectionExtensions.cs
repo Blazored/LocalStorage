@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using Blazored.LocalStorage.JsonConverters;
+using Blazored.LocalStorage.StorageOptions;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Blazored.LocalStorage
 {
@@ -8,7 +11,23 @@ namespace Blazored.LocalStorage
         {
             return services
                 .AddScoped<ILocalStorageService, LocalStorageService>()
-                .AddScoped<ISyncLocalStorageService, LocalStorageService>();
+                .AddScoped<ISyncLocalStorageService, LocalStorageService>()
+                .Configure<LocalStorageOptions>(configureOptions =>
+                {
+                    configureOptions.JsonSerializerOptions.Converters.Add(new TimespanJsonConverter());
+                });
+        }
+
+        public static IServiceCollection AddBlazoredLocalStorage(this IServiceCollection services, Action<LocalStorageOptions> configure)
+        {
+            return services
+                .AddScoped<ILocalStorageService, LocalStorageService>()
+                .AddScoped<ISyncLocalStorageService, LocalStorageService>()
+                .Configure<LocalStorageOptions>(configureOptions =>
+                {
+                    configure?.Invoke(configureOptions);
+                    configureOptions.JsonSerializerOptions.Converters.Add(new TimespanJsonConverter());
+                });
         }
     }
 }

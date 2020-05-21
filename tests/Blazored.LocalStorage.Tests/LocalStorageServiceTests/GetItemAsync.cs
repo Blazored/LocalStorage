@@ -1,28 +1,33 @@
+using System.Text.Json;
+using System.Threading.Tasks;
 using Blazored.LocalStorage.JsonConverters;
+using Blazored.LocalStorage.StorageOptions;
 using Blazored.LocalStorage.Tests.Mocks;
 using Blazored.LocalStorage.Tests.TestAssets;
 using FluentAssertions;
+using Microsoft.Extensions.Options;
 using Moq;
-using System.Text.Json;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Blazored.LocalStorage.Tests.LocalStorageServiceTests
 {
     public class GetItemAsync
     {
-        private JsonSerializerOptions _jsonOptions;
-        private Mock<JSRuntimeWrapperAsync> _mockJSRuntime;
-        private LocalStorageService _sut;
+        private readonly JsonSerializerOptions _jsonOptions;
+        private readonly Mock<JSRuntimeWrapperAsync> _mockJSRuntime;
+        private readonly Mock<IOptions<LocalStorageOptions>> _mockOptions;
+        private readonly LocalStorageService _sut;
 
-        private static string _key = "testKey";
+        private static readonly string _key = "testKey";
 
         public GetItemAsync()
         {
             _mockJSRuntime = new Mock<JSRuntimeWrapperAsync>();
+            _mockOptions = new Mock<IOptions<LocalStorageOptions>>();
             _jsonOptions = new JsonSerializerOptions();
             _jsonOptions.Converters.Add(new TimespanJsonConverter());
-            _sut = new LocalStorageService(_mockJSRuntime.Object);
+            _mockOptions.Setup(u => u.Value).Returns(new LocalStorageOptions());
+            _sut = new LocalStorageService(_mockJSRuntime.Object, _mockOptions.Object);
         }
 
         [Theory]
@@ -37,7 +42,7 @@ namespace Blazored.LocalStorage.Tests.LocalStorageServiceTests
                 serialisedData = value.ToString();
             else
                 serialisedData = JsonSerializer.Serialize(value, _jsonOptions);
-            
+
             _mockJSRuntime.Setup(x => x.InvokeAsync<string>("localStorage.getItem", new[] { _key }))
                           .Returns(() => new ValueTask<string>(serialisedData));
 
@@ -72,7 +77,7 @@ namespace Blazored.LocalStorage.Tests.LocalStorageServiceTests
             // Arrange
             decimal value = 6.00m;
             var serialisedData = JsonSerializer.Serialize(value, _jsonOptions);
-            
+
             _mockJSRuntime.Setup(x => x.InvokeAsync<string>("localStorage.getItem", new[] { _key }))
                           .Returns(() => new ValueTask<string>(serialisedData));
 

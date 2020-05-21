@@ -36,7 +36,34 @@ public static async Task Main(string[] args)
 
     await builder.Build().RunAsync();
 }
-``` 
+```
+
+### Configuration
+
+The local storage provides options that can be modified by you at registration in your _Startup.cs_ file in Blazor Server.
+
+
+```c#
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddBlazoredLocalStorage(config =>
+        config.JsonSerializerOptions.WriteIndented = true);
+}
+```
+Or in your _Program.cs_ file in Blazor WebAssembly.
+
+```c#
+public static async Task Main(string[] args)
+{
+    var builder = WebAssemblyHostBuilder.CreateDefault(args);
+    builder.RootComponents.Add<App>("app");
+
+    builder.Services.AddBlazoredLocalStorage(config =>
+        config.JsonSerializerOptions.WriteIndented = true);
+
+    await builder.Build().RunAsync();
+}
+```
 
 ### Usage (Blazor WebAssembly)
 To use Blazored.LocalStorage in Blazor WebAssembly, inject the `ILocalStorageService` per the example below.
