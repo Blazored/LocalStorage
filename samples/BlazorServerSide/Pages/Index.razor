@@ -58,12 +58,16 @@
             await GetNameFromLocalStorage();
             await GetLocalStorageLength();
 
-            localStorage.Changed += (sender, e) =>
+            localStorage.Changed += async (sender, e) =>
             {
                 Console.WriteLine($"Value for key {e.Key} changed from {e.OldValue} to {e.NewValue}");
+                await foreach (var key in localStorage.GetKeysAsync())
+                {
+                    Console.WriteLine($"Key: {key}");
+                }
             };
-            await TestTimespan();
 
+            await TestTimespan();
 
             StateHasChanged();
         }

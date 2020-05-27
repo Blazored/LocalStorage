@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Blazored.LocalStorage
 {
@@ -7,6 +8,8 @@ namespace Blazored.LocalStorage
         void Clear();
 
         T GetItem<T>(string key);
+
+        IEnumerable<string> GetKeys();
 
         string Key(int index);
 

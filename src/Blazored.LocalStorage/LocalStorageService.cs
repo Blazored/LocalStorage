@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Blazored.LocalStorage.StorageOptions;
 using Microsoft.Extensions.Options;
@@ -48,12 +51,13 @@ namespace Blazored.LocalStorage
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentNullException(nameof(key));
 
-            var serialisedData = await _jSRuntime.InvokeAsync<string>("localStorage.getItem", key);
+            var serialisedData = (await _jSRuntime.InvokeAsync<string>("localStorage.getItem", key)).Trim();
 
             if (string.IsNullOrWhiteSpace(serialisedData))
                 return default;
 
             if (serialisedData.StartsWith("{") && serialisedData.EndsWith("}")
+                || serialisedData.StartsWith("[") && serialisedData.EndsWith("]")
                 || serialisedData.StartsWith("\"") && serialisedData.EndsWith("\"")
                 || typeof(T) != typeof(string))
             {
@@ -114,12 +118,13 @@ namespace Blazored.LocalStorage
             if (_jSInProcessRuntime == null)
                 throw new InvalidOperationException("IJSInProcessRuntime not available");
 
-            var serialisedData = _jSInProcessRuntime.Invoke<string>("localStorage.getItem", key);
+            var serialisedData = _jSInProcessRuntime.Invoke<string>("localStorage.getItem", key).Trim();
 
             if (string.IsNullOrWhiteSpace(serialisedData))
                 return default;
 
             if (serialisedData.StartsWith("{") && serialisedData.EndsWith("}")
+                || serialisedData.StartsWith("[") && serialisedData.EndsWith("]")
                 || serialisedData.StartsWith("\"") && serialisedData.EndsWith("\"")
                 || typeof(T) != typeof(string))
             {
@@ -172,6 +177,39 @@ namespace Blazored.LocalStorage
                 throw new InvalidOperationException("IJSInProcessRuntime not available");
 
             return _jSInProcessRuntime.Invoke<bool>("localStorage.hasOwnProperty", key);
+        }
+
+        public IEnumerable<string> GetKeys()
+        {
+            if (_jSInProcessRuntime == null)
+                throw new InvalidOperationException("IJSInProcessRuntime not available");
+
+            var index = 0;
+            var key = Key(index++);
+
+            while (key != default)
+            {
+                yield return key;
+                key = Key(index++);
+            }
+        }
+
+        public async IAsyncEnumerable<string> GetKeysAsync([EnumeratorCancellation] CancellationToken cancellationToken)
+        {
+            var index = 0;
+            var key = await KeyAsync(index++);
+
+            while (key != default)
+            {
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    throw new TaskCanceledException();
+                }
+
+                yield return key;
+
+                key = await KeyAsync(index++);
+            }
         }
 
         public event EventHandler<ChangingEventArgs> Changing;

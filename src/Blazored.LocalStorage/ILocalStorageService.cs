@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Blazored.LocalStorage
@@ -8,6 +10,8 @@ namespace Blazored.LocalStorage
         Task ClearAsync();
 
         Task<T> GetItemAsync<T>(string key);
+
+        IAsyncEnumerable<string> GetKeysAsync(CancellationToken cancellationToken = default);
 
         Task<string> KeyAsync(int index);
 

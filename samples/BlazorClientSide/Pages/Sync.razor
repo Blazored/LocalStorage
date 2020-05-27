@@ -57,6 +57,10 @@
         localStorage.Changed += (sender, e) =>
         {
             Console.WriteLine($"Value for key {e.Key} changed from {e.OldValue} to {e.NewValue}");
+            foreach (var key in localStorage.GetKeys())
+            {
+                Console.WriteLine($"Key: {key}");
+            }
         };
     }
 
