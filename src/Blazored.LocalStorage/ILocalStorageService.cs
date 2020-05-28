@@ -7,24 +7,24 @@ namespace Blazored.LocalStorage
 {
     public interface ILocalStorageService
     {
-        Task ClearAsync();
+        ValueTask ClearAsync();
 
-        Task<T> GetItemAsync<T>(string key);
+        ValueTask<T> GetItemAsync<T>(string key);
 
         IAsyncEnumerable<string> GetKeysAsync(CancellationToken cancellationToken = default);
 
-        Task<string> KeyAsync(int index);
+        ValueTask<string> KeyAsync(int index);
 
         /// <summary>
         /// Checks if the key exists in local storage but does not check the value.
         /// </summary>
         /// <param name="key">name of the key</param>
         /// <returns>True if the key exist, false otherwise</returns>
-        Task<bool> ContainKeyAsync(string key);
+        ValueTask<bool> ContainKeyAsync(string key);
 
-        Task<int> LengthAsync();
+        ValueTask<int> LengthAsync();
 
-        Task RemoveItemAsync(string key);
+        ValueTask RemoveItemAsync(string key);
 
         Task SetItemAsync<T>(string key, T data);
 
