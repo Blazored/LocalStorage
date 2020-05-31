@@ -11,6 +11,8 @@ namespace Blazored.LocalStorage
 
         ValueTask<T> GetItemAsync<T>(string key);
 
+        IAsyncEnumerable<T> GetItemsAsync<T>(CancellationToken cancellationToken = default);
+
         IAsyncEnumerable<string> GetKeysAsync(CancellationToken cancellationToken = default);
 
         ValueTask<string> KeyAsync(int index);

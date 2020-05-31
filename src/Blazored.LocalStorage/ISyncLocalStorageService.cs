@@ -9,6 +9,8 @@ namespace Blazored.LocalStorage
 
         T GetItem<T>(string key);
 
+        IEnumerable<T> GetItems<T>();
+
         IEnumerable<string> GetKeys();
 
         string Key(int index);
