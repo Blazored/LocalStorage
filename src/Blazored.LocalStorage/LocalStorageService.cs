@@ -188,7 +188,7 @@ namespace Blazored.LocalStorage
 
             for (var key = Key(index++); key != default; key = Key(index++))
             {
-                var serialisedData = _jSInProcessRuntime.Invoke<string>("sessionStorage.getItem", key);
+                var serialisedData = _jSInProcessRuntime.Invoke<string>("localStorage.getItem", key);
 
                 if (serialisedData == default)
                 {
@@ -233,7 +233,7 @@ namespace Blazored.LocalStorage
                     throw new TaskCanceledException();
                 }
 
-                var serialisedData = await _jSRuntime.InvokeAsync<string>("sessionStorage.getItem", key);
+                var serialisedData = await _jSRuntime.InvokeAsync<string>("localStorage.getItem", key);
 
                 if (cancellationToken.IsCancellationRequested)
                 {

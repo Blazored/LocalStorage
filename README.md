@@ -116,7 +116,35 @@ With Blazor WebAssembly you also have the option of a synchronous API, if your u
 }
 ```
 
-The APIs available are:
+### Usage (async/await)
+
+The Razor compiler builds a synchronous rendering pipeline, thus usage of `await` in Razor syntax will
+in general not work. This is an example where the usage of `await` will not work
+
+`<p>Storage size: @await localStorage.LengthAsync()</p>`
+
+The exception to this is code placed within the `@code` block. The reason for the exception
+is that all code placed within `@code` block is written to the declaration of the razor component type (not
+as part of the rendering pipeline)
+
+```
+@code {
+
+    List<string> listOfKeys = new List<string>();
+
+    async Task GetAllKeys()
+    {
+        await foreach (var key in localStorage.GetKeysAsync())
+        {
+            listOfKeys.Add(key);
+        }
+    }
+}
+```
+
+**NOTE**: Please read this [issue](https://github.com/dotnet/aspnetcore/issues/15735) if curious about why the usage of `await` will not work within the rendering pipeline.
+
+### The APIs available are
 
 - asynchronous via `ILocalStorageService`:
   - SetItemAsync()
