@@ -45,12 +45,45 @@
     </div>
 </div>
 
+<div class="row mt-2">
+
+    <div class="col-md-6">
+        <button class="btn btn-primary" @onclick="AddRandomValueToStorage">Add random value to storage</button>
+    </div>
+
+    <div class="col-md-6">
+        <ul>
+            @foreach(var key in KeysInStorage)
+            {
+                <li>@key</li>
+            }
+        </ul>
+    </div>
+
+</div>
+
 @code {
 
     string NameFromLocalStorage { get; set; }
     int ItemsInLocalStorage { get; set; }
     string Name { get; set; }
     bool ItemExist { get; set; }
+    List<string> KeysInStorage = new List<string>();
+
+    async Task AddRandomValueToStorage()
+    {
+        var value = $"{Guid.NewGuid():N}";
+        var key = $"Key_{value.Substring(6)}";
+
+        await localStorage.SetItemAsync(key, value);
+
+        KeysInStorage.Clear();
+
+        await foreach(var storageKey in localStorage.GetKeysAsync())
+        {
+            KeysInStorage.Add(storageKey);
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -95,6 +128,7 @@
 
     async Task ClearLocalStorage()
     {
+        KeysInStorage.Clear();
         Console.WriteLine("Calling Clear...");
         await localStorage.ClearAsync();
         Console.WriteLine("Getting name from local storage...");

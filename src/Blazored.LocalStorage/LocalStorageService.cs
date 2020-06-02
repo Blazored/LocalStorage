@@ -300,6 +300,7 @@ namespace Blazored.LocalStorage
                 return default;
 
             if (serialisedData.StartsWith("{") && serialisedData.EndsWith("}")
+                || serialisedData.StartsWith("[") && serialisedData.EndsWith("]")
                 || serialisedData.StartsWith("\"") && serialisedData.EndsWith("\""))
             {
                 return JsonSerializer.Deserialize<T>(serialisedData, _jsonOptions);
@@ -338,6 +339,7 @@ namespace Blazored.LocalStorage
                 return default;
 
             if (serialisedData.StartsWith("{") && serialisedData.EndsWith("}")
+                || serialisedData.StartsWith("[") && serialisedData.EndsWith("]")
                 || serialisedData.StartsWith("\"") && serialisedData.EndsWith("\""))
             {
                 return JsonSerializer.Deserialize<T>(serialisedData, _jsonOptions);

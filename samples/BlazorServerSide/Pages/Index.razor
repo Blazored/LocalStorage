@@ -6,7 +6,7 @@
 <hr class="mb-5" />
 
 <div class="row mb-5">
-    
+
     <div class="col-md-4">
         <h5>Add Item to local storage</h5>
         <div class="input-group">
@@ -44,12 +44,45 @@
     </div>
 </div>
 
+<div class="row mt-2">
+
+    <div class="col-md-6">
+        <button class="btn btn-primary" @onclick="AddRandomValueToStorage">Add random value to storage</button>
+    </div>
+
+    <div class="col-md-6">
+        <ul>
+            @foreach (var key in KeysInStorage)
+            {
+                <li>@key</li>
+            }
+        </ul>
+    </div>
+
+</div>
+
 @code {
 
     string NameFromLocalStorage { get; set; }
     int ItemsInLocalStorage { get; set; }
     string Name { get; set; }
     bool ItemExist { get; set; }
+    List<string> KeysInStorage = new List<string>();
+
+    async Task AddRandomValueToStorage()
+    {
+        var value = $"{Guid.NewGuid():N}";
+        var key = $"Key_{value.Substring(6)}";
+
+        await localStorage.SetItemAsync(key, value);
+
+        KeysInStorage.Clear();
+
+        await foreach (var storageKey in localStorage.GetKeysAsync())
+        {
+            KeysInStorage.Add(storageKey);
+        }
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -101,6 +134,7 @@
 
     async Task ClearLocalStorage()
     {
+        KeysInStorage.Clear();
         Console.WriteLine("Calling Clear...");
         await localStorage.ClearAsync();
         Console.WriteLine("Getting name from local storage...");
@@ -119,9 +153,9 @@
     async Task TestTimespan()
     {
         var timespan = await localStorage.GetItemAsync<TimeSpan>("timespan");
-        if(timespan == TimeSpan.Zero)
+        if (timespan == TimeSpan.Zero)
         {
-            await localStorage.SetItemAsync("timespan", new TimeSpan(0,15,0));
+            await localStorage.SetItemAsync("timespan", new TimeSpan(0, 15, 0));
             timespan = await localStorage.GetItemAsync<TimeSpan>("timespan");
         }
     }
