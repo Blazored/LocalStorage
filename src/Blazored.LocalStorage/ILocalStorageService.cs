@@ -9,6 +9,8 @@ namespace Blazored.LocalStorage
 
         Task<T> GetItemAsync<T>(string key);
 
+        Task<String> GetStringAsync(string key);
+
         Task<string> KeyAsync(int index);
 
         /// <summary>
