@@ -82,10 +82,10 @@ To use Blazored.LocalStorage in Blazor WebAssembly, inject the `ILocalStorageSer
 }
 ```
 
-With Blazor WebAssembly you also have the option of a synchronous API, if your use case requires it. You can swap the `ILocalStorageService` for `ISyncStorageService` which allows you to avoid use of `async`/`await`. For either interface, the method names are the same.
+With Blazor WebAssembly you also have the option of a synchronous API, if your use case requires it. You can swap the `ILocalStorageService` for `ISyncLocalStorageService` which allows you to avoid use of `async`/`await`. For either interface, the method names are the same.
 
 ```c#
-@inject Blazored.LocalStorage.ISyncStorageService localStorage
+@inject Blazored.LocalStorage.ISyncLocalStorageService localStorage
 
 @code {
 
@@ -127,7 +127,7 @@ The APIs available are:
   - KeyAsync()
   - ContainsKeyAsync()
   
-- synchronous via `ISyncStorageService` (Synchronous methods are **only** available in Blazor WebAssembly):
+- synchronous via `ISyncLocalStorageService` (Synchronous methods are **only** available in Blazor WebAssembly):
   - SetItem()
   - GetItem()
   - RemoveItem()
