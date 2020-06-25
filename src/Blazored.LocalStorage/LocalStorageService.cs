@@ -12,12 +12,15 @@ namespace Blazored.LocalStorage
         private readonly IJSRuntime _jSRuntime;
         private readonly IJSInProcessRuntime _jSInProcessRuntime;
         private readonly JsonSerializerOptions _jsonOptions;
+        private readonly IJsonSecure _jsonSecure;
+        private bool _SecureImplemented => _jsonSecure != null ? true : false;
 
         public LocalStorageService(IJSRuntime jSRuntime, IOptions<LocalStorageOptions> options)
         {
             _jSRuntime = jSRuntime;
             _jsonOptions = options.Value.JsonSerializerOptions;
             _jSInProcessRuntime = jSRuntime as IJSInProcessRuntime;
+            _jsonSecure = options.Value.JsonEncryption;
         }
 
         public async Task SetItemAsync<T>(string key, T data)
@@ -32,11 +35,14 @@ namespace Blazored.LocalStorage
 
             if (data is string)
             {
-                await _jSRuntime.InvokeVoidAsync("localStorage.setItem", key, data);
+                await _jSRuntime.InvokeVoidAsync("localStorage.setItem", key, _SecureImplemented ? _jsonSecure.Encrypt(data.ToString()) : data.ToString());
             }
             else
             {
                 var serialisedData = JsonSerializer.Serialize(data, _jsonOptions);
+
+                if (_SecureImplemented) serialisedData = _jsonSecure.Encrypt(serialisedData);
+
                 await _jSRuntime.InvokeVoidAsync("localStorage.setItem", key, serialisedData);
             }
 
@@ -52,6 +58,8 @@ namespace Blazored.LocalStorage
 
             if (string.IsNullOrWhiteSpace(serialisedData))
                 return default;
+
+            if (_SecureImplemented) serialisedData = _jsonSecure.Decrypt(serialisedData);
 
             if (serialisedData.StartsWith("{") && serialisedData.EndsWith("}")
                 || serialisedData.StartsWith("\"") && serialisedData.EndsWith("\"")
@@ -199,6 +207,8 @@ namespace Blazored.LocalStorage
             if (string.IsNullOrWhiteSpace(serialisedData))
                 return default;
 
+            if (_SecureImplemented) serialisedData = _jsonSecure.Decrypt(serialisedData);
+
             if (serialisedData.StartsWith("{") && serialisedData.EndsWith("}")
                 || serialisedData.StartsWith("\"") && serialisedData.EndsWith("\""))
             {
@@ -236,6 +246,8 @@ namespace Blazored.LocalStorage
 
             if (string.IsNullOrWhiteSpace(serialisedData))
                 return default;
+
+            if (_SecureImplemented) serialisedData = _jsonSecure.Encrypt(serialisedData);
 
             if (serialisedData.StartsWith("{") && serialisedData.EndsWith("}")
                 || serialisedData.StartsWith("\"") && serialisedData.EndsWith("\""))
