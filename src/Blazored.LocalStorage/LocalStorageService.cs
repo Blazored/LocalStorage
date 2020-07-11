@@ -138,7 +138,8 @@ namespace Blazored.LocalStorage
                 return (T)(object)serialisedData;
             }
         }
-        public String GetString(string key)
+        public string GetString(string key)
+
         {
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentNullException(nameof(key));
