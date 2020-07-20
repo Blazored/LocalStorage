@@ -42,9 +42,18 @@
     </div>
 </div>
 
+<div class="row">
+
+    <div class="col-md-4">
+        <h5>String Read from local storage</h5>
+        @StringFromLocalStorage
+    </div>
+</div>
+
 @code {
 
     string NameFromLocalStorage { get; set; }
+    string StringFromLocalStorage { get; set; }
     int ItemsInLocalStorage { get; set; }
     string Name { get; set; }
     bool ItemExist { get; set; }
@@ -52,6 +61,7 @@
     protected override void OnInitialized()
     {
         GetNameFromLocalStorage();
+        GetStringFromLocalStorage();
         GetLocalStorageLength();
 
         localStorage.Changed += (sender, e) =>
@@ -65,6 +75,7 @@
         Console.WriteLine(Name);
         localStorage.SetItem("name", Name);
         GetNameFromLocalStorage();
+        GetStringFromLocalStorage();
         GetLocalStorageLength();
 
         Name = "";
@@ -72,11 +83,28 @@
 
     void GetNameFromLocalStorage()
     {
-        NameFromLocalStorage = localStorage.GetItem<string>("name");
-
-        if (string.IsNullOrEmpty(NameFromLocalStorage))
+        try
         {
-            NameFromLocalStorage = "Nothing Saved";
+            NameFromLocalStorage = localStorage.GetItem<string>("name");
+
+            if (string.IsNullOrEmpty(NameFromLocalStorage))
+            {
+                NameFromLocalStorage = "Nothing Saved";
+            }
+        }
+        catch (Exception)
+        {
+            Console.WriteLine("error reading 'name'");
+        }
+    }
+
+    void GetStringFromLocalStorage()
+    {
+        StringFromLocalStorage = localStorage.GetString("name");
+
+        if (string.IsNullOrEmpty(StringFromLocalStorage))
+        {
+            StringFromLocalStorage = "Nothing Saved";
         }
     }
 
@@ -84,6 +112,7 @@
     {
         localStorage.RemoveItem("name");
         GetNameFromLocalStorage();
+        GetStringFromLocalStorage();
         GetLocalStorageLength();
     }
 
@@ -93,6 +122,7 @@
         localStorage.Clear();
         Console.WriteLine("Getting name from local storage...");
         GetNameFromLocalStorage();
+        GetStringFromLocalStorage();
         Console.WriteLine("Calling Get Length...");
         GetLocalStorageLength();
     }

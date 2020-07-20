@@ -7,6 +7,8 @@ namespace Blazored.LocalStorage
         void Clear();
 
         T GetItem<T>(string key);
+        
+        string GetString(string key);
 
         string Key(int index);
 

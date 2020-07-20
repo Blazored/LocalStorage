@@ -65,6 +65,14 @@ namespace Blazored.LocalStorage
             }
         }
 
+        public async Task<string> GetStringAsync(string key)
+        {
+            if (string.IsNullOrEmpty(key))
+                throw new ArgumentNullException(nameof(key));
+
+            return await _jSRuntime.InvokeAsync<string>("localStorage.getItem", key);
+        }
+
         public async Task RemoveItemAsync(string key)
         {
             if (string.IsNullOrEmpty(key))
@@ -129,6 +137,17 @@ namespace Blazored.LocalStorage
             {
                 return (T)(object)serialisedData;
             }
+        }
+        public string GetString(string key)
+
+        {
+            if (string.IsNullOrEmpty(key))
+                throw new ArgumentNullException(nameof(key));
+
+            if (_jSInProcessRuntime == null)
+                throw new InvalidOperationException("IJSInProcessRuntime not available");
+
+            return _jSInProcessRuntime.Invoke<string>("localStorage.getItem", key);
         }
 
         public void RemoveItem(string key)
@@ -215,7 +234,7 @@ namespace Blazored.LocalStorage
             var e = new ChangingEventArgs
             {
                 Key = key,
-                OldValue = GetItemInternal<object>(key),
+                OldValue = GetItemInternal(key),
                 NewValue = data
             };
 
@@ -245,6 +264,38 @@ namespace Blazored.LocalStorage
             else
             {
                 return (T)(object)serialisedData;
+            }
+        }
+
+        public object GetItemInternal(string key)
+        {
+            if (string.IsNullOrEmpty(key))
+                throw new ArgumentNullException(nameof(key));
+
+            if (_jSInProcessRuntime == null)
+                throw new InvalidOperationException("IJSInProcessRuntime not available");
+
+            var serialisedData = _jSInProcessRuntime.Invoke<string>("localStorage.getItem", key);
+
+            if (string.IsNullOrWhiteSpace(serialisedData))
+                return default;
+
+            if (serialisedData.StartsWith("{") && serialisedData.EndsWith("}")
+                || serialisedData.StartsWith("\"") && serialisedData.EndsWith("\""))
+            {
+                try
+                {
+                    //Try to deserialize
+                    return JsonSerializer.Deserialize<object>(serialisedData, _jsonOptions);
+                }
+                catch (JsonException)
+                {
+                    return serialisedData;
+                }
+            }
+            else
+            {
+                return serialisedData;
             }
         }
 

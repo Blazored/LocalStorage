@@ -28,7 +28,7 @@
     </div>
 </div>
 
-<div class="row">
+<div class="row mb-5">
 
     <div class="col-md-4">
         <h5>Value Read from local storage</h5>
@@ -45,9 +45,18 @@
     </div>
 </div>
 
+<div class="row">
+
+    <div class="col-md-4">
+        <h5>String Read from local storage</h5>
+        @StringFromLocalStorage
+    </div>
+</div>
+
 @code {
 
     string NameFromLocalStorage { get; set; }
+    string StringFromLocalStorage { get; set; }
     int ItemsInLocalStorage { get; set; }
     string Name { get; set; }
     bool ItemExist { get; set; }
@@ -55,6 +64,7 @@
     protected override async Task OnInitializedAsync()
     {
         await GetNameFromLocalStorage();
+        await GetStringFromLocalStorage();
         await GetLocalStorageLength();
 
         localStorage.Changed += (sender, e) =>
@@ -67,6 +77,7 @@
     {
         await localStorage.SetItemAsync("name", Name);
         await GetNameFromLocalStorage();
+        await GetStringFromLocalStorage();
         await GetLocalStorageLength();
 
         Name = "";
@@ -74,11 +85,29 @@
 
     async Task GetNameFromLocalStorage()
     {
-        NameFromLocalStorage = await localStorage.GetItemAsync<string>("name");
-
-        if (string.IsNullOrEmpty(NameFromLocalStorage))
+        try
         {
-            NameFromLocalStorage = "Nothing Saved";
+            NameFromLocalStorage = await localStorage.GetItemAsync<string>("name");
+
+            if (string.IsNullOrEmpty(NameFromLocalStorage))
+            {
+                NameFromLocalStorage = "Nothing Saved";
+            }
+        }
+        catch(Exception)
+        {
+            Console.WriteLine("error reading 'name'");
+        }
+    }
+
+
+    async Task GetStringFromLocalStorage()
+    {
+        StringFromLocalStorage = await localStorage.GetStringAsync("name");
+
+        if (string.IsNullOrEmpty(StringFromLocalStorage))
+        {
+            StringFromLocalStorage = "Nothing Saved";
         }
     }
 
@@ -86,6 +115,7 @@
     {
         await localStorage.RemoveItemAsync("name");
         await GetNameFromLocalStorage();
+        await GetStringFromLocalStorage();
         await GetLocalStorageLength();
     }
 
@@ -95,6 +125,7 @@
         await localStorage.ClearAsync();
         Console.WriteLine("Getting name from local storage...");
         await GetNameFromLocalStorage();
+        await GetStringFromLocalStorage();
         Console.WriteLine("Calling Get Length...");
         await GetLocalStorageLength();
     }
