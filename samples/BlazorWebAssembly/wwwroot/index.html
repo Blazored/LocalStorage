@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width" />
     <title>Blazored LocalStorage - Wasm</title>
     <base href="/" />
+    <link href="favicon.ico" type="image/x-icon" rel="shortcut icon" />
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
     <link href="css/site.css" rel="stylesheet" />
 
@@ -50,7 +51,7 @@
     </div>
 
     <script src="js/decode.js"></script>
-    <script src="_framework/blazor.webassembly.js"></script>
+    <script src="_framework/blazor.webassembly.js" autostart="false"></script>
     <script>
         Blazor.start({
             loadBootResource: function (type, name, defaultUri, integrity) {
