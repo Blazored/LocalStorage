@@ -1,26 +1,38 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <RazorLangVersion>3.0</RazorLangVersion>
     <RootNamespace>Blazored.LocalStorage</RootNamespace>
 
-    <PackageId>Blazored.LocalStorage</PackageId>
-    <Version>2.1.6</Version>
     <Authors>Chris Sainty</Authors>
+    <Company></Company>
+    <Copyright>Copyright 2020 (c) Chris Sainty. All rights reserved.</Copyright> 
     <Description>A library to provide access to local storage in Blazor applications</Description>
-    <Copyright>Copyright 2018 (c) Chris Sainty. All rights reserved.</Copyright>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+    <!-- NuGet settings -->
+    <PackageId>Blazored.LocalStorage</PackageId>
+    <PackageTags>Blazored;Blazor;Razor;Components;LocalStorage;Local Storage;ASP.NET Core;CSharp;Web</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/blazored/LocalStorage</PackageProjectUrl>
-    <PackageIconUrl>https://avatars1.githubusercontent.com/u/39194025</PackageIconUrl>
-    <RepositoryUrl>https://github.com/blazored/LocalStorage</RepositoryUrl>
-    <PackageTags>Blazor LocalStorage Blazored Razor Components</PackageTags>
-    <Company />
+    <PackageProjectUrl>https://github.com/Blazored/LocalStorage</PackageProjectUrl>
+    <PackageIcon>icon.png</PackageIcon>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/Blazored/LocalStorage</RepositoryUrl>
+
+    <!-- SourceLink settings -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components" Version="3.1.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="3.1.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Components" Version="3.1.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="3.1.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="icon.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>
