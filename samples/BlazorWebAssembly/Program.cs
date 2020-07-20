@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using System.Threading.Tasks;
 
-namespace BlazorClientSide
+namespace BlazorWebAssembly
 {
     public class Program
     {

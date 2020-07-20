@@ -1,0 +1,30 @@
+name: Build & Test PR
+
+on:
+  pull_request:
+    branches: [ main ]
+
+env:
+    NETCORE_VERSION: '3.1.301'
+    PROJECT_NAME: Blazored.LocalStorage
+
+jobs:
+  build:
+    name: Build and test
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setting up .NET Core SDK ${{ env.NETCORE_VERSION }}...
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ env.NETCORE_VERSION }}
+
+    - name: Restoring packages...
+      run: dotnet restore
+
+    - name: Building project...
+      run: dotnet build --configuration Release --no-restore src/$PROJECT_NAME/$PROJECT_NAME.csproj
+
+    - name: Testing...
+      run: dotnet test --no-restore --verbosity normal

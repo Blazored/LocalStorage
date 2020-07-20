@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazored.LocalStorage", "sr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{F20B2AAB-FB71-4A1C-82FE-F1750B922BF6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorClientSide", "samples\BlazorClientSide\BlazorClientSide.csproj", "{D6953CE0-6AD5-434C-99AA-7FF1E26724D4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorWebAssembly", "samples\BlazorWebAssembly\BlazorWebAssembly.csproj", "{D6953CE0-6AD5-434C-99AA-7FF1E26724D4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorServerSide", "samples\BlazorServerSide\BlazorServerSide.csproj", "{767D657A-5410-4714-9477-99929D3FF709}"
 EndProject
