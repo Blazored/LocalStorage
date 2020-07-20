@@ -51,7 +51,7 @@ jobs:
       uses: SteveSandersonMS/ghaction-rewrite-base-href@v1
       with:
         html_path: samples/BlazorWebAssembly/bin/Release/netstandard2.1/publish/wwwroot/index.html
-        base_href: /$PROJECT_NAME/
+        base_href: /${{ env.PROJECT_NAME }}/
     
     - name: Deploy to Github Pages
       uses: JamesIves/github-pages-deploy-action@releases/v3
