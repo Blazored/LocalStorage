@@ -103,7 +103,7 @@
 
     async Task GetStringFromLocalStorage()
     {
-        StringFromLocalStorage = await localStorage.GetStringAsync("name");
+        StringFromLocalStorage = await localStorage.GetItemAsStringAsync("name");
 
         if (string.IsNullOrEmpty(StringFromLocalStorage))
         {

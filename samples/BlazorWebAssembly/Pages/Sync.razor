@@ -100,7 +100,7 @@
 
     void GetStringFromLocalStorage()
     {
-        StringFromLocalStorage = localStorage.GetString("name");
+        StringFromLocalStorage = localStorage.GetItemAsString("name");
 
         if (string.IsNullOrEmpty(StringFromLocalStorage))
         {

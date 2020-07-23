@@ -1,7 +1,7 @@
 # Blazored LocalStorage
 A library to provide access to local storage in Blazor applications
 
-[![Build Status](https://dev.azure.com/blazored/LocalStorage/_apis/build/status/Blazored.LocalStorage?branchName=master)](https://dev.azure.com/blazored/LocalStorage/_build/latest?definitionId=1&branchName=master)
+![Build & Test Main](https://github.com/Blazored/LocalStorage/workflows/Build%20&%20Test%20Main/badge.svg)
 
 [![Nuget](https://img.shields.io/nuget/v/blazored.localstorage.svg)](https://www.nuget.org/packages/Blazored.LocalStorage/)
 
@@ -121,6 +121,7 @@ The APIs available are:
 - asynchronous via `ILocalStorageService`:
   - SetItemAsync()
   - GetItemAsync()
+  - GetItemAsStringAsync()
   - RemoveItemAsync()
   - ClearAsync()
   - LengthAsync()
@@ -130,10 +131,13 @@ The APIs available are:
 - synchronous via `ISyncLocalStorageService` (Synchronous methods are **only** available in Blazor WebAssembly):
   - SetItem()
   - GetItem()
+  - GetItemAsString()
   - RemoveItem()
   - Clear()
   - Length()
   - Key()
   - ContainsKey()
 
-**Note:** Blazored.LocalStorage methods will handle the serialisation and de-serialisation of the data for you.
+**Note:** Blazored.LocalStorage methods will handle the serialisation and de-serialisation of the data for you, the exception is the `GetItemAsString[Async]` method.
+
+If you want to handle serialising and de-serialising yourself, serialise the data to a string and save using the `SetItem[Async]` method, as normal -- This method will not attempt to serialise a string value. You can then read out the data using the `GetItemAsString[Async]` method and de-serialise it yourself.
