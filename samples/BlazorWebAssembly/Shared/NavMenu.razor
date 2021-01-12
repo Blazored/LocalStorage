@@ -5,7 +5,7 @@
     </button>
 </div>
 
-<div class=@(collapseNavMenu ? "collapse" : null) @onclick=@ToggleNavMenu>
+<div class="@NavMenuCssClass">
     <ul class="nav flex-column">
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="" Match=NavLinkMatch.All>
@@ -19,7 +19,9 @@
 </div>
 
 @code {
-    bool collapseNavMenu = true;
+    bool collapseNavMenu = false;
+
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
     void ToggleNavMenu()
     {
