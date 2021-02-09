@@ -65,29 +65,29 @@ namespace Blazored.LocalStorage
             }
         }
 
-        public async ValueTask<string> GetItemAsStringAsync(string key)
+        public ValueTask<string> GetItemAsStringAsync(string key)
         {
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentNullException(nameof(key));
 
-            return await _jSRuntime.InvokeAsync<string>("localStorage.getItem", key).ConfigureAwait(false);
+            return _jSRuntime.InvokeAsync<string>("localStorage.getItem", key);
         }
 
-        public async ValueTask RemoveItemAsync(string key)
+        public ValueTask RemoveItemAsync(string key)
         {
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentNullException(nameof(key));
 
-            await _jSRuntime.InvokeVoidAsync("localStorage.removeItem", key).ConfigureAwait(false);
+            return _jSRuntime.InvokeVoidAsync("localStorage.removeItem", key);
         }
 
-        public async ValueTask ClearAsync() => await _jSRuntime.InvokeVoidAsync("localStorage.clear").ConfigureAwait(false);
+        public ValueTask ClearAsync() => _jSRuntime.InvokeVoidAsync("localStorage.clear");
 
-        public async ValueTask<int> LengthAsync() => await _jSRuntime.InvokeAsync<int>("eval", "localStorage.length").ConfigureAwait(false);
+        public ValueTask<int> LengthAsync() => _jSRuntime.InvokeAsync<int>("eval", "localStorage.length");
 
-        public async ValueTask<string> KeyAsync(int index) => await _jSRuntime.InvokeAsync<string>("localStorage.key", index).ConfigureAwait(false);
+        public ValueTask<string> KeyAsync(int index) => _jSRuntime.InvokeAsync<string>("localStorage.key", index);
 
-        public async ValueTask<bool> ContainKeyAsync(string key) => await _jSRuntime.InvokeAsync<bool>("localStorage.hasOwnProperty", key).ConfigureAwait(false);
+        public ValueTask<bool> ContainKeyAsync(string key) => _jSRuntime.InvokeAsync<bool>("localStorage.hasOwnProperty", key);
 
         public void SetItem<T>(string key, T data)
         {
@@ -138,7 +138,7 @@ namespace Blazored.LocalStorage
                 return (T)(object)serialisedData;
             }
         }
-        
+
         public string GetItemAsString(string key)
         {
             if (string.IsNullOrEmpty(key))
