@@ -126,7 +126,7 @@ The APIs available are:
   - ClearAsync()
   - LengthAsync()
   - KeyAsync()
-  - ContainsKeyAsync()
+  - ContainKeyAsync()
   
 - synchronous via `ISyncLocalStorageService` (Synchronous methods are **only** available in Blazor WebAssembly):
   - SetItem()
@@ -136,7 +136,7 @@ The APIs available are:
   - Clear()
   - Length()
   - Key()
-  - ContainsKey()
+  - ContainKey()
 
 **Note:** Blazored.LocalStorage methods will handle the serialisation and de-serialisation of the data for you, the exception is the `GetItemAsString[Async]` method.
 
