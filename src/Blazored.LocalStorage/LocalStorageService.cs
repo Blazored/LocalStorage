@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Blazored.LocalStorage.StorageOptions;
-using Microsoft.Extensions.Options;
+using Blazored.LocalStorage.Serialization;
 using Microsoft.JSInterop;
 
 namespace Blazored.LocalStorage
@@ -10,13 +9,13 @@ namespace Blazored.LocalStorage
     public class LocalStorageService : ILocalStorageService, ISyncLocalStorageService
     {
         private readonly IJSRuntime _jSRuntime;
+        private readonly ISerializer _serializer;
         private readonly IJSInProcessRuntime _jSInProcessRuntime;
-        private readonly JsonSerializerOptions _jsonOptions;
 
-        public LocalStorageService(IJSRuntime jSRuntime, IOptions<LocalStorageOptions> options)
+        public LocalStorageService(IJSRuntime jSRuntime, ISerializer serializer)
         {
             _jSRuntime = jSRuntime;
-            _jsonOptions = options.Value.JsonSerializerOptions;
+            _serializer = serializer;
             _jSInProcessRuntime = jSRuntime as IJSInProcessRuntime;
         }
 
@@ -30,15 +29,8 @@ namespace Blazored.LocalStorage
             if (e.Cancel)
                 return;
 
-            if (data is string)
-            {
-                await _jSRuntime.InvokeVoidAsync("localStorage.setItem", key, data).ConfigureAwait(false);
-            }
-            else
-            {
-                var serialisedData = JsonSerializer.Serialize(data, _jsonOptions);
-                await _jSRuntime.InvokeVoidAsync("localStorage.setItem", key, serialisedData).ConfigureAwait(false);
-            }
+            var serialisedData = _serializer.Serialize(data);
+            await _jSRuntime.InvokeVoidAsync("localStorage.setItem", key, serialisedData).ConfigureAwait(false);
 
             RaiseOnChanged(key, e.OldValue, data);
         }
@@ -53,14 +45,14 @@ namespace Blazored.LocalStorage
             if (string.IsNullOrWhiteSpace(serialisedData))
                 return default;
 
-            if (serialisedData.StartsWith("{") && serialisedData.EndsWith("}")
-                || serialisedData.StartsWith("\"") && serialisedData.EndsWith("\"")
-                || typeof(T) != typeof(string))
+            try
             {
-                return JsonSerializer.Deserialize<T>(serialisedData, _jsonOptions);
+                return _serializer.Deserialize<T>(serialisedData);
             }
-            else
+            catch (JsonException e) when (e.Path == "$" && typeof(T) == typeof(string))
             {
+                // For backward compatibility return the plain string.
+                // On the next save a correct value will be stored and this Exception will not happen again, for this 'key'
                 return (T)(object)serialisedData;
             }
         }
@@ -102,14 +94,8 @@ namespace Blazored.LocalStorage
             if (e.Cancel)
                 return;
 
-            if (data is string)
-            {
-                _jSInProcessRuntime.InvokeVoid("localStorage.setItem", key, data);
-            }
-            else
-            {
-                _jSInProcessRuntime.InvokeVoid("localStorage.setItem", key, JsonSerializer.Serialize(data, _jsonOptions));
-            }
+            var serialisedData = _serializer.Serialize(data);
+            _jSInProcessRuntime.InvokeVoid("localStorage.setItem", key, serialisedData);
 
             RaiseOnChanged(key, e.OldValue, data);
         }
@@ -127,14 +113,14 @@ namespace Blazored.LocalStorage
             if (string.IsNullOrWhiteSpace(serialisedData))
                 return default;
 
-            if (serialisedData.StartsWith("{") && serialisedData.EndsWith("}")
-                || serialisedData.StartsWith("\"") && serialisedData.EndsWith("\"")
-                || typeof(T) != typeof(string))
+            try
             {
-                return JsonSerializer.Deserialize<T>(serialisedData, _jsonOptions);
+                return _serializer.Deserialize<T>(serialisedData);
             }
-            else
+            catch (JsonException e) when (e.Path == "$" && typeof(T) == typeof(string))
             {
+                // For backward compatibility return the plain string.
+                // On the next save a correct value will be stored and this Exception will not happen again, for this 'key'
                 return (T)(object)serialisedData;
             }
         }
@@ -231,13 +217,11 @@ namespace Blazored.LocalStorage
 
             if (string.IsNullOrWhiteSpace(serialisedData))
                 return default;
-
-            if (serialisedData.StartsWith("{") && serialisedData.EndsWith("}")
-                || serialisedData.StartsWith("\"") && serialisedData.EndsWith("\""))
+            try
             {
-                return JsonSerializer.Deserialize<T>(serialisedData, _jsonOptions);
+                return _serializer.Deserialize<T>(serialisedData);
             }
-            else
+            catch (JsonException)
             {
                 return (T)(object)serialisedData;
             }
@@ -256,20 +240,11 @@ namespace Blazored.LocalStorage
             if (string.IsNullOrWhiteSpace(serialisedData))
                 return default;
 
-            if (serialisedData.StartsWith("{") && serialisedData.EndsWith("}")
-                || serialisedData.StartsWith("\"") && serialisedData.EndsWith("\""))
+            try
             {
-                try
-                {
-                    //Try to deserialize
-                    return JsonSerializer.Deserialize<object>(serialisedData, _jsonOptions);
-                }
-                catch (JsonException)
-                {
-                    return serialisedData;
-                }
+                return _serializer.Deserialize<object>(serialisedData);
             }
-            else
+            catch (JsonException)
             {
                 return serialisedData;
             }

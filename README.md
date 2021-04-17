@@ -5,6 +5,22 @@ A library to provide access to local storage in Blazor applications
 
 [![Nuget](https://img.shields.io/nuget/v/blazored.localstorage.svg)](https://www.nuget.org/packages/Blazored.LocalStorage/)
 
+## v3 > v4 Breaking Changes with JsonSerializerOptions
+From v4 onwards we use the default the `JsonSerializerOptions` for `System.Text.Json` instead of using custom ones. This will cause values saved to local storage with v3 to break things.
+To retain the old settings use the following configuration when adding Blazored LocalStorage to the DI container:
+
+```csharp
+builder.Services.AddBlazoredLocalStorage(config =>
+    config.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
+    config.JsonSerializerOptions.IgnoreNullValues = true;
+    config.JsonSerializerOptions.IgnoreReadOnlyProperties = true;
+    config.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+    config.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    config.JsonSerializerOptions.ReadCommentHandling = JsonCommentHandling.Skip;
+    config.JsonSerializerOptions.WriteIndented = false;
+);
+```
+
 ### Installing
 
 You can install from NuGet using the following command:
