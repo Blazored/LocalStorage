@@ -1,6 +1,7 @@
 ﻿namespace Blazored.LocalStorage.Serialization
 {
-    public interface ISerializer
+    public interface IJsonSerializer
+
     {
         string Serialize<T>(T obj);
         T Deserialize<T>(string text);

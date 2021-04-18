@@ -4,6 +4,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Blazored.LocalStorage;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Blazored.LocalStorage.Serialization;
+using Newtonsoft.Json;
+using System;
 
 namespace BlazorServer
 {
@@ -21,8 +25,9 @@ namespace BlazorServer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
-            services.AddServerSideBlazor();
+            services.AddServerSideBlazor(config => config.DetailedErrors = true);
             services.AddBlazoredLocalStorage();
+            services.Replace(ServiceDescriptor.Scoped<IJsonSerializer, NewtonSoftJsonSerializer>());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,5 +55,14 @@ namespace BlazorServer
                 endpoints.MapFallbackToPage("/_Host");
             });
         }
+    }
+
+    public class NewtonSoftJsonSerializer : IJsonSerializer
+    {
+        public T Deserialize<T>(string text) 
+            =>JsonConvert.DeserializeObject<T>(text);
+
+        public string Serialize<T>(T obj) 
+            => JsonConvert.SerializeObject(obj);
     }
 }

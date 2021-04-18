@@ -157,3 +157,13 @@ The APIs available are:
 **Note:** Blazored.LocalStorage methods will handle the serialisation and de-serialisation of the data for you, the exception is the `GetItemAsString[Async]` method.
 
 If you want to handle serialising and de-serialising yourself, serialise the data to a string and save using the `SetItem[Async]` method, as normal -- This method will not attempt to serialise a string value. You can then read out the data using the `GetItemAsString[Async]` method and de-serialise it yourself.
+
+### Using a custom JSON serializer
+By default, the library uses a serializer based on `System.Text.Json`. If you prefer to use a different JSON library for serialization--or if you want to add some custom logic when serializing or deserializing--you can provide your own serializer which implements the `Blazored.LocalStorage.Serialization.IJsonSerializer` interface.
+
+To register your own serializer in place of the default one, you can do the following:
+
+```csharp
+builder.Services.AddBlazoredLocalStorage();
+builder.Services.Replace(ServiceDescriptor.Scoped<IJsonSerializer, MySerializer>());
+```

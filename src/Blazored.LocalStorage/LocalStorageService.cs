@@ -9,10 +9,10 @@ namespace Blazored.LocalStorage
     public class LocalStorageService : ILocalStorageService, ISyncLocalStorageService
     {
         private readonly IJSRuntime _jSRuntime;
-        private readonly ISerializer _serializer;
+        private readonly IJsonSerializer _serializer;
         private readonly IJSInProcessRuntime _jSInProcessRuntime;
 
-        public LocalStorageService(IJSRuntime jSRuntime, ISerializer serializer)
+        public LocalStorageService(IJSRuntime jSRuntime, IJsonSerializer serializer)
         {
             _jSRuntime = jSRuntime;
             _serializer = serializer;
