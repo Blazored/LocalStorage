@@ -12,6 +12,7 @@ namespace Blazored.LocalStorage
         {
             return services
                 .AddScoped<IJsonSerializer, SystemTextJsonSerializer>()
+                .AddScoped<IStorageProvider, BrowserStorageProvider>()
                 .AddScoped<ILocalStorageService, LocalStorageService>()
                 .AddScoped<ISyncLocalStorageService, LocalStorageService>()
                 .Configure<LocalStorageOptions>(configureOptions =>
@@ -24,6 +25,7 @@ namespace Blazored.LocalStorage
         {
             return services
                 .AddScoped<IJsonSerializer, SystemTextJsonSerializer>()
+                .AddScoped<IStorageProvider, BrowserStorageProvider>()
                 .AddScoped<ILocalStorageService, LocalStorageService>()
                 .AddScoped<ISyncLocalStorageService, LocalStorageService>()
                 .Configure<LocalStorageOptions>(configureOptions =>

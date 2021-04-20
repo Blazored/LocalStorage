@@ -2,21 +2,18 @@
 using System.Text.Json;
 using System.Threading.Tasks;
 using Blazored.LocalStorage.Serialization;
-using Microsoft.JSInterop;
 
 namespace Blazored.LocalStorage
 {
     public class LocalStorageService : ILocalStorageService, ISyncLocalStorageService
     {
-        private readonly IJSRuntime _jSRuntime;
+        private readonly IStorageProvider _storageProvider;
         private readonly IJsonSerializer _serializer;
-        private readonly IJSInProcessRuntime _jSInProcessRuntime;
 
-        public LocalStorageService(IJSRuntime jSRuntime, IJsonSerializer serializer)
+        public LocalStorageService(IStorageProvider storageProvider, IJsonSerializer serializer)
         {
-            _jSRuntime = jSRuntime;
+            _storageProvider = storageProvider;
             _serializer = serializer;
-            _jSInProcessRuntime = jSRuntime as IJSInProcessRuntime;
         }
 
         public async ValueTask SetItemAsync<T>(string key, T data)
@@ -30,7 +27,7 @@ namespace Blazored.LocalStorage
                 return;
 
             var serialisedData = _serializer.Serialize(data);
-            await _jSRuntime.InvokeVoidAsync("localStorage.setItem", key, serialisedData).ConfigureAwait(false);
+            await _storageProvider.SetItemAsync(key, serialisedData).ConfigureAwait(false);
 
             RaiseOnChanged(key, e.OldValue, data);
         }
@@ -40,7 +37,7 @@ namespace Blazored.LocalStorage
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentNullException(nameof(key));
 
-            var serialisedData = await _jSRuntime.InvokeAsync<string>("localStorage.getItem", key).ConfigureAwait(false);
+            var serialisedData = await _storageProvider.GetItemAsync(key).ConfigureAwait(false);
 
             if (string.IsNullOrWhiteSpace(serialisedData))
                 return default;
@@ -62,7 +59,7 @@ namespace Blazored.LocalStorage
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentNullException(nameof(key));
 
-            return _jSRuntime.InvokeAsync<string>("localStorage.getItem", key);
+            return _storageProvider.GetItemAsync(key);
         }
 
         public ValueTask RemoveItemAsync(string key)
@@ -70,24 +67,25 @@ namespace Blazored.LocalStorage
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentNullException(nameof(key));
 
-            return _jSRuntime.InvokeVoidAsync("localStorage.removeItem", key);
+            return _storageProvider.RemoveItemAsync(key);
         }
 
-        public ValueTask ClearAsync() => _jSRuntime.InvokeVoidAsync("localStorage.clear");
+        public ValueTask ClearAsync() 
+            => _storageProvider.ClearAsync();
 
-        public ValueTask<int> LengthAsync() => _jSRuntime.InvokeAsync<int>("eval", "localStorage.length");
+        public ValueTask<int> LengthAsync() 
+            => _storageProvider.LengthAsync();
 
-        public ValueTask<string> KeyAsync(int index) => _jSRuntime.InvokeAsync<string>("localStorage.key", index);
+        public ValueTask<string> KeyAsync(int index) 
+            => _storageProvider.KeyAsync(index);
 
-        public ValueTask<bool> ContainKeyAsync(string key) => _jSRuntime.InvokeAsync<bool>("localStorage.hasOwnProperty", key);
+        public ValueTask<bool> ContainKeyAsync(string key) 
+            => _storageProvider.ContainKeyAsync(key);
 
         public void SetItem<T>(string key, T data)
         {
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentNullException(nameof(key));
-
-            if (_jSInProcessRuntime == null)
-                throw new InvalidOperationException("IJSInProcessRuntime not available");
 
             var e = RaiseOnChangingSync(key, data);
 
@@ -95,7 +93,7 @@ namespace Blazored.LocalStorage
                 return;
 
             var serialisedData = _serializer.Serialize(data);
-            _jSInProcessRuntime.InvokeVoid("localStorage.setItem", key, serialisedData);
+            _storageProvider.SetItem(key, serialisedData);
 
             RaiseOnChanged(key, e.OldValue, data);
         }
@@ -105,10 +103,7 @@ namespace Blazored.LocalStorage
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentNullException(nameof(key));
 
-            if (_jSInProcessRuntime == null)
-                throw new InvalidOperationException("IJSInProcessRuntime not available");
-
-            var serialisedData = _jSInProcessRuntime.Invoke<string>("localStorage.getItem", key);
+            var serialisedData = _storageProvider.GetItem(key);
 
             if (string.IsNullOrWhiteSpace(serialisedData))
                 return default;
@@ -130,10 +125,7 @@ namespace Blazored.LocalStorage
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentNullException(nameof(key));
 
-            if (_jSInProcessRuntime == null)
-                throw new InvalidOperationException("IJSInProcessRuntime not available");
-
-            return _jSInProcessRuntime.Invoke<string>("localStorage.getItem", key);
+            return _storageProvider.GetItem(key);
         }
 
         public void RemoveItem(string key)
@@ -141,43 +133,20 @@ namespace Blazored.LocalStorage
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentNullException(nameof(key));
 
-            if (_jSInProcessRuntime == null)
-                throw new InvalidOperationException("IJSInProcessRuntime not available");
-
-            _jSInProcessRuntime.InvokeVoid("localStorage.removeItem", key);
+            _storageProvider.RemoveItem(key);
         }
 
         public void Clear()
-        {
-            if (_jSInProcessRuntime == null)
-                throw new InvalidOperationException("IJSInProcessRuntime not available");
-
-            _jSInProcessRuntime.InvokeVoid("localStorage.clear");
-        }
+            => _storageProvider.Clear();
 
         public int Length()
-        {
-            if (_jSInProcessRuntime == null)
-                throw new InvalidOperationException("IJSInProcessRuntime not available");
-
-            return _jSInProcessRuntime.Invoke<int>("eval", "localStorage.length");
-        }
+            => _storageProvider.Length();
 
         public string Key(int index)
-        {
-            if (_jSInProcessRuntime == null)
-                throw new InvalidOperationException("IJSInProcessRuntime not available");
-
-            return _jSInProcessRuntime.Invoke<string>("localStorage.key", index);
-        }
+            => _storageProvider.Key(index);
 
         public bool ContainKey(string key)
-        {
-            if (_jSInProcessRuntime == null)
-                throw new InvalidOperationException("IJSInProcessRuntime not available");
-
-            return _jSInProcessRuntime.Invoke<bool>("localStorage.hasOwnProperty", key);
-        }
+            => _storageProvider.ContainKey(key);
 
         public event EventHandler<ChangingEventArgs> Changing;
         private async Task<ChangingEventArgs> RaiseOnChangingAsync(string key, object data)
@@ -213,7 +182,7 @@ namespace Blazored.LocalStorage
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentNullException(nameof(key));
 
-            var serialisedData = await _jSRuntime.InvokeAsync<string>("localStorage.getItem", key).ConfigureAwait(false);
+            var serialisedData = await _storageProvider.GetItemAsync(key).ConfigureAwait(false);
 
             if (string.IsNullOrWhiteSpace(serialisedData))
                 return default;
@@ -232,10 +201,7 @@ namespace Blazored.LocalStorage
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentNullException(nameof(key));
 
-            if (_jSInProcessRuntime == null)
-                throw new InvalidOperationException("IJSInProcessRuntime not available");
-
-            var serialisedData = _jSInProcessRuntime.Invoke<string>("localStorage.getItem", key);
+            var serialisedData = _storageProvider.GetItem(key);
 
             if (string.IsNullOrWhiteSpace(serialisedData))
                 return default;
