@@ -39,7 +39,7 @@ namespace Blazored.LocalStorage.Testing
             => new ValueTask<string>(Key(index));
 
         public int Length()
-            => _dataStore.Count();
+            => _dataStore.Count;
 
         public ValueTask<int> LengthAsync()
             => new ValueTask<int>(Length());

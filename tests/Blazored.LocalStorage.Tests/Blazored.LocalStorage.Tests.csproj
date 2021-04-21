@@ -5,9 +5,9 @@
 
     <IsPackable>false</IsPackable>
 
-    <SignAssembly>true</SignAssembly>
-
     <AssemblyOriginatorKeyFile>..\..\src\Blazored.LocalStorage\Blazored.LocalStorage.snk</AssemblyOriginatorKeyFile>
+
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
 
   <ItemGroup>

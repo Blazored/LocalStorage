@@ -7,12 +7,12 @@ using System;
 
 namespace Blazored.LocalStorage.Testing
 {
-    public static class BUnitFakeLocalStorageExtensions
+    public static class BUnitLocalStorageTestExtensions
     {
         public static void AddBlazoredLocalStorage(this TestContextBase context)
         {
             if (context is null)
-                throw new System.ArgumentNullException(nameof(context));
+                throw new ArgumentNullException(nameof(context));
 
             context.Services
                 .AddScoped<IJsonSerializer, SystemTextJsonSerializer>()
@@ -28,7 +28,7 @@ namespace Blazored.LocalStorage.Testing
         public static void AddBlazoredLocalStorage(this TestContextBase context, Action<LocalStorageOptions> configure)
         {
             if (context is null)
-                throw new System.ArgumentNullException(nameof(context));
+                throw new ArgumentNullException(nameof(context));
 
             context.Services
                 .AddScoped<IJsonSerializer, SystemTextJsonSerializer>()
@@ -40,7 +40,6 @@ namespace Blazored.LocalStorage.Testing
                     configure?.Invoke(configureOptions);
                     configureOptions.JsonSerializerOptions.Converters.Add(new TimespanJsonConverter());
                 });
-
         }
     }
 }

@@ -5,7 +5,7 @@ using Blazored.LocalStorage.Serialization;
 
 namespace Blazored.LocalStorage
 {
-    public class LocalStorageService : ILocalStorageService, ISyncLocalStorageService
+    internal class LocalStorageService : ILocalStorageService, ISyncLocalStorageService
     {
         private readonly IStorageProvider _storageProvider;
         private readonly IJsonSerializer _serializer;
@@ -34,7 +34,7 @@ namespace Blazored.LocalStorage
 
         public async ValueTask<T> GetItemAsync<T>(string key)
         {
-            if (string.IsNullOrEmpty(key))
+            if (string.IsNullOrWhiteSpace(key))
                 throw new ArgumentNullException(nameof(key));
 
             var serialisedData = await _storageProvider.GetItemAsync(key).ConfigureAwait(false);

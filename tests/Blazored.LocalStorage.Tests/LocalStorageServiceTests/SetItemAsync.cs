@@ -50,7 +50,7 @@ namespace Blazored.LocalStorage.Tests.LocalStorageServiceTests
         {
             // arrange
             var onChangingCalled = false;
-            _sut.Changing += (_, _) => onChangingCalled = true;
+            _sut.Changing += (sender, args) => onChangingCalled = true;
 
             // act
             await _sut.SetItemAsync("Key", "Data");
@@ -137,7 +137,7 @@ namespace Blazored.LocalStorage.Tests.LocalStorageServiceTests
         }
         
         [Fact]
-        public async Task ReturnsNullFromStore_When_NullValueSaved()
+        public async Task SavesNullIntoStore_When_NullValueProvided()
         {
             // Arrange
             var valueToSave = (string)null;
@@ -178,7 +178,7 @@ namespace Blazored.LocalStorage.Tests.LocalStorageServiceTests
         {
             // arrange
             var onChangedCalled = false;
-            _sut.Changed += (_, _) => onChangedCalled = true;
+            _sut.Changed += (sender, args) => onChangedCalled = true;
 
             // act
             await _sut.SetItemAsync("Key", "Data");

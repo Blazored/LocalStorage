@@ -137,7 +137,7 @@ namespace Blazored.LocalStorage.Tests.LocalStorageServiceTests
         }
         
         [Fact]
-        public void ReturnsNullFromStore_When_NullValueSaved()
+        public void SavesNullIntoStore_When_NullValueProvided()
         {
             // Arrange
             var valueToSave = (string)null;
