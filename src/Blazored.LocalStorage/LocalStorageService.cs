@@ -64,7 +64,7 @@ namespace Blazored.LocalStorage
 
         public ValueTask RemoveItemAsync(string key)
         {
-            if (string.IsNullOrEmpty(key))
+            if (string.IsNullOrWhiteSpace(key))
                 throw new ArgumentNullException(nameof(key));
 
             return _storageProvider.RemoveItemAsync(key);
@@ -130,7 +130,7 @@ namespace Blazored.LocalStorage
 
         public void RemoveItem(string key)
         {
-            if (string.IsNullOrEmpty(key))
+            if (string.IsNullOrWhiteSpace(key))
                 throw new ArgumentNullException(nameof(key));
 
             _storageProvider.RemoveItem(key);
