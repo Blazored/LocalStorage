@@ -4,9 +4,11 @@ using Blazored.LocalStorage.StorageOptions;
 using Bunit;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Blazored.LocalStorage.Testing
 {
+    [ExcludeFromCodeCoverage]
     public static class BUnitLocalStorageTestExtensions
     {
         public static void AddBlazoredLocalStorage(this TestContextBase context)
