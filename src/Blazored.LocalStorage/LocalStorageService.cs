@@ -56,7 +56,7 @@ namespace Blazored.LocalStorage
 
         public ValueTask<string> GetItemAsStringAsync(string key)
         {
-            if (string.IsNullOrEmpty(key))
+            if (string.IsNullOrWhiteSpace(key))
                 throw new ArgumentNullException(nameof(key));
 
             return _storageProvider.GetItemAsync(key);
@@ -100,7 +100,7 @@ namespace Blazored.LocalStorage
 
         public T GetItem<T>(string key)
         {
-            if (string.IsNullOrEmpty(key))
+            if (string.IsNullOrWhiteSpace(key))
                 throw new ArgumentNullException(nameof(key));
 
             var serialisedData = _storageProvider.GetItem(key);
@@ -122,7 +122,7 @@ namespace Blazored.LocalStorage
 
         public string GetItemAsString(string key)
         {
-            if (string.IsNullOrEmpty(key))
+            if (string.IsNullOrWhiteSpace(key))
                 throw new ArgumentNullException(nameof(key));
 
             return _storageProvider.GetItem(key);
