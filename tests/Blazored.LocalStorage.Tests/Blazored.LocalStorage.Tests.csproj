@@ -4,6 +4,10 @@
     <TargetFramework>net5.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
+
+    <SignAssembly>true</SignAssembly>
+
+    <AssemblyOriginatorKeyFile>..\..\src\Blazored.LocalStorage\Blazored.LocalStorage.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,6 +28,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Blazored.LocalStorage\Blazored.LocalStorage.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\src\Blazored.LocalStorage\Blazored.LocalStorage.snk">
+      <Link>Blazored.LocalStorage.snk</Link>
+    </None>
   </ItemGroup>
 
 </Project>
