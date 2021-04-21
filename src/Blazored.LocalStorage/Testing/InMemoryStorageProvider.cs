@@ -26,8 +26,8 @@ namespace Blazored.LocalStorage.Testing
         public ValueTask<bool> ContainKeyAsync(string key)
             => new ValueTask<bool>(ContainKey(key));
 
-        public string GetItem(string key)
-            => _dataStore[key];
+        public string GetItem(string key) 
+            => _dataStore.ContainsKey(key) ? _dataStore[key] : default;
 
         public ValueTask<string> GetItemAsync(string key)
             => new ValueTask<string>(GetItem(key));

@@ -18,7 +18,7 @@ namespace Blazored.LocalStorage
 
         public async ValueTask SetItemAsync<T>(string key, T data)
         {
-            if (string.IsNullOrEmpty(key))
+            if (string.IsNullOrWhiteSpace(key))
                 throw new ArgumentNullException(nameof(key));
 
             var e = await RaiseOnChangingAsync(key, data).ConfigureAwait(false);
@@ -84,7 +84,7 @@ namespace Blazored.LocalStorage
 
         public void SetItem<T>(string key, T data)
         {
-            if (string.IsNullOrEmpty(key))
+            if (string.IsNullOrWhiteSpace(key))
                 throw new ArgumentNullException(nameof(key));
 
             var e = RaiseOnChangingSync(key, data);
