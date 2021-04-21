@@ -24,6 +24,8 @@
     <!-- SourceLink settings -->
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>Blazored.LocalStorage.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
