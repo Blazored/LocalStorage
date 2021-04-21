@@ -12,14 +12,12 @@ using Xunit;
 
 namespace Blazored.LocalStorage.Tests.LocalStorageServiceTests
 {
-    public class RemoveItemAsync
+    public class Clear
     {
         private readonly LocalStorageService _sut;
         private readonly IStorageProvider _storageProvider;
 
-        private const string Key = "testKey";
-
-        public RemoveItemAsync()
+        public Clear()
         {
             var mockOptions = new Mock<IOptions<LocalStorageOptions>>();
             var jsonOptions = new JsonSerializerOptions();
@@ -30,41 +28,31 @@ namespace Blazored.LocalStorage.Tests.LocalStorageServiceTests
             _sut = new LocalStorageService(_storageProvider, serializer);
         }
 
-        [Theory]
-        [InlineData("")]
-        [InlineData("  ")]
-        [InlineData(null)]
-        public void ThrowsArgumentNullException_When_KeyIsInvalid(string key)
-        {
-            // arrange / act
-            var action = new Func<Task>(async () => await _sut.RemoveItemAsync(key));
-
-            // assert
-            Assert.ThrowsAsync<ArgumentNullException>(action);
-        }
-
         [Fact]
-        public async Task RemovesItemFromStoreIfExists()
+        public void ClearsAnyItemsInTheStore()
         {
             // Arrange
-            var data = new TestObject(2, "Jane Smith");
-            await _sut.SetItemAsync(Key, data);
+            var item1 = new TestObject(1, "Jane Smith");
+            var item2 = new TestObject(2, "John Smith");
+            
+            _sut.SetItem("Item1", item1);
+            _sut.SetItem("Item2", item2);
 
             // Act
-            await _sut.RemoveItemAsync(Key);
+            _sut.Clear();
 
             // Assert
-            Assert.Equal(0, await _storageProvider.LengthAsync());
+            Assert.Equal(0, _storageProvider.Length());
         }
         
         [Fact]
-        public async Task DoesNothingWhenItemDoesNotExistInStore()
+        public void DoesNothingWhenStoreIsEmpty()
         {
             // Act
-            await _sut.RemoveItemAsync(Key);
+            _sut.Clear();
 
             // Assert
-            Assert.Equal(0, await _storageProvider.LengthAsync());
+            Assert.Equal(0, _storageProvider.Length());
         }
     }
 }

@@ -12,14 +12,12 @@ using Xunit;
 
 namespace Blazored.LocalStorage.Tests.LocalStorageServiceTests
 {
-    public class RemoveItemAsync
+    public class ClearAsync
     {
         private readonly LocalStorageService _sut;
         private readonly IStorageProvider _storageProvider;
 
-        private const string Key = "testKey";
-
-        public RemoveItemAsync()
+        public ClearAsync()
         {
             var mockOptions = new Mock<IOptions<LocalStorageOptions>>();
             var jsonOptions = new JsonSerializerOptions();
@@ -30,28 +28,18 @@ namespace Blazored.LocalStorage.Tests.LocalStorageServiceTests
             _sut = new LocalStorageService(_storageProvider, serializer);
         }
 
-        [Theory]
-        [InlineData("")]
-        [InlineData("  ")]
-        [InlineData(null)]
-        public void ThrowsArgumentNullException_When_KeyIsInvalid(string key)
-        {
-            // arrange / act
-            var action = new Func<Task>(async () => await _sut.RemoveItemAsync(key));
-
-            // assert
-            Assert.ThrowsAsync<ArgumentNullException>(action);
-        }
-
         [Fact]
-        public async Task RemovesItemFromStoreIfExists()
+        public async Task ClearsAnyItemsInTheStore()
         {
             // Arrange
-            var data = new TestObject(2, "Jane Smith");
-            await _sut.SetItemAsync(Key, data);
+            var item1 = new TestObject(1, "Jane Smith");
+            var item2 = new TestObject(2, "John Smith");
+            
+            await _sut.SetItemAsync("Item1", item1);
+            await _sut.SetItemAsync("Item2", item2);
 
             // Act
-            await _sut.RemoveItemAsync(Key);
+            await _sut.ClearAsync();
 
             // Assert
             Assert.Equal(0, await _storageProvider.LengthAsync());
@@ -61,7 +49,7 @@ namespace Blazored.LocalStorage.Tests.LocalStorageServiceTests
         public async Task DoesNothingWhenItemDoesNotExistInStore()
         {
             // Act
-            await _sut.RemoveItemAsync(Key);
+            await _sut.ClearAsync();
 
             // Assert
             Assert.Equal(0, await _storageProvider.LengthAsync());

@@ -10,9 +10,7 @@ namespace Blazored.LocalStorage.Testing
         private readonly Dictionary<string, string> _dataStore = new Dictionary<string, string>();
 
         public void Clear()
-        {
-            throw new NotImplementedException();
-        }
+            => _dataStore.Clear();
 
         public ValueTask ClearAsync()
         {
@@ -33,7 +31,7 @@ namespace Blazored.LocalStorage.Testing
             => new ValueTask<string>(GetItem(key));
 
         public string Key(int index)
-            => _dataStore.ElementAt(index).Key;
+            => index > _dataStore.Count - 1 ? default : _dataStore.ElementAt(index).Key;
 
         public ValueTask<string> KeyAsync(int index)
             => new ValueTask<string>(Key(index));

@@ -16,7 +16,6 @@ namespace Blazored.LocalStorage.Tests.LocalStorageServiceTests
     {
         private readonly LocalStorageService _sut;
         private readonly IStorageProvider _storageProvider;
-        private readonly IJsonSerializer _serializer;
 
         private const string Key = "testKey";
 
@@ -26,9 +25,9 @@ namespace Blazored.LocalStorage.Tests.LocalStorageServiceTests
             var jsonOptions = new JsonSerializerOptions();
             jsonOptions.Converters.Add(new TimespanJsonConverter());
             mockOptions.Setup(u => u.Value).Returns(new LocalStorageOptions());
-            _serializer = new SystemTextJsonSerializer(mockOptions.Object);
+            IJsonSerializer serializer = new SystemTextJsonSerializer(mockOptions.Object);
             _storageProvider = new InMemoryStorageProvider();
-            _sut = new LocalStorageService(_storageProvider, _serializer);
+            _sut = new LocalStorageService(_storageProvider, serializer);
         }
 
         [Theory]
