@@ -2,7 +2,7 @@
 
 namespace Blazored.LocalStorage
 {
-    public interface IStorageProvider
+    internal interface IStorageProvider
     {
         void Clear();
         ValueTask ClearAsync();

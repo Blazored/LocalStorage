@@ -12,10 +12,10 @@ namespace Bunit
     [ExcludeFromCodeCoverage]
     public static class BUnitLocalStorageTestExtensions
     {
-        public static IStorageProvider AddBlazoredLocalStorage(this TestContextBase context)
+        public static ILocalStorageService AddBlazoredLocalStorage(this TestContextBase context)
             => AddBlazoredLocalStorage(context, null);
 
-        public static IStorageProvider AddBlazoredLocalStorage(this TestContextBase context, Action<LocalStorageOptions> configure)
+        public static ILocalStorageService AddBlazoredLocalStorage(this TestContextBase context, Action<LocalStorageOptions> configure)
         {
             if (context is null)
                 throw new ArgumentNullException(nameof(context));
@@ -32,7 +32,7 @@ namespace Bunit
                     configureOptions.JsonSerializerOptions.Converters.Add(new TimespanJsonConverter());
                 });
 
-            return context.Services.GetService<IStorageProvider>();
+            return context.Services.GetService<ILocalStorageService>();
         }
     }
 }

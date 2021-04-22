@@ -1,5 +1,5 @@
+using System.Threading.Tasks;
 using Bunit;
-using System.Text.Json;
 using Xunit;
 
 namespace bUnitExample
@@ -7,11 +7,11 @@ namespace bUnitExample
     public class IndexPageTests : TestContext
     {
         [Fact]
-        public void SavesNameToLocalStorage()
+        public async Task SavesNameToLocalStorage()
         {
             // Arrange
             const string inputName = "John Smith";
-            var storageProvider = this.AddBlazoredLocalStorage();
+            var localStorage = this.AddBlazoredLocalStorage();
             var cut = RenderComponent<BlazorWebAssembly.Pages.Index>();
 
             // Act
@@ -19,8 +19,7 @@ namespace bUnitExample
             cut.Find("#NameButton").Click();
             
             // Assert
-            var serializedName = storageProvider.GetItem("name");
-            var name = JsonSerializer.Deserialize<string>(serializedName);
+            var name = await localStorage.GetItemAsync<string>("name");
             
             Assert.Equal(inputName, name);
         }
