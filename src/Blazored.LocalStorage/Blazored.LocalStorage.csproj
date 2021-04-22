@@ -50,7 +50,6 @@
 
   <ItemGroup>
     <PackageReference Include="bunit.core" Version="1.0.19" />
-    <PackageReference Include="bunit.web" Version="1.0.19" />
   </ItemGroup>
 
 </Project>
