@@ -1,12 +1,13 @@
 ﻿using Blazored.LocalStorage.JsonConverters;
 using Blazored.LocalStorage.Serialization;
 using Blazored.LocalStorage.StorageOptions;
-using Bunit;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using Blazored.LocalStorage;
+using Blazored.LocalStorage.Testing;
 
-namespace Blazored.LocalStorage.Testing
+namespace Bunit
 {
     [ExcludeFromCodeCoverage]
     public static class BUnitLocalStorageTestExtensions
@@ -21,10 +22,10 @@ namespace Blazored.LocalStorage.Testing
             
 
             context.Services
-                .AddScoped<IJsonSerializer, SystemTextJsonSerializer>()
-                .AddScoped<IStorageProvider, InMemoryStorageProvider>()
-                .AddScoped<ILocalStorageService, LocalStorageService>()
-                .AddScoped<ISyncLocalStorageService, LocalStorageService>()
+                .AddSingleton<IJsonSerializer, SystemTextJsonSerializer>()
+                .AddSingleton<IStorageProvider, InMemoryStorageProvider>()
+                .AddSingleton<ILocalStorageService, LocalStorageService>()
+                .AddSingleton<ISyncLocalStorageService, LocalStorageService>()
                 .Configure<LocalStorageOptions>(configureOptions =>
                 {
                     configure?.Invoke(configureOptions);
