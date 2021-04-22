@@ -4,14 +4,10 @@ using Xunit;
 
 namespace bUnitExample
 {
-    /// <summary>
-    /// These tests are written entirely in C#.
-    /// Learn more at https://bunit.egilhansen.com/docs/getting-started/
-    /// </summary>
     public class IndexPageTests : TestContext
     {
         [Fact]
-        public void CounterStartsAtZero()
+        public void SavesNameToLocalStorage()
         {
             // Arrange
             const string inputName = "John Smith";
