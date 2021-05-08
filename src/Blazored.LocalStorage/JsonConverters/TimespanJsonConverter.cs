@@ -25,18 +25,13 @@ namespace Blazored.LocalStorage.JsonConverters
             {
                 return TimeSpan.Zero;
             }
-            else
+
+            if (!TimeSpan.TryParseExact(s, TimeSpanFormatString, null, out var parsedTimeSpan))
             {
-                TimeSpan parsedTimeSpan;
-                if (!TimeSpan.TryParseExact(s, TimeSpanFormatString, null, out parsedTimeSpan))
-                {
-                    throw new FormatException($"Input timespan is not in an expected format : expected {Regex.Unescape(TimeSpanFormatString)}. Please retrieve this key as a string and parse manually.");
-                }
-                else
-                {
-                    return parsedTimeSpan;
-                }
+                throw new FormatException($"Input timespan is not in an expected format : expected {Regex.Unescape(TimeSpanFormatString)}. Please retrieve this key as a string and parse manually.");
             }
+
+            return parsedTimeSpan;
         }
 
         public override void Write(Utf8JsonWriter writer, TimeSpan value, JsonSerializerOptions options)

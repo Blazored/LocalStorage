@@ -1,5 +1,8 @@
-﻿namespace Blazored.LocalStorage
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Blazored.LocalStorage
 {
+    [ExcludeFromCodeCoverage]
     public class ChangedEventArgs
     {
         public string Key { get; set; }

@@ -1,9 +1,11 @@
+﻿using System;
 using System.Text.Json;
+using System.Threading.Tasks;
 using Blazored.LocalStorage.JsonConverters;
+using Blazored.LocalStorage.Serialization;
 using Blazored.LocalStorage.StorageOptions;
-using Blazored.LocalStorage.Tests.Mocks;
+using Blazored.LocalStorage.Testing;
 using Blazored.LocalStorage.Tests.TestAssets;
-using FluentAssertions;
 using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;
@@ -12,96 +14,93 @@ namespace Blazored.LocalStorage.Tests.LocalStorageServiceTests
 {
     public class GetItem
     {
-        private readonly JsonSerializerOptions _jsonOptions;
-        private readonly Mock<JSRuntimeWrapper> _mockJSRuntime;
-        private readonly Mock<IOptions<LocalStorageOptions>> _mockOptions;
         private readonly LocalStorageService _sut;
+        private readonly IStorageProvider _storageProvider;
+        private readonly IJsonSerializer _serializer;
 
-        private static readonly string _key = "testKey";
+        private const string Key = "testKey";
 
         public GetItem()
         {
-            _mockJSRuntime = new Mock<JSRuntimeWrapper>();
-            _mockOptions = new Mock<IOptions<LocalStorageOptions>>();
-            _jsonOptions = new JsonSerializerOptions();
-            _jsonOptions.Converters.Add(new TimespanJsonConverter());
-            _mockOptions.Setup(u => u.Value).Returns(new LocalStorageOptions());
-            _sut = new LocalStorageService(_mockJSRuntime.Object, _mockOptions.Object);
+            var mockOptions = new Mock<IOptions<LocalStorageOptions>>();
+            var jsonOptions = new JsonSerializerOptions();
+            jsonOptions.Converters.Add(new TimespanJsonConverter());
+            mockOptions.Setup(u => u.Value).Returns(new LocalStorageOptions());
+            _serializer = new SystemTextJsonSerializer(mockOptions.Object);
+            _storageProvider = new InMemoryStorageProvider();
+            _sut = new LocalStorageService(_storageProvider, _serializer);
         }
 
         [Theory]
-        [InlineData("stringTest")]
-        [InlineData(11)]
-        [InlineData(11.11)]
-        public void Should_DeserialiseToCorrectType<T>(T value)
+        [InlineData("")]
+        [InlineData("  ")]
+        [InlineData(null)]
+        public void ThrowsArgumentNullException_When_KeyIsInvalid(string key)
+        {
+            // arrange / act
+            var action = new Action(() => _sut.GetItem<object>(key));
+
+            // assert
+            Assert.Throws<ArgumentNullException>(action);
+        }
+        
+        [Theory]
+        [InlineData("Item1", "stringTest")]
+        [InlineData("Item2", 11)]
+        [InlineData("Item3", 11.11)]
+        public void ReturnsDeserializedDataFromStore<T>(string key, T data)
         {
             // Arrange
-            var serialisedData = "";
-            if (typeof(T) == typeof(string))
-                serialisedData = value.ToString();
-            else
-                serialisedData = JsonSerializer.Serialize(value, _jsonOptions);
-
-            _mockJSRuntime.Setup(x => x.Invoke<string>("localStorage.getItem", new[] { _key }))
-                          .Returns(() => serialisedData);
-
+            _sut.SetItem(key, data);
+            
             // Act
-            var result = _sut.GetItem<T>(_key);
+            var result = _sut.GetItem<T>(key);
 
             // Assert
-            Assert.Equal(value, result);
-            _mockJSRuntime.Verify();
+            Assert.Equal(data, result);
         }
 
         [Fact]
-        public void Should_DeserialiseValueToNullableInt()
+        public void ReturnsComplexObjectFromStore()
         {
             // Arrange
-            int? value = 6;
-            var serialisedData = JsonSerializer.Serialize(value, _jsonOptions);
-
-            _mockJSRuntime.Setup(x => x.Invoke<string>("localStorage.getItem", new[] { _key }))
-                          .Returns(() => serialisedData);
+            var objectToSave = new TestObject(2, "Jane Smith");
+            _sut.SetItem(Key, objectToSave);
 
             // Act
-            var result = _sut.GetItem<int?>(_key);
+            var result = _sut.GetItem<TestObject>(Key);
 
             // Assert
-            Assert.Equal(value, result);
+            Assert.Equal(objectToSave.Id, result.Id);
+            Assert.Equal(objectToSave.Name, result.Name);
         }
-
+        
         [Fact]
-        public void Should_DeserialiseValueToDecimal()
+        public void ReturnsNullFromStore_When_NullValueSaved()
         {
             // Arrange
-            decimal value = 6.00m;
-            var serialisedData = JsonSerializer.Serialize(value, _jsonOptions);
-
-            _mockJSRuntime.Setup(x => x.Invoke<string>("localStorage.getItem", new[] { _key }))
-                          .Returns(() => serialisedData);
+            var valueToSave = (string)null;
+            _sut.SetItem(Key, valueToSave);
 
             // Act
-            var result = _sut.GetItem<decimal>(_key);
+            var result = _sut.GetItem<string>(Key);
 
             // Assert
-            Assert.Equal(value, result);
+            Assert.Null(result);
         }
-
+        
         [Fact]
-        public void Should_DeserialiseValueToComplexType()
+        public void ReturnsStringFromStore_When_JsonExceptionIsThrown()
         {
             // Arrange
-            TestObject value = new TestObject { Id = 1, Name = "John Smith" };
-            var serialisedData = JsonSerializer.Serialize(value, _jsonOptions);
-
-            _mockJSRuntime.Setup(x => x.Invoke<string>("localStorage.getItem", new[] { _key }))
-                          .Returns(() => serialisedData);
+            var jsonData = "[{ id: 5, name: \"Jane Smith\"}]";
+            _storageProvider.SetItem(Key, jsonData);
 
             // Act
-            var result = _sut.GetItem<TestObject>(_key);
+            var result = _sut.GetItem<string>(Key);
 
             // Assert
-            result.Should().BeEquivalentTo(value);
+            Assert.Equal(jsonData, result);
         }
     }
 }

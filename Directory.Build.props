@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+
+  <PropertyGroup Label="Package Versions">
+    <DotNet3Version>3.1.14</DotNet3Version>
+    <DotNet5Version>5.0.5</DotNet5Version>
+  </PropertyGroup>
+
+</Project>

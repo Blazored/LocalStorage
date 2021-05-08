@@ -1,19 +1,43 @@
-# Blazored LocalStorage
-A library to provide access to local storage in Blazor applications
-
+[![Nuget version](https://img.shields.io/nuget/v/blazored.localstorage.svg?logo=nuget)](https://www.nuget.org/packages/Blazored.LocalStorage/)
+[![Nuget downloads](https://img.shields.io/nuget/dt/Blazored.LocalStorage?logo=nuget)](https://www.nuget.org/packages/Blazored.LocalStorage/)
 ![Build & Test Main](https://github.com/Blazored/LocalStorage/workflows/Build%20&%20Test%20Main/badge.svg)
 
-[![Nuget](https://img.shields.io/nuget/v/blazored.localstorage.svg)](https://www.nuget.org/packages/Blazored.LocalStorage/)
+# Blazored LocalStorage
+Blazored LocalStorage is a library that provides access to the browsers local storage APIs for Blazor applications. An additional benefit of using this library is that it will handle serializing and deserializing values when saving or retrieving them.
 
-### Installing
+## Breaking Change (v3 > v4): JsonSerializerOptions
+From v4 onwards we use the default the `JsonSerializerOptions` for `System.Text.Json` instead of using custom ones. This will cause values saved to local storage with v3 to break things.
+To retain the old settings use the following configuration when adding Blazored LocalStorage to the DI container:
 
-You can install from NuGet using the following command:
+```csharp
+builder.Services.AddBlazoredLocalStorage(config =>
+    config.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
+    config.JsonSerializerOptions.IgnoreNullValues = true;
+    config.JsonSerializerOptions.IgnoreReadOnlyProperties = true;
+    config.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+    config.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    config.JsonSerializerOptions.ReadCommentHandling = JsonCommentHandling.Skip;
+    config.JsonSerializerOptions.WriteIndented = false;
+);
+```
 
-`Install-Package Blazored.LocalStorage`
+## Installing
 
-Or via the Visual Studio package manager.
+To install the package add the following line to you csproj file replacing x.x.x with the latest version number (found at the top of this file):
 
-### Setup
+```
+<PackageReference Include="Blazored.LocalStorage" Version="x.x.x" />
+```
+
+You can also install via the .NET CLI with the following command:
+
+```
+dotnet add package Blazored.LocalStorage
+```
+
+If you're using Visual Studio you can also install via the built in NuGet package manager.
+
+## Setup
 
 You will need to register the local storage services with the service collection in your _Startup.cs_ file in Blazor Server.
 
@@ -38,34 +62,7 @@ public static async Task Main(string[] args)
 }
 ```
 
-### Configuration
-
-The local storage provides options that can be modified by you at registration in your _Startup.cs_ file in Blazor Server.
-
-
-```c#
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddBlazoredLocalStorage(config =>
-        config.JsonSerializerOptions.WriteIndented = true);
-}
-```
-Or in your _Program.cs_ file in Blazor WebAssembly.
-
-```c#
-public static async Task Main(string[] args)
-{
-    var builder = WebAssemblyHostBuilder.CreateDefault(args);
-    builder.RootComponents.Add<App>("app");
-
-    builder.Services.AddBlazoredLocalStorage(config =>
-        config.JsonSerializerOptions.WriteIndented = true);
-
-    await builder.Build().RunAsync();
-}
-```
-
-### Usage (Blazor WebAssembly)
+## Usage (Blazor WebAssembly)
 To use Blazored.LocalStorage in Blazor WebAssembly, inject the `ILocalStorageService` per the example below.
 
 ```c#
@@ -98,7 +95,7 @@ With Blazor WebAssembly you also have the option of a synchronous API, if your u
 }
 ```
 
-### Usage (Blazor Server)
+## Usage (Blazor Server)
 
 **NOTE:** Due to pre-rendering in Blazor Server you can't perform any JS interop until the `OnAfterRender` lifecycle method.
 
@@ -138,6 +135,61 @@ The APIs available are:
   - Key()
   - ContainKey()
 
-**Note:** Blazored.LocalStorage methods will handle the serialisation and de-serialisation of the data for you, the exception is the `GetItemAsString[Async]` method.
+**Note:** Blazored.LocalStorage methods will handle the serialisation and de-serialisation of the data for you, the exception is the `GetItemAsString[Async]` method which will return the raw string value from local storage.
 
-If you want to handle serialising and de-serialising yourself, serialise the data to a string and save using the `SetItem[Async]` method, as normal -- This method will not attempt to serialise a string value. You can then read out the data using the `GetItemAsString[Async]` method and de-serialise it yourself.
+## Configuring JSON Serializer Options
+You can configure the options for the default serializer (System.Text.Json) when calling the `AddBlazoredLocalStorage` method to register services.
+
+```c#
+public static async Task Main(string[] args)
+{
+    var builder = WebAssemblyHostBuilder.CreateDefault(args);
+    builder.RootComponents.Add<App>("app");
+
+    builder.Services.AddBlazoredLocalStorage(config =>
+        config.JsonSerializerOptions.WriteIndented = true
+    );
+
+    await builder.Build().RunAsync();
+}
+```
+
+## Using a custom JSON serializer
+By default, the library uses `System.Text.Json`. If you prefer to use a different JSON library for serialization--or if you want to add some custom logic when serializing or deserializing--you can provide your own serializer which implements the `Blazored.LocalStorage.Serialization.IJsonSerializer` interface.
+
+To register your own serializer in place of the default one, you can do the following:
+
+```csharp
+builder.Services.AddBlazoredLocalStorage();
+builder.Services.Replace(ServiceDescriptor.Scoped<IJsonSerializer, MySerializer>());
+```
+
+You can find an example of this in the Blazor Server sample project. The standard serializer has been replaced with a new serializer which uses NewtonsoftJson.
+
+## Testing with bUnit
+This library provides test extensions for use with the [bUnit testing library](https://bunit.dev/). Using these test extensions will provide an in memory implementation which mimics local storage allowing more realistic testing of your components.
+
+Below is an example test which uses these extensions. You can find an example project which shows this code in action in the samples folder.
+
+```c#
+public class IndexPageTests : TestContext
+{
+    [Fact]
+    public async Task SavesNameToLocalStorage()
+    {
+        // Arrange
+        const string inputName = "John Smith";
+        var localStorage = this.AddBlazoredLocalStorage();
+        var cut = RenderComponent<BlazorWebAssembly.Pages.Index>();
+
+        // Act
+        cut.Find("#Name").Change(inputName);
+        cut.Find("#NameButton").Click();
+            
+        // Assert
+        var name = await localStorage.GetItemAsync<string>("name");
+            
+        Assert.Equal(inputName, name);
+    }
+}
+```
