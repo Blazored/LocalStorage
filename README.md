@@ -117,6 +117,7 @@ The APIs available are:
 
 - asynchronous via `ILocalStorageService`:
   - SetItemAsync()
+  - SetItemAsStringAsync()
   - GetItemAsync()
   - GetItemAsStringAsync()
   - RemoveItemAsync()
@@ -127,6 +128,7 @@ The APIs available are:
   
 - synchronous via `ISyncLocalStorageService` (Synchronous methods are **only** available in Blazor WebAssembly):
   - SetItem()
+  - SetItemAsString()
   - GetItem()
   - GetItemAsString()
   - RemoveItem()
@@ -135,7 +137,7 @@ The APIs available are:
   - Key()
   - ContainKey()
 
-**Note:** Blazored.LocalStorage methods will handle the serialisation and de-serialisation of the data for you, the exception is the `GetItemAsString[Async]` method which will return the raw string value from local storage.
+**Note:** Blazored.LocalStorage methods will handle the serialisation and de-serialisation of the data for you, the exceptions are the `SetItemAsString[Async]` and `GetItemAsString[Async]` methods which will save and return raw string values from local storage.
 
 ## Configuring JSON Serializer Options
 You can configure the options for the default serializer (System.Text.Json) when calling the `AddBlazoredLocalStorage` method to register services.

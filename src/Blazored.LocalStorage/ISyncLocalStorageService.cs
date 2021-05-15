@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Blazored.LocalStorage
 {
@@ -55,6 +55,14 @@ namespace Blazored.LocalStorage
         /// <param name="key">A <see cref="string"/> value specifying the name of the storage slot to use</param>
         /// <param name="data">The data to be saved</param>
         void SetItem<T>(string key, T data);
+
+        /// <summary>
+        /// Sets or updates the <paramref name="data"/> in local storage with the specified <paramref name="key"/>. Does not serialize the value before storing.
+        /// </summary>
+        /// <param name="key">A <see cref="string"/> value specifying the name of the storage slot to use</param>
+        /// <param name="data">The string to be saved</param>
+        /// <returns></returns>
+        void SetItemAsString(string key, string data);
 
         event EventHandler<ChangingEventArgs> Changing;
         event EventHandler<ChangedEventArgs> Changed;
