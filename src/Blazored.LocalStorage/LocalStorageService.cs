@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Blazored.LocalStorage.Serialization;
@@ -28,6 +28,24 @@ namespace Blazored.LocalStorage
 
             var serialisedData = _serializer.Serialize(data);
             await _storageProvider.SetItemAsync(key, serialisedData).ConfigureAwait(false);
+
+            RaiseOnChanged(key, e.OldValue, data);
+        }
+
+        public async ValueTask SetItemAsStringAsync(string key, string data)
+        {
+            if (string.IsNullOrWhiteSpace(key))
+                throw new ArgumentNullException(nameof(key));
+
+            if (data is null)
+                throw new ArgumentNullException(nameof(data));
+
+            var e = await RaiseOnChangingAsync(key, data).ConfigureAwait(false);
+
+            if (e.Cancel)
+                return;
+
+            await _storageProvider.SetItemAsync(key, data).ConfigureAwait(false);
 
             RaiseOnChanged(key, e.OldValue, data);
         }
@@ -94,6 +112,24 @@ namespace Blazored.LocalStorage
 
             var serialisedData = _serializer.Serialize(data);
             _storageProvider.SetItem(key, serialisedData);
+
+            RaiseOnChanged(key, e.OldValue, data);
+        }
+
+        public void SetItemAsString(string key, string data)
+        {
+            if (string.IsNullOrWhiteSpace(key))
+                throw new ArgumentNullException(nameof(key));
+
+            if (data is null)
+                throw new ArgumentNullException(nameof(data));
+
+            var e = RaiseOnChangingSync(key, data);
+
+            if (e.Cancel)
+                return;
+
+            _storageProvider.SetItem(key, data);
 
             RaiseOnChanged(key, e.OldValue, data);
         }

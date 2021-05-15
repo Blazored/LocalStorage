@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Blazored.LocalStorage.JsonConverters;
@@ -82,7 +82,7 @@ namespace Blazored.LocalStorage.Tests.LocalStorageServiceTests
             _sut.Changing += (_, args) => newValue = args.NewValue.ToString();
 
             // act
-            _sut.SetItemAsync("Key", data);
+            _sut.SetItem("Key", data);
 
             // assert
             Assert.Equal(data, newValue);

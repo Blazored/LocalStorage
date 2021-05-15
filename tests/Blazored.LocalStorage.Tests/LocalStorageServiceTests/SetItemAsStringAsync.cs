@@ -5,14 +5,13 @@ using Blazored.LocalStorage.JsonConverters;
 using Blazored.LocalStorage.Serialization;
 using Blazored.LocalStorage.StorageOptions;
 using Blazored.LocalStorage.Testing;
-using Blazored.LocalStorage.Tests.TestAssets;
 using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;
 
 namespace Blazored.LocalStorage.Tests.LocalStorageServiceTests
 {
-    public class SetItemAsync
+    public class SetItemAsStringAsync
     {
         private readonly LocalStorageService _sut;
         private readonly IStorageProvider _storageProvider;
@@ -20,7 +19,7 @@ namespace Blazored.LocalStorage.Tests.LocalStorageServiceTests
 
         private const string Key = "testKey";
 
-        public SetItemAsync()
+        public SetItemAsStringAsync()
         {
             var mockOptions = new Mock<IOptions<LocalStorageOptions>>();
             var jsonOptions = new JsonSerializerOptions();
@@ -39,7 +38,18 @@ namespace Blazored.LocalStorage.Tests.LocalStorageServiceTests
         {
             // arrange / act
             const string data = "Data";
-            var action = new Func<Task>(async () => await _sut.SetItemAsync(key, data));
+            var action = new Func<Task>(async () => await _sut.SetItemAsStringAsync(key, data));
+
+            // assert
+            Assert.ThrowsAsync<ArgumentNullException>(action);
+        }
+        
+        [Fact]
+        public void ThrowsArgumentNullException_When_DataIsNull()
+        {
+            // arrange / act
+            var data = (string)null;
+            var action = new Func<Task>(async () => await _sut.SetItemAsStringAsync("MyValue", data));
 
             // assert
             Assert.ThrowsAsync<ArgumentNullException>(action);
@@ -50,10 +60,10 @@ namespace Blazored.LocalStorage.Tests.LocalStorageServiceTests
         {
             // arrange
             var onChangingCalled = false;
-            _sut.Changing += (sender, args) => onChangingCalled = true;
+            _sut.Changing += (_, _) => onChangingCalled = true;
 
             // act
-            await _sut.SetItemAsync("Key", "Data");
+            await _sut.SetItemAsStringAsync("Key", "Data");
 
             // assert
             Assert.True(onChangingCalled);
@@ -67,7 +77,7 @@ namespace Blazored.LocalStorage.Tests.LocalStorageServiceTests
             _sut.Changing += (_, args) => oldValue = args.OldValue?.ToString();
 
             // act
-            await _sut.SetItemAsync("Key", "Data");
+            await _sut.SetItemAsStringAsync("Key", "Data");
 
             // assert
             Assert.Equal(default, oldValue);
@@ -82,7 +92,7 @@ namespace Blazored.LocalStorage.Tests.LocalStorageServiceTests
             _sut.Changing += (_, args) => newValue = args.NewValue.ToString();
 
             // act
-            await _sut.SetItemAsync("Key", data);
+            await _sut.SetItemAsStringAsync("Key", data);
 
             // assert
             Assert.Equal(data, newValue);
@@ -95,62 +105,24 @@ namespace Blazored.LocalStorage.Tests.LocalStorageServiceTests
             _sut.Changing += (_, args) => args.Cancel = true;
 
             // act
-            await _sut.SetItemAsync("Key", "Data");
+            await _sut.SetItemAsStringAsync("Key", "Data");
 
             // assert
-            Assert.Equal(0, await _storageProvider.LengthAsync());
+            Assert.Equal(0, _storageProvider.Length());
         }
         
-        [Theory]
-        [InlineData("stringTest")]
-        [InlineData(11)]
-        [InlineData(11.11)]
-        public async Task SavesDataAsJsonToStore<T>(T valueToSave)
+        [Fact]
+        public async Task SavesDataToStore()
         {
             // Act
-            await _sut.SetItemAsync(Key, valueToSave);
+            var valueToSave = "StringValue";
+            await _sut.SetItemAsStringAsync(Key, valueToSave);
 
             // Assert
-            var serializedValue = await _storageProvider.GetItemAsync(Key);
-            var valueFromStore = _serializer.Deserialize<T>(serializedValue);
+            var valueFromStore = _storageProvider.GetItem(Key);
 
-            Assert.Equal(1, await _storageProvider.LengthAsync());
+            Assert.Equal(1, _storageProvider.Length());
             Assert.Equal(valueToSave, valueFromStore);
-        }
-
-        [Fact]
-        public async Task SavesComplexObjectAsJsonToStore()
-        {
-            // Arrange
-            var objectToSave = new TestObject(2, "Jane Smith");
-
-            // Act
-            await _sut.SetItemAsync(Key, objectToSave);
-
-            // Assert
-            var serializedObject = await _storageProvider.GetItemAsync(Key);
-            var objectFromStore = _serializer.Deserialize<TestObject>(serializedObject);
-
-            Assert.Equal(1, await _storageProvider.LengthAsync());
-            Assert.Equal(objectToSave.Id, objectFromStore.Id);
-            Assert.Equal(objectToSave.Name, objectFromStore.Name);
-        }
-        
-        [Fact]
-        public async Task SavesNullIntoStore_When_NullValueProvided()
-        {
-            // Arrange
-            var valueToSave = (string)null;
-
-            // Act
-            await _sut.SetItemAsync(Key, valueToSave);
-
-            // Assert
-            var serializedValue = await _storageProvider.GetItemAsync(Key);
-            var valueFromStore = _serializer.Deserialize<string>(serializedValue);
-
-            Assert.Equal(1, await _storageProvider.LengthAsync());
-            Assert.Null(valueFromStore);
         }
         
         [Fact]
@@ -160,15 +132,13 @@ namespace Blazored.LocalStorage.Tests.LocalStorageServiceTests
             const string existingValue = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYWRtaW4iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbmlzdHJhdG9yIiwiZXhwIjoxNTg1NjYwNzEyLCJpc3MiOiJDb2RlUmVkQm9va2luZy5TZXJ2ZXIiLCJhdWQiOiJDb2RlUmVkQm9va2luZy5DbGllbnRzIn0.JhK1M1H7NLCFexujJYCDjTn9La0HloGYADMHXGCFksU";
             const string newValue = "﻿6QLE0LL7iw7tHPAwold31qUENt3lVTUZxDGqeXQFx38=";
 
-            var serializedValue = _serializer.Serialize(existingValue);
-            await _storageProvider.SetItemAsync(Key, serializedValue);
+            _storageProvider.SetItem(Key, existingValue);
 
             // Act
-            await _sut.SetItemAsync(Key, newValue);
+            await _sut.SetItemAsStringAsync(Key, newValue);
 
             // Assert
-            var serializedUpdatedValue = await _storageProvider.GetItemAsync(Key);
-            var updatedValue = _serializer.Deserialize<string>(serializedUpdatedValue);
+            var updatedValue = _storageProvider.GetItem(Key);
 
             Assert.Equal(newValue, updatedValue);
         }
@@ -178,10 +148,10 @@ namespace Blazored.LocalStorage.Tests.LocalStorageServiceTests
         {
             // arrange
             var onChangedCalled = false;
-            _sut.Changed += (sender, args) => onChangedCalled = true;
+            _sut.Changed += (_, _) => onChangedCalled = true;
 
             // act
-            await _sut.SetItemAsync("Key", "Data");
+            await _sut.SetItemAsStringAsync("Key", "Data");
 
             // assert
             Assert.True(onChangedCalled);
@@ -195,7 +165,7 @@ namespace Blazored.LocalStorage.Tests.LocalStorageServiceTests
             _sut.Changed += (_, args) => oldValue = args.OldValue?.ToString();
 
             // act
-            await _sut.SetItemAsync("Key", "Data");
+            await _sut.SetItemAsStringAsync("Key", "Data");
 
             // assert
             Assert.Equal(default, oldValue);
@@ -210,7 +180,7 @@ namespace Blazored.LocalStorage.Tests.LocalStorageServiceTests
             _sut.Changed += (_, args) => newValue = args.NewValue.ToString();
 
             // act
-            await _sut.SetItemAsync("Key", data);
+            await _sut.SetItemAsStringAsync("Key", data);
 
             // assert
             Assert.Equal(data, newValue);
@@ -221,12 +191,12 @@ namespace Blazored.LocalStorage.Tests.LocalStorageServiceTests
         {
             // arrange
             var existingValue = "Foo";
-            await _storageProvider.SetItemAsync("Key", existingValue);
+            _storageProvider.SetItem("Key", existingValue);
             var oldValue = "";
             _sut.Changed += (_, args) => oldValue = args.OldValue?.ToString();
 
             // act
-            await _sut.SetItemAsync("Key", "Data");
+            await _sut.SetItemAsStringAsync("Key", "Data");
 
             // assert
             Assert.Equal(existingValue, oldValue);
