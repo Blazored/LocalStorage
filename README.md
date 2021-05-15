@@ -5,7 +5,9 @@
 # Blazored LocalStorage
 Blazored LocalStorage is a library that provides access to the browsers local storage APIs for Blazor applications. An additional benefit of using this library is that it will handle serializing and deserializing values when saving or retrieving them.
 
-## Breaking Change (v3 > v4): JsonSerializerOptions
+## Breaking Changes (v3 > v4)
+
+### JsonSerializerOptions
 From v4 onwards we use the default the `JsonSerializerOptions` for `System.Text.Json` instead of using custom ones. This will cause values saved to local storage with v3 to break things.
 To retain the old settings use the following configuration when adding Blazored LocalStorage to the DI container:
 
@@ -20,6 +22,10 @@ builder.Services.AddBlazoredLocalStorage(config =>
     config.JsonSerializerOptions.WriteIndented = false;
 );
 ```
+
+### SetItem[Async] method now serializes string values
+Prior to v4 we bypassed the serialization of string values as it seemed a pointless as string can be stored directly. However, this led to some edge cases where nullable strings were being saved as the string `"null"`. Then when retrieved, instead of being null the value was `"null"`. By serializing strings this issue is taken care of. 
+For those who wish to save raw string values, a new method `SetValueAsString[Async]` is available. This will save a string value without attempting to serialize it and will throw an exception if a null string is attempted to be saved.
 
 ## Installing
 
