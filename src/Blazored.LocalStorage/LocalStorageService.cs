@@ -1,5 +1,6 @@
 using System;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Blazored.LocalStorage.Serialization;
 
@@ -16,7 +17,7 @@ namespace Blazored.LocalStorage
             _serializer = serializer;
         }
 
-        public async ValueTask SetItemAsync<T>(string key, T data)
+        public async ValueTask SetItemAsync<T>(string key, T data, CancellationToken? cancellationToken = null)
         {
             if (string.IsNullOrWhiteSpace(key))
                 throw new ArgumentNullException(nameof(key));
@@ -27,12 +28,12 @@ namespace Blazored.LocalStorage
                 return;
 
             var serialisedData = _serializer.Serialize(data);
-            await _storageProvider.SetItemAsync(key, serialisedData).ConfigureAwait(false);
+            await _storageProvider.SetItemAsync(key, serialisedData, cancellationToken).ConfigureAwait(false);
 
             RaiseOnChanged(key, e.OldValue, data);
         }
 
-        public async ValueTask SetItemAsStringAsync(string key, string data)
+        public async ValueTask SetItemAsStringAsync(string key, string data, CancellationToken? cancellationToken = null)
         {
             if (string.IsNullOrWhiteSpace(key))
                 throw new ArgumentNullException(nameof(key));
@@ -45,17 +46,17 @@ namespace Blazored.LocalStorage
             if (e.Cancel)
                 return;
 
-            await _storageProvider.SetItemAsync(key, data).ConfigureAwait(false);
+            await _storageProvider.SetItemAsync(key, data, cancellationToken).ConfigureAwait(false);
 
             RaiseOnChanged(key, e.OldValue, data);
         }
 
-        public async ValueTask<T> GetItemAsync<T>(string key)
+        public async ValueTask<T> GetItemAsync<T>(string key, CancellationToken? cancellationToken = null)
         {
             if (string.IsNullOrWhiteSpace(key))
                 throw new ArgumentNullException(nameof(key));
 
-            var serialisedData = await _storageProvider.GetItemAsync(key).ConfigureAwait(false);
+            var serialisedData = await _storageProvider.GetItemAsync(key, cancellationToken).ConfigureAwait(false);
 
             if (string.IsNullOrWhiteSpace(serialisedData))
                 return default;
@@ -72,33 +73,33 @@ namespace Blazored.LocalStorage
             }
         }
 
-        public ValueTask<string> GetItemAsStringAsync(string key)
+        public ValueTask<string> GetItemAsStringAsync(string key, CancellationToken? cancellationToken = null)
         {
             if (string.IsNullOrWhiteSpace(key))
                 throw new ArgumentNullException(nameof(key));
 
-            return _storageProvider.GetItemAsync(key);
+            return _storageProvider.GetItemAsync(key, cancellationToken);
         }
 
-        public ValueTask RemoveItemAsync(string key)
+        public ValueTask RemoveItemAsync(string key, CancellationToken? cancellationToken = null)
         {
             if (string.IsNullOrWhiteSpace(key))
                 throw new ArgumentNullException(nameof(key));
 
-            return _storageProvider.RemoveItemAsync(key);
+            return _storageProvider.RemoveItemAsync(key, cancellationToken);
         }
 
-        public ValueTask ClearAsync() 
-            => _storageProvider.ClearAsync();
+        public ValueTask ClearAsync(CancellationToken? cancellationToken = null)
+            => _storageProvider.ClearAsync(cancellationToken);
 
-        public ValueTask<int> LengthAsync() 
-            => _storageProvider.LengthAsync();
+        public ValueTask<int> LengthAsync(CancellationToken? cancellationToken = null)
+            => _storageProvider.LengthAsync(cancellationToken);
 
-        public ValueTask<string> KeyAsync(int index) 
-            => _storageProvider.KeyAsync(index);
+        public ValueTask<string> KeyAsync(int index, CancellationToken? cancellationToken = null)
+            => _storageProvider.KeyAsync(index, cancellationToken);
 
-        public ValueTask<bool> ContainKeyAsync(string key) 
-            => _storageProvider.ContainKeyAsync(key);
+        public ValueTask<bool> ContainKeyAsync(string key, CancellationToken? cancellationToken = null)
+            => _storageProvider.ContainKeyAsync(key, cancellationToken);
 
         public void SetItem<T>(string key, T data)
         {
@@ -213,12 +214,12 @@ namespace Blazored.LocalStorage
             return e;
         }
 
-        private async Task<T> GetItemInternalAsync<T>(string key)
+        private async Task<T> GetItemInternalAsync<T>(string key, CancellationToken? cancellationToken = null)
         {
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentNullException(nameof(key));
 
-            var serialisedData = await _storageProvider.GetItemAsync(key).ConfigureAwait(false);
+            var serialisedData = await _storageProvider.GetItemAsync(key, cancellationToken).ConfigureAwait(false);
 
             if (string.IsNullOrWhiteSpace(serialisedData))
                 return default;
