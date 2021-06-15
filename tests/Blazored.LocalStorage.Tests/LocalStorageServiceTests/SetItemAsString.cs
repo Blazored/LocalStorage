@@ -3,7 +3,7 @@ using System.Text.Json;
 using Blazored.LocalStorage.JsonConverters;
 using Blazored.LocalStorage.Serialization;
 using Blazored.LocalStorage.StorageOptions;
-using Blazored.LocalStorage.Testing;
+using Blazored.LocalStorage.TestExtensions;
 using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;

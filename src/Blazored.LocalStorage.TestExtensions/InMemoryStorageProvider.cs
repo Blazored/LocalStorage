@@ -1,10 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Blazored.LocalStorage.Testing
+namespace Blazored.LocalStorage.TestExtensions
 {
     internal class InMemoryStorageProvider : IStorageProvider
     {
