@@ -1,10 +1,8 @@
-﻿using System;
 using System.Text.Json;
-using System.Threading.Tasks;
 using Blazored.LocalStorage.JsonConverters;
 using Blazored.LocalStorage.Serialization;
 using Blazored.LocalStorage.StorageOptions;
-using Blazored.LocalStorage.Testing;
+using Blazored.LocalStorage.TestExtensions;
 using Blazored.LocalStorage.Tests.TestAssets;
 using Microsoft.Extensions.Options;
 using Moq;

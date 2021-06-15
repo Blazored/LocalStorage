@@ -11,6 +11,7 @@ env:
     DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
     DOTNET_CLI_TELEMETRY_OPTOUT: true
     PROJECT_NAME: LocalStorage
+    TESTEXTENSIONS_PROJECT_NAME: $PROJECT_NAME.TestExtensions
     GITHUB_FEED: https://nuget.pkg.github.com/Blazored/
     GITHUB_USER: chrissainty
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -44,6 +45,9 @@ jobs:
     - name: Pack
       run: dotnet pack -v normal -c Release --no-restore --include-symbols --include-source -p:PackageVersion=$GITHUB_RUN_ID src/Blazored.$PROJECT_NAME/Blazored.$PROJECT_NAME.*proj
 
+    - name: Pack TestExtensions
+      run: dotnet pack -v normal -c Release --no-restore --include-symbols --include-source -p:PackageVersion=$GITHUB_RUN_ID src/Blazored.$TESTEXTENSIONS_PROJECT_NAME/Blazored.$TESTEXTENSIONS_PROJECT_NAME.*proj
+
     - name: Publish Sample Site
       run: dotnet publish -c Release samples/BlazorWebAssembly/BlazorWebAssembly.csproj
 
@@ -67,6 +71,13 @@ jobs:
       with:
         name: nupkg
         path: ./src/Blazored.${{ env.PROJECT_NAME }}/bin/Release/*.nupkg
+
+    - name: Upload Artifact TestExtensions
+      uses: actions/upload-artifact@v2
+      with:
+        name: nupkg
+        path: ./src/Blazored.${{ env.TEST_EXTENSIONS_PROJECT_NAME }}/bin/Release/*.nupkg
+
   prerelease:
     needs: build
     if: github.event_name != 'release'
@@ -100,6 +111,7 @@ jobs:
           VERSION="${VERSION//v}"
           echo Clean Version: $VERSION
           dotnet pack -v normal -c Release --include-symbols --include-source -p:PackageVersion=$VERSION -o nupkg src/Blazored.$PROJECT_NAME/Blazored.$PROJECT_NAME.*proj
+          dotnet pack -v normal -c Release --include-symbols --include-source -p:PackageVersion=$VERSION -o nupkg src/Blazored.$TESTEXTENSIONS_PROJECT_NAME/Blazored.$TESTEXTENSIONS_PROJECT_NAME.*proj
       - name: Push to GitHub Feed
         run: |
           for f in ./nupkg/*.nupkg
