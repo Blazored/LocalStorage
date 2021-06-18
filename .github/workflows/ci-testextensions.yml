@@ -1,4 +1,4 @@
-name: Build & Test Main
+name: Build TestExtensions
 
 on:
   push:
@@ -10,7 +10,7 @@ env:
     NETCORE_VERSION: '5.0.202'
     DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
     DOTNET_CLI_TELEMETRY_OPTOUT: true
-    PROJECT_NAME: LocalStorage
+    PROJECT_NAME: LocalStorage.TestExtensions
     GITHUB_FEED: https://nuget.pkg.github.com/Blazored/
     GITHUB_USER: chrissainty
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -35,38 +35,15 @@ jobs:
     - name: Restore
       run: dotnet restore
 
-    - name: Build
-      run: dotnet build -c Release --no-restore src/Blazored.$PROJECT_NAME/Blazored.$PROJECT_NAME.csproj
-
-    - name: Test
-      run: dotnet test -c Release
-
     - name: Pack
       run: dotnet pack -v normal -c Release --no-restore --include-symbols --include-source -p:PackageVersion=$GITHUB_RUN_ID src/Blazored.$PROJECT_NAME/Blazored.$PROJECT_NAME.*proj
 
-    - name: Publish Sample Site
-      run: dotnet publish -c Release samples/BlazorWebAssembly/BlazorWebAssembly.csproj
-
-    - name: Rewrite base href
-      uses: SteveSandersonMS/ghaction-rewrite-base-href@v1
-      with:
-        html_path: samples/BlazorWebAssembly/bin/Release/net5.0/publish/wwwroot/index.html
-        base_href: /${{ env.PROJECT_NAME }}/
-    
-    - name: Deploy to Github Pages
-      uses: JamesIves/github-pages-deploy-action@releases/v3
-      with:
-        ACCESS_TOKEN: $GITHUB_TOKEN
-        BASE_BRANCH: main # The branch the action should deploy from.
-        BRANCH: gh-pages # The branch the action should deploy to.
-        FOLDER: samples/BlazorWebAssembly/bin/Release/net5.0/publish/wwwroot # The folder the action should deploy.
-        SINGLE_COMMIT: true
-
-    - name: Upload Artifact
+    - name: Upload Artifact TestExtensions
       uses: actions/upload-artifact@v2
       with:
         name: nupkg
         path: ./src/Blazored.${{ env.PROJECT_NAME }}/bin/Release/*.nupkg
+
   prerelease:
     needs: build
     if: github.event_name != 'release'

@@ -15,6 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\ci-main.yml = .github\workflows\ci-main.yml
 		.github\workflows\ci-pr.yml = .github\workflows\ci-pr.yml
+		.github\workflows\ci-testextensions.yml = .github\workflows\ci-testextensions.yml
 		README.md = README.md
 		.github\workflows\release-drafter.yml = .github\workflows\release-drafter.yml
 	EndProjectSection
