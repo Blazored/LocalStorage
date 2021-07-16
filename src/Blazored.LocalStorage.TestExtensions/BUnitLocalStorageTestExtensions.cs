@@ -1,11 +1,11 @@
-using Blazored.LocalStorage.JsonConverters;
-using Blazored.LocalStorage.Serialization;
-using Blazored.LocalStorage.StorageOptions;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Blazored.LocalStorage;
-using Blazored.LocalStorage.Testing;
+using Blazored.LocalStorage.JsonConverters;
+using Blazored.LocalStorage.Serialization;
+using Blazored.LocalStorage.StorageOptions;
+using Blazored.LocalStorage.TestExtensions;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Bunit
 {

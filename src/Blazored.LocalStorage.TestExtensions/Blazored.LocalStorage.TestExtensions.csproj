@@ -1,0 +1,53 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.1;net5.0</TargetFrameworks>
+
+    <Authors>Chris Sainty</Authors>
+    <Company></Company>
+    <Copyright>Copyright 2020 (c) Chris Sainty. All rights reserved.</Copyright>
+    <Description>A testing library to provide helper extensions for Blazored.LocalStorage</Description>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+    <!-- NuGet settings -->
+    <PackageId>Blazored.LocalStorage.TestExtensions</PackageId>
+    <PackageTags>Blazored;Blazor;Razor;Components;LocalStorage;Local Storage;ASP.NET Core;CSharp;Web</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/Blazored/LocalStorage</PackageProjectUrl>
+    <PackageIcon>icon.png</PackageIcon>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/Blazored/LocalStorage</RepositoryUrl>
+
+    <!-- SourceLink settings -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>    
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\src\Blazored.LocalStorage\Blazored.LocalStorage.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\src\Blazored.LocalStorage\icon.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="bunit.core" Version="1.1.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Blazored.LocalStorage\Blazored.LocalStorage.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>
+        Blazored.LocalStorage.Tests, PublicKey=0024000004800000940000000602000000240000525341310004000001000100e94102d6760ebcff1970798791888ddf102ac709e19db9a312721fafca42b894652b59bada7d592a4ab62a5b76507a27720e922bc310c4f5aa75acd8ab59632c920ac41a7e9abcaf4b8bb5525a60931faccea704dbdcf68e1207616751447dcfec687f18854148aa66a9a09e1edc8fd0c9bd11950b4baf7d46fe38993af4add4
+      </_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\Blazored.LocalStorage\Blazored.LocalStorage.snk" Link="Blazored.LocalStorage.snk" />
+  </ItemGroup>
+
+</Project>
