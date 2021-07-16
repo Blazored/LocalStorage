@@ -13,6 +13,7 @@ To retain the old settings use the following configuration when adding Blazored 
 
 ```csharp
 builder.Services.AddBlazoredLocalStorage(config =>
+{
     config.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
     config.JsonSerializerOptions.IgnoreNullValues = true;
     config.JsonSerializerOptions.IgnoreReadOnlyProperties = true;
@@ -20,7 +21,7 @@ builder.Services.AddBlazoredLocalStorage(config =>
     config.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
     config.JsonSerializerOptions.ReadCommentHandling = JsonCommentHandling.Skip;
     config.JsonSerializerOptions.WriteIndented = false;
-);
+});
 ```
 
 ### SetItem[Async] method now serializes string values
