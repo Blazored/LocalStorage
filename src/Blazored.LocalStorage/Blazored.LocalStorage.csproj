@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;net5.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;net5.0;net6.0</TargetFrameworks>
 
     <Authors>Chris Sainty</Authors>
     <Company></Company>
@@ -30,7 +30,7 @@
     <RazorLangVersion>3.0</RazorLangVersion>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net5.0' or '$(TargetFramework)' == 'net6.0'">
     <SupportedPlatform Include="browser" />
   </ItemGroup>
 
@@ -40,6 +40,10 @@
   
   <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="$(DotNet5Version)" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="$(DotNet6Version)" />
   </ItemGroup>
 
   <ItemGroup>
@@ -61,5 +65,14 @@
       </_Parameter1>
     </AssemblyAttribute>
   </ItemGroup>
+
+  <!-- Microsoft.Extensions.Logging.Abstractions 6.0.0-preview.5.21301.5 introduced the analyzer which is not present
+       in .net5 or .netcore3.1 therefore we have to remove the analyzer otherwise the build will fail
+  -->
+  <Target Name="RemoveLoggingAnalyzer" BeforeTargets="CoreCompile">
+    <ItemGroup>
+      <Analyzer Remove="@(Analyzer)" Condition="%(FileName) == 'Microsoft.Extensions.Logging.Generators'" />
+    </ItemGroup>
+  </Target>
 
 </Project>
