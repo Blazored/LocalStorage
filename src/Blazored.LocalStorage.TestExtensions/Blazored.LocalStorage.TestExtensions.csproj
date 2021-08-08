@@ -50,4 +50,13 @@
     <None Include="..\Blazored.LocalStorage\Blazored.LocalStorage.snk" Link="Blazored.LocalStorage.snk" />
   </ItemGroup>
 
+   <!-- Microsoft.Extensions.Logging.Abstractions 6.0.0-preview.5.21301.5 introduced the analyzer which is not present
+       in .net5 or .netcore3.1 therefore we have to remove the analyzer otherwise the build will fail
+  -->
+  <Target Name="RemoveLoggingAnalyzer" BeforeTargets="CoreCompile">
+    <ItemGroup>
+      <Analyzer Remove="@(Analyzer)" Condition="%(FileName) == 'Microsoft.Extensions.Logging.Generators'" />
+    </ItemGroup>
+  </Target>
+
 </Project>
