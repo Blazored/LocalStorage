@@ -7,7 +7,7 @@ on:
     types: [ published ]
 
 env:
-    NETCORE_VERSION: '5.0.400'
+    NETCORE_VERSION: '6.0.100-preview.6.21355.2'
     DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
     DOTNET_CLI_TELEMETRY_OPTOUT: true
     PROJECT_NAME: LocalStorage
