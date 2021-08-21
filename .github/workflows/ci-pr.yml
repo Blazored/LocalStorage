@@ -33,4 +33,4 @@ jobs:
       run: dotnet build -c Release --no-restore src/$PROJECT_NAME.TestExtensions/$PROJECT_NAME.TestExtensions.csproj
 
     - name: Testing...
-      run: dotnet test -c Release --no-build --verbosity normal
+      run: dotnet test -c Release --no-build --verbosity normal tests/Blazored.$PROJECT_NAME.Tests

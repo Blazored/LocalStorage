@@ -5,7 +5,6 @@ on:
     branches: [ main ]
   release:
     types: [ published ]
-  workflow_dispatch:
 
 env:
     NETCORE_VERSION: '5.0.400'
@@ -41,7 +40,7 @@ jobs:
       run: dotnet build -c Release --no-restore src/Blazored.$PROJECT_NAME.TestExtensions/Blazored.$PROJECT_NAME.TestExtensions.csproj
       
     - name: Test Local Storage
-      run: dotnet test -c Release --no-build --verbosity normal
+      run: dotnet test -c Release --no-build --verbosity normal tests/Blazored.$PROJECT_NAME.Tests
 
   deploy:
     needs: build
