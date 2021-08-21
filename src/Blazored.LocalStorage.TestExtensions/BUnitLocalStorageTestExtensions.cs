@@ -18,20 +18,16 @@ namespace Bunit
         public static ILocalStorageService AddBlazoredLocalStorage(this TestContextBase context, Action<LocalStorageOptions> configure)
         {
             if (context is null)
-                throw new ArgumentNullException(nameof(context));      
+                throw new ArgumentNullException(nameof(context));
 
-            context.Services
-                .AddSingleton<IJsonSerializer, SystemTextJsonSerializer>()
-                .AddSingleton<IStorageProvider, InMemoryStorageProvider>()
-                .AddSingleton<ILocalStorageService, LocalStorageService>()
-                .AddSingleton<ISyncLocalStorageService, LocalStorageService>()
-                .Configure<LocalStorageOptions>(configureOptions =>
-                {
-                    configure?.Invoke(configureOptions);
-                    configureOptions.JsonSerializerOptions.Converters.Add(new TimespanJsonConverter());
-                });
+            var localStorageOptions = new LocalStorageOptions();
+            configure?.Invoke(localStorageOptions);
+            localStorageOptions.JsonSerializerOptions.Converters.Add(new TimespanJsonConverter());
 
-            return context.Services.GetService<ILocalStorageService>();
+            var localStorageService = new LocalStorageService(new InMemoryStorageProvider(), new SystemTextJsonSerializer(localStorageOptions));
+            context.Services.AddSingleton<ILocalStorageService>(localStorageService);
+
+            return localStorageService;
         }
     }
 }

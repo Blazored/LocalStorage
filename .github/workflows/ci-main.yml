@@ -8,15 +8,13 @@ on:
   workflow_dispatch:
 
 env:
-    NETCORE_VERSION: '5.0.202'
+    NETCORE_VERSION: '5.0.400'
     DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
     DOTNET_CLI_TELEMETRY_OPTOUT: true
     PROJECT_NAME: LocalStorage
-    GITHUB_FEED: https://nuget.pkg.github.com/Blazored/
-    GITHUB_USER: chrissainty
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     NUGET_FEED: https://api.nuget.org/v3/index.json
-    NUGET_KEY: ${{ secrets.NUGET_KEY_LS }}
+    NUGET_KEY: ${{ secrets.NUGET_KEY }}
 
 jobs:
   build:
@@ -36,63 +34,27 @@ jobs:
     - name: Restore
       run: dotnet restore
 
-    - name: Build
+    - name: Build Local Storage
       run: dotnet build -c Release --no-restore src/Blazored.$PROJECT_NAME/Blazored.$PROJECT_NAME.csproj
+      
+    - name: Build Local Storage Test Extensions
+      run: dotnet build -c Release --no-restore src/Blazored.$PROJECT_NAME.TestExtensions/Blazored.$PROJECT_NAME.TestExtensions.csproj
+      
+    - name: Test Local Storage
+      run: dotnet test -c Release --no-build --verbosity normal
 
-    - name: Test
-      run: dotnet test -c Release
-
-    - name: Pack
-      run: dotnet pack -v normal -c Release --no-restore --include-symbols --include-source -p:PackageVersion=$GITHUB_RUN_ID src/Blazored.$PROJECT_NAME/Blazored.$PROJECT_NAME.*proj
-
-    - name: Publish Sample Site
-      run: dotnet publish -c Release samples/BlazorWebAssembly/BlazorWebAssembly.csproj
-
-    - name: Rewrite base href
-      uses: SteveSandersonMS/ghaction-rewrite-base-href@v1
-      with:
-        html_path: samples/BlazorWebAssembly/bin/Release/net5.0/publish/wwwroot/index.html
-        base_href: /${{ env.PROJECT_NAME }}/
-    
-    - name: Deploy to Github Pages
-      uses: JamesIves/github-pages-deploy-action@releases/v3
-      with:
-        ACCESS_TOKEN: $GITHUB_TOKEN
-        BASE_BRANCH: main # The branch the action should deploy from.
-        BRANCH: gh-pages # The branch the action should deploy to.
-        FOLDER: samples/BlazorWebAssembly/bin/Release/net5.0/publish/wwwroot # The folder the action should deploy.
-        SINGLE_COMMIT: true
-
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: nupkg
-        path: ./src/Blazored.${{ env.PROJECT_NAME }}/bin/Release/*.nupkg
-  prerelease:
-    needs: build
-    if: github.event_name != 'release'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download Artifact
-        uses: actions/download-artifact@v1
-        with:
-          name: nupkg
-      - name: Push to GitHub Feed
-        run: |
-          for f in ./nupkg/*.nupkg
-          do
-            curl -vX PUT -u "$GITHUB_USER:$GITHUB_TOKEN" -F package=@$f $GITHUB_FEED
-          done
   deploy:
     needs: build
     if: github.event_name == 'release'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: ${{ env.NETCORE_VERSION }}
+      
       - name: Create Release NuGet package
         run: |
           arrTag=(${GITHUB_REF//\// })
@@ -100,12 +62,26 @@ jobs:
           echo Version: $VERSION
           VERSION="${VERSION//v}"
           echo Clean Version: $VERSION
-          dotnet pack -v normal -c Release --include-symbols --include-source -p:PackageVersion=$VERSION -o nupkg src/Blazored.$PROJECT_NAME/Blazored.$PROJECT_NAME.*proj
-      - name: Push to GitHub Feed
-        run: |
-          for f in ./nupkg/*.nupkg
-          do
-            curl -vX PUT -u "$GITHUB_USER:$GITHUB_TOKEN" -F package=@$f $GITHUB_FEED
-          done
+          dotnet pack -v normal -c Release --include-symbols --include-source -p:PackageVersion=$VERSION -o nupkg src/Blazored.$PROJECT_NAME/Blazored.$PROJECT_NAME.csproj
+          dotnet pack -v normal -c Release --include-symbols --include-source -p:PackageVersion=$VERSION -o nupkg src/Blazored.$PROJECT_NAME.TestExtensions/Blazored.$PROJECT_NAME.TestExtensions.csproj
+      
       - name: Push to NuGet Feed
-        run: dotnet nuget push ./nupkg/*.nupkg --source $NUGET_FEED --skip-duplicate --api-key $NUGET_KEY_LS
+        run: dotnet nuget push ./nupkg/*.nupkg --source $NUGET_FEED --api-key $NUGET_KEY --skip-duplicate
+      
+      - name: Publish Sample Site
+        run: dotnet publish -c Release samples/BlazorWebAssembly/BlazorWebAssembly.csproj
+
+      - name: Rewrite base href
+        uses: SteveSandersonMS/ghaction-rewrite-base-href@v1
+        with:
+          html_path: samples/BlazorWebAssembly/bin/Release/net5.0/publish/wwwroot/index.html
+          base_href: /${{ env.PROJECT_NAME }}/
+
+      - name: Deploy to Github Pages
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          ACCESS_TOKEN: $GITHUB_TOKEN
+          BASE_BRANCH: main # The branch the action should deploy from.
+          BRANCH: gh-pages # The branch the action should deploy to.
+          FOLDER: samples/BlazorWebAssembly/bin/Release/net5.0/publish/wwwroot # The folder the action should deploy.
+          SINGLE_COMMIT: true

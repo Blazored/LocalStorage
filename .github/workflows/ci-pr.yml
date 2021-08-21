@@ -5,7 +5,7 @@ on:
     branches: [ main ]
 
 env:
-    NETCORE_VERSION: '5.0.202'
+    NETCORE_VERSION: '5.0.400'
     PROJECT_NAME: Blazored.LocalStorage
 
 jobs:
@@ -26,5 +26,11 @@ jobs:
     - name: Building project...
       run: dotnet build --configuration Release --no-restore src/$PROJECT_NAME/$PROJECT_NAME.csproj
 
+    - name: Build Local Storage
+      run: dotnet build -c Release --no-restore src/$PROJECT_NAME/$PROJECT_NAME.csproj
+
+    - name: Build Local Storage Test Extensions
+      run: dotnet build -c Release --no-restore src/$PROJECT_NAME.TestExtensions/$PROJECT_NAME.TestExtensions.csproj
+
     - name: Testing...
-      run: dotnet test --no-restore --verbosity normal
+      run: dotnet test -c Release --no-build --verbosity normal
