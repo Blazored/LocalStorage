@@ -35,12 +35,10 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1' OR '$(TargetFramework)' == 'netcoreapp3.1'">
-    <PackageReference Include="Microsoft.AspNetCore.Components" Version="$(DotNet3Version)" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="$(DotNet3Version)" />
   </ItemGroup>
   
   <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
-    <PackageReference Include="Microsoft.AspNetCore.Components" Version="$(DotNet5Version)" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="$(DotNet5Version)" />
   </ItemGroup>
 
