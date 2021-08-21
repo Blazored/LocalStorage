@@ -1,6 +1,5 @@
 using Blazored.LocalStorage.StorageOptions;
 using Microsoft.Extensions.Options;
-using System.Runtime.CompilerServices;
 using System.Text.Json;
 
 namespace Blazored.LocalStorage.Serialization
@@ -12,6 +11,11 @@ namespace Blazored.LocalStorage.Serialization
         public SystemTextJsonSerializer(IOptions<LocalStorageOptions> options)
         {
             _options = options.Value.JsonSerializerOptions;
+        }
+
+        public SystemTextJsonSerializer(LocalStorageOptions localStorageOptions)
+        {
+            _options = localStorageOptions.JsonSerializerOptions;
         }
 
         public T Deserialize<T>(string data) 
