@@ -40,7 +40,7 @@ jobs:
       run: dotnet build -c Release --no-restore src/Blazored.$PROJECT_NAME.TestExtensions/Blazored.$PROJECT_NAME.TestExtensions.csproj
       
     - name: Test Local Storage
-      run: dotnet test -c Release --no-build --verbosity normal tests/Blazored.$PROJECT_NAME.Tests
+      run: dotnet test -c Release --no-restore --verbosity normal tests/Blazored.$PROJECT_NAME.Tests
 
   deploy:
     needs: build
