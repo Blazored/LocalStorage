@@ -176,7 +176,25 @@ builder.Services.Replace(ServiceDescriptor.Scoped<IJsonSerializer, MySerializer>
 You can find an example of this in the Blazor Server sample project. The standard serializer has been replaced with a new serializer which uses NewtonsoftJson.
 
 ## Testing with bUnit
-The `Blazored.LocalStorage.TestExtensions` library provides test extensions for use with the [bUnit testing library](https://bunit.dev/). Using these test extensions will provide an in memory implementation which mimics local storage allowing more realistic testing of your components.
+The `Blazored.LocalStorage.TestExtensions` package provides test extensions for use with the [bUnit testing library](https://bunit.dev/). Using these test extensions will provide an in memory implementation which mimics local storage allowing more realistic testing of your components.
+
+### Installing
+
+To install the package add the following line to you csproj file replacing x.x.x with the latest version number (found at the top of this file):
+
+```
+<PackageReference Include="Blazored.LocalStorage.TestExtensions" Version="x.x.x" />
+```
+
+You can also install via the .NET CLI with the following command:
+
+```
+dotnet add package Blazored.LocalStorage.TestExtensions
+```
+
+If you're using Visual Studio you can also install via the built in NuGet package manager.
+
+### Usage example
 
 Below is an example test which uses these extensions. You can find an example project which shows this code in action in the samples folder.
 
