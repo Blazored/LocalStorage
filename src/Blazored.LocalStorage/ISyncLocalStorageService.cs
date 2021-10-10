@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Blazored.LocalStorage
 {
@@ -46,8 +47,14 @@ namespace Blazored.LocalStorage
         /// <summary>
         /// Remove the data with the specified <paramref name="key"/>.
         /// </summary>
-        /// <param name="key">A <see cref="string"/> value specifying the name of the storage slot to use</param>
+        /// <param name="key">A <see cref="string"/> value specifying the name of the storage slot to remove</param>
         void RemoveItem(string key);
+
+        /// <summary>
+        /// Removes a collection of <paramref name="keys"/>.
+        /// </summary>
+        /// <param name="keys">A IEnumerable collection of strings specifyin the name of the storage slot to remove</param>
+        void RemoveItems(IEnumerable<string> keys);
 
         /// <summary>
         /// Sets or updates the <paramref name="data"/> in local storage with the specified <paramref name="key"/>.

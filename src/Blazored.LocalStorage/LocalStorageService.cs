@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -98,6 +99,9 @@ namespace Blazored.LocalStorage
         public ValueTask<string> KeyAsync(int index, CancellationToken? cancellationToken = null)
             => _storageProvider.KeyAsync(index, cancellationToken);
 
+        public ValueTask<IEnumerable<string>> KeysAsync(CancellationToken? cancellationToken = null)
+            => _storageProvider.KeysAsync(cancellationToken);
+
         public ValueTask<bool> ContainKeyAsync(string key, CancellationToken? cancellationToken = null)
             => _storageProvider.ContainKeyAsync(key, cancellationToken);
 
@@ -171,6 +175,17 @@ namespace Blazored.LocalStorage
                 throw new ArgumentNullException(nameof(key));
 
             _storageProvider.RemoveItem(key);
+        }
+
+        public void RemoveItems(IEnumerable<string> keys)
+        {
+            if (keys == null)
+                throw new ArgumentNullException(nameof(keys));
+
+            foreach (var key in keys)
+            {
+                _storageProvider.RemoveItem(key);
+            }
         }
 
         public void Clear()
