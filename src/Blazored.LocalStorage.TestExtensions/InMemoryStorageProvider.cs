@@ -36,6 +36,10 @@ namespace Blazored.LocalStorage.TestExtensions
         public ValueTask<string> KeyAsync(int index, CancellationToken? cancellationToken = null)
             => new ValueTask<string>(Key(index));
 
+        public ValueTask<IEnumerable<string>> KeysAsync(CancellationToken? cancellationToken = null)
+            => new ValueTask<IEnumerable<string>>(KeysAsync().Result);
+        
+
         public int Length()
             => _dataStore.Count;
 
