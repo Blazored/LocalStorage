@@ -33,6 +33,7 @@ namespace Blazored.LocalStorage.Tests.LocalStorageServiceTests
             // Arrange
             const string key1 = "TestKey1";
             const string key2 = "TestKey2";
+            _sut.Clear();
             
             var item1 = new TestObject(1, "Jane Smith");
             var item2 = new TestObject(2, "John Smith");
