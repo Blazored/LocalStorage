@@ -53,7 +53,7 @@ namespace Blazored.LocalStorage
         /// <summary>
         /// Removes a collection of <paramref name="keys"/>.
         /// </summary>
-        /// <param name="keys">A IEnumerable collection of strings specifyin the name of the storage slot to remove</param>
+        /// <param name="keys">A IEnumerable collection of strings specifying the name of the storage slot to remove</param>
         void RemoveItems(IEnumerable<string> keys);
 
         /// <summary>
