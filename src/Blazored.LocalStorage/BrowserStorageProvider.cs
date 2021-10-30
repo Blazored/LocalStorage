@@ -74,7 +74,7 @@ namespace Blazored.LocalStorage
         public void RemoveItem(string key)
         {
             CheckForInProcessRuntime();
-            _jSInProcessRuntime.InvokeVoidAsync("localStorage.removeItem", key);
+            _jSInProcessRuntime.InvokeVoid("localStorage.removeItem", key);
         }
 
         public void RemoveItems(List<string> keys)
