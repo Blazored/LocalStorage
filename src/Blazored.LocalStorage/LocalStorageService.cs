@@ -105,6 +105,14 @@ namespace Blazored.LocalStorage
         public ValueTask<bool> ContainKeyAsync(string key, CancellationToken? cancellationToken = null)
             => _storageProvider.ContainKeyAsync(key, cancellationToken);
 
+        public ValueTask RemoveItemsAsync(IEnumerable<string> keys, CancellationToken? cancellationToken = null)
+            => _storageProvider.RemoveItemsAsync(keys, cancellationToken);
+
+        public IEnumerable<string> Keys()
+        {
+           return _storageProvider.Keys();
+        }
+
         public void SetItem<T>(string key, T data)
         {
             if (string.IsNullOrWhiteSpace(key))

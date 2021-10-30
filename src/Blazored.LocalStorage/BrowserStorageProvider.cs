@@ -41,6 +41,19 @@ namespace Blazored.LocalStorage
         public ValueTask<IEnumerable<string>> KeysAsync(CancellationToken? cancellationToken = null)
             => _jSRuntime.InvokeAsync<IEnumerable<string>>("eval", cancellationToken ?? CancellationToken.None, "Object.keys(localStorage)");
 
+        public ValueTask RemoveItemsAsync(IEnumerable<string> keys, CancellationToken? cancellationToken = null)
+        {
+            if (keys != null)
+            {
+                foreach (var key in keys)
+                {
+                    _jSRuntime.InvokeVoidAsync("localStorage.removeItem", cancellationToken ?? CancellationToken.None, key);
+                }
+            }
+
+            return new ValueTask(Task.CompletedTask);
+        }
+
         public void Clear()
         {
             CheckForInProcessRuntime();
@@ -77,12 +90,12 @@ namespace Blazored.LocalStorage
             _jSInProcessRuntime.InvokeVoid("localStorage.removeItem", key);
         }
 
-        public void RemoveItems(List<string> keys)
+        public void RemoveItems(IEnumerable<string> keys)
         {
             CheckForInProcessRuntime();
             foreach (var key in keys)
             {
-                _jSInProcessRuntime.InvokeVoidAsync("localStorage.removeItem", key);
+                _jSInProcessRuntime.InvokeVoid("localStorage.removeItem", key);
             }
         }
 
@@ -90,6 +103,12 @@ namespace Blazored.LocalStorage
         {
             CheckForInProcessRuntime();
             _jSInProcessRuntime.InvokeVoid("localStorage.setItem", key, data);
+        }
+
+        public IEnumerable<string> Keys()
+        {
+            CheckForInProcessRuntime();
+            return _jSInProcessRuntime.Invoke<IEnumerable<string>>("eval", "Object.keys(localStorage)");
         }
 
         private void CheckForInProcessRuntime()
