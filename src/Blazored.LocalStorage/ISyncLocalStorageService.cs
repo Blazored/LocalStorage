@@ -45,6 +45,12 @@ namespace Blazored.LocalStorage
         int Length();
 
         /// <summary>
+        /// Get the keys of all items stored in local storage.
+        /// </summary>
+        /// <returns>The keys of all items stored in local storage</returns>
+        IEnumerable<string> Keys();
+
+        /// <summary>
         /// Remove the data with the specified <paramref name="key"/>.
         /// </summary>
         /// <param name="key">A <see cref="string"/> value specifying the name of the storage slot to remove</param>
