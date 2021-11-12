@@ -1,5 +1,6 @@
 using Microsoft.JSInterop;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -37,6 +38,22 @@ namespace Blazored.LocalStorage
         public ValueTask SetItemAsync(string key, string data, CancellationToken? cancellationToken = null)
             => _jSRuntime.InvokeVoidAsync("localStorage.setItem", cancellationToken ?? CancellationToken.None, key, data);
 
+        public ValueTask<IEnumerable<string>> KeysAsync(CancellationToken? cancellationToken = null)
+            => _jSRuntime.InvokeAsync<IEnumerable<string>>("eval", cancellationToken ?? CancellationToken.None, "Object.keys(localStorage)");
+
+        public ValueTask RemoveItemsAsync(IEnumerable<string> keys, CancellationToken? cancellationToken = null)
+        {
+            if (keys != null)
+            {
+                foreach (var key in keys)
+                {
+                    _jSRuntime.InvokeVoidAsync("localStorage.removeItem", cancellationToken ?? CancellationToken.None, key);
+                }
+            }
+
+            return new ValueTask(Task.CompletedTask);
+        }
+
         public void Clear()
         {
             CheckForInProcessRuntime();
@@ -70,13 +87,28 @@ namespace Blazored.LocalStorage
         public void RemoveItem(string key)
         {
             CheckForInProcessRuntime();
-            _jSInProcessRuntime.InvokeVoidAsync("localStorage.removeItem", key);
+            _jSInProcessRuntime.InvokeVoid("localStorage.removeItem", key);
+        }
+
+        public void RemoveItems(IEnumerable<string> keys)
+        {
+            CheckForInProcessRuntime();
+            foreach (var key in keys)
+            {
+                _jSInProcessRuntime.InvokeVoid("localStorage.removeItem", key);
+            }
         }
 
         public void SetItem(string key, string data)
         {
             CheckForInProcessRuntime();
             _jSInProcessRuntime.InvokeVoid("localStorage.setItem", key, data);
+        }
+
+        public IEnumerable<string> Keys()
+        {
+            CheckForInProcessRuntime();
+            return _jSInProcessRuntime.Invoke<IEnumerable<string>>("eval", "Object.keys(localStorage)");
         }
 
         private void CheckForInProcessRuntime()

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -46,6 +47,16 @@ namespace Blazored.LocalStorage
         ValueTask<string> KeyAsync(int index, CancellationToken? cancellationToken = null);
 
         /// <summary>
+        /// Returns a collection of strings representing the names of the keys in the local storage.
+        /// </summary>
+        /// <param name="cancellationToken">
+        /// A cancellation token to signal the cancellation of the operation. Specifying this parameter will override any default cancellations such as due to timeouts
+        /// (<see cref="JSRuntime.DefaultAsyncTimeout"/>) from being applied.
+        /// </param>
+        /// <returns>A <see cref="ValueTask"/> representing the completion of the operation.</returns>
+        ValueTask<IEnumerable<string>> KeysAsync(CancellationToken? cancellationToken = null);
+
+        /// <summary>
         /// Checks if the <paramref name="key"/> exists in local storage, but does not check its value.
         /// </summary>
         /// <param name="key">A <see cref="string"/> value specifying the name of the storage slot to use</param>
@@ -72,6 +83,16 @@ namespace Blazored.LocalStorage
         /// </param>
         /// <returns>A <see cref="ValueTask"/> representing the completion of the operation.</returns>
         ValueTask RemoveItemAsync(string key, CancellationToken? cancellationToken = null);
+
+        /// <summary>
+        /// Removes a collection of <paramref name="keys"/>.
+        /// </summary>
+        /// <param name="keys">A IEnumerable collection of strings specifying the name of the storage slot to remove</param>
+        /// <param name="cancellationToken">
+        /// A cancellation token to signal the cancellation of the operation. Specifying this parameter will override any default cancellations such as due to timeouts
+        /// (<see cref="JSRuntime.DefaultAsyncTimeout"/>) from being applied.
+        /// </param>
+        ValueTask RemoveItemsAsync(IEnumerable<string> keys, CancellationToken? cancellationToken = null);
 
         /// <summary>
         /// Sets or updates the <paramref name="data"/> in local storage with the specified <paramref name="key"/>.

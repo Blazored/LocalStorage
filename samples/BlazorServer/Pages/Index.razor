@@ -6,7 +6,6 @@
 <hr class="mb-5" />
 
 <div class="row mb-5">
-    
     <div class="col-md-4">
         <h5>Add Item to local storage</h5>
         <div class="input-group">
@@ -29,7 +28,6 @@
 </div>
 
 <div class="row">
-
     <div class="col-md-4">
         <h5>Value Read from local storage</h5>
         @NameFromLocalStorage
@@ -44,15 +42,28 @@
     </div>
 </div>
 
+<div class="row">
+    <div class="col-md-12">
+        <h5>All keys in local storage:</h5>
+        @foreach (var key in keys)
+        {
+            <span>@key &nbsp;</span>
+        }
+    </div>
+</div>
+
 @code {
 
     string NameFromLocalStorage { get; set; }
     int ItemsInLocalStorage { get; set; }
     string Name { get; set; }
     bool ItemExist { get; set; }
+    IEnumerable<string> keys { get; set; } = new List<string>();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        keys = await localStorage.KeysAsync();
+
         if (firstRender)
         {
             await GetNameFromLocalStorage();
@@ -63,7 +74,6 @@
                 Console.WriteLine($"Value for key {e.Key} changed from {e.OldValue} to {e.NewValue}");
             };
             await TestTimespan();
-
 
             StateHasChanged();
         }
@@ -76,6 +86,8 @@
         await GetLocalStorageLength();
 
         Name = "";
+
+        keys = await localStorage.KeysAsync();
     }
 
     async Task GetNameFromLocalStorage()
@@ -115,9 +127,9 @@
     async Task TestTimespan()
     {
         var timespan = await localStorage.GetItemAsync<TimeSpan>("timespan");
-        if(timespan == TimeSpan.Zero)
+        if (timespan == TimeSpan.Zero)
         {
-            await localStorage.SetItemAsync("timespan", new TimeSpan(0,15,0));
+            await localStorage.SetItemAsync("timespan", new TimeSpan(0, 15, 0));
             timespan = await localStorage.GetItemAsync<TimeSpan>("timespan");
         }
     }
