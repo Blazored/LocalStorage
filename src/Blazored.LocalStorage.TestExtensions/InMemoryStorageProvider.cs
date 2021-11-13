@@ -36,6 +36,15 @@ namespace Blazored.LocalStorage.TestExtensions
         public ValueTask<string> KeyAsync(int index, CancellationToken? cancellationToken = null)
             => new ValueTask<string>(Key(index));
 
+        public IEnumerable<string> Keys()
+        {
+            return _dataStore.Keys.ToList();
+        }
+
+        public ValueTask<IEnumerable<string>> KeysAsync(CancellationToken? cancellationToken = null)
+            => new ValueTask<IEnumerable<string>>(_dataStore.Keys.ToList());
+        
+
         public int Length()
             => _dataStore.Count;
 
@@ -48,6 +57,21 @@ namespace Blazored.LocalStorage.TestExtensions
         public ValueTask RemoveItemAsync(string key, CancellationToken? cancellationToken = null)
         {
             RemoveItem(key);
+            return new ValueTask(Task.CompletedTask);
+        }
+
+        public void RemoveItems(IEnumerable<string> keys)
+        {
+            foreach (var key in keys)
+            {
+                _dataStore.Remove(key);
+            }
+        }
+
+        public ValueTask RemoveItemsAsync(IEnumerable<string> keys, CancellationToken? cancellationToken = null)
+        {
+            RemoveItems(keys);
+
             return new ValueTask(Task.CompletedTask);
         }
 
