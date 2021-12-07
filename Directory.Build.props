@@ -4,6 +4,7 @@
   <PropertyGroup Label="Package Versions">
     <DotNet3Version>3.1.14</DotNet3Version>
     <DotNet5Version>5.0.5</DotNet5Version>
+    <DotNet6Version>6.0.0</DotNet6Version>
   </PropertyGroup>
 
 </Project>
