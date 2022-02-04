@@ -73,7 +73,7 @@ jobs:
       - name: Rewrite base href
         uses: SteveSandersonMS/ghaction-rewrite-base-href@v1
         with:
-          html_path: samples/BlazorWebAssembly/bin/Release/net5.0/publish/wwwroot/index.html
+          html_path: samples/BlazorWebAssembly/bin/Release/net6.0/publish/wwwroot/index.html
           base_href: /${{ env.PROJECT_NAME }}/
 
       - name: Deploy to Github Pages
@@ -82,5 +82,5 @@ jobs:
           ACCESS_TOKEN: $GITHUB_TOKEN
           BASE_BRANCH: main # The branch the action should deploy from.
           BRANCH: gh-pages # The branch the action should deploy to.
-          FOLDER: samples/BlazorWebAssembly/bin/Release/net5.0/publish/wwwroot # The folder the action should deploy.
+          FOLDER: samples/BlazorWebAssembly/bin/Release/net6.0/publish/wwwroot # The folder the action should deploy.
           SINGLE_COMMIT: true
