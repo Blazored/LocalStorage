@@ -69,6 +69,16 @@ public static async Task Main(string[] args)
 }
 ```
 
+### Registering services as Singleton - Blazor WebAssembly **ONLY**
+99% of developers will want to register Blazored LocalStorage using the method described above. However, in some very specific scenarios 
+developer may have a need to register services as Singleton as apposed to Scoped. This is possible by using the following method:
+
+```csharp
+builder.Services.AddBlazoredLocalStorageAsSingleton();
+```
+
+This method will not work with Blazor Server applications as Blazor's JS interop services are registered as Scoped and cannot be injected into Singletons.
+
 ## Usage (Blazor WebAssembly)
 To use Blazored.LocalStorage in Blazor WebAssembly, inject the `ILocalStorageService` per the example below.
 
