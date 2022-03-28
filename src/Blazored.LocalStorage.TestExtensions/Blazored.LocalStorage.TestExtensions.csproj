@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;net5.0;net6.0</TargetFrameworks>
+    <TargetFrameworks>net6.0;net5.0</TargetFrameworks>
 
     <Authors>Chris Sainty</Authors>
     <Company></Company>
@@ -31,7 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="bunit.core" Version="1.4.15" />
+    <PackageReference Include="bunit.core" Version="1.6.4" />
   </ItemGroup>
 
   <ItemGroup>
