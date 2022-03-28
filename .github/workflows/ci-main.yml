@@ -7,7 +7,7 @@ on:
     types: [ published ]
 
 env:
-    NETCORE_VERSION: '6.0.100'
+    NETCORE_VERSION: '6.0.x'
     DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
     DOTNET_CLI_TELEMETRY_OPTOUT: true
     PROJECT_NAME: LocalStorage
@@ -59,7 +59,7 @@ jobs:
           arrTag=(${GITHUB_REF//\// })
           VERSION="${arrTag[2]}"
           echo Version: $VERSION
-          VERSION="${VERSION//v}"
+          VERSION="${VERSION:1}"
           echo Clean Version: $VERSION
           dotnet pack -v normal -c Release --include-symbols --include-source -p:PackageVersion=$VERSION -o nupkg src/Blazored.$PROJECT_NAME/Blazored.$PROJECT_NAME.csproj
           dotnet pack -v normal -c Release --include-symbols --include-source -p:PackageVersion=$VERSION -o nupkg src/Blazored.$PROJECT_NAME.TestExtensions/Blazored.$PROJECT_NAME.TestExtensions.csproj
