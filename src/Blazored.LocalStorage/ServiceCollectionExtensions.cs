@@ -26,5 +26,34 @@ namespace Blazored.LocalStorage
                     configureOptions.JsonSerializerOptions.Converters.Add(new TimespanJsonConverter());
                 });
         }
+        
+        /// <summary>
+        /// Registers the Blazored LocalStorage services as singletons. This should only be used in Blazor WebAssembly applications.
+        /// Using this in Blazor Server applications will cause unexpected and potentially dangerous behaviour. 
+        /// </summary>
+        /// <returns></returns>
+        public static IServiceCollection AddBlazoredLocalStorageAsSingleton(this IServiceCollection services)
+            => AddBlazoredLocalStorageAsSingleton(services, null);
+        
+        /// <summary>
+        /// Registers the Blazored LocalStorage services as singletons. This should only be used in Blazor WebAssembly applications.
+        /// Using this in Blazor Server applications will cause unexpected and potentially dangerous behaviour. 
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="configure"></param>
+        /// <returns></returns>
+        public static IServiceCollection AddBlazoredLocalStorageAsSingleton(this IServiceCollection services, Action<LocalStorageOptions> configure)
+        {
+            return services
+                .AddSingleton<IJsonSerializer, SystemTextJsonSerializer>()
+                .AddSingleton<IStorageProvider, BrowserStorageProvider>()
+                .AddSingleton<ILocalStorageService, LocalStorageService>()
+                .AddSingleton<ISyncLocalStorageService, LocalStorageService>()
+                .Configure<LocalStorageOptions>(configureOptions =>
+                {
+                    configure?.Invoke(configureOptions);
+                    configureOptions.JsonSerializerOptions.Converters.Add(new TimespanJsonConverter());
+                });
+        }
     }
 }
