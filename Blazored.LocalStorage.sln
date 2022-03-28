@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28531.58
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32228.430
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazored.LocalStorage", "src\Blazored.LocalStorage\Blazored.LocalStorage.csproj", "{EFA12DC3-35DE-449C-88F2-2BD7576CAF2C}"
 EndProject

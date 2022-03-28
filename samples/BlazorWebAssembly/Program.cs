@@ -11,7 +11,7 @@ namespace BlazorWebAssembly
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
 
-            builder.Services.AddBlazoredLocalStorage();
+            builder.Services.AddBlazoredLocalStorageAsSingleton();
 
             await builder.Build().RunAsync();
         }
