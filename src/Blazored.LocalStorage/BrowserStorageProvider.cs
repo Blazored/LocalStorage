@@ -1,8 +1,8 @@
-using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.JSInterop;
 
 namespace Blazored.LocalStorage
 {
@@ -17,37 +17,37 @@ namespace Blazored.LocalStorage
             _jSInProcessRuntime = jSRuntime as IJSInProcessRuntime;
         }
 
-        public ValueTask ClearAsync(CancellationToken? cancellationToken = null)
-            => _jSRuntime.InvokeVoidAsync("localStorage.clear", cancellationToken ?? CancellationToken.None);
+        public ValueTask ClearAsync(CancellationToken cancellationToken = default)
+            => _jSRuntime.InvokeVoidAsync("localStorage.clear", cancellationToken);
 
-        public ValueTask<string> GetItemAsync(string key, CancellationToken? cancellationToken = null)
-            => _jSRuntime.InvokeAsync<string>("localStorage.getItem", cancellationToken ?? CancellationToken.None, key);
+        public ValueTask<string> GetItemAsync(string key, CancellationToken cancellationToken = default)
+            => _jSRuntime.InvokeAsync<string>("localStorage.getItem", cancellationToken, key);
 
-        public ValueTask<string> KeyAsync(int index, CancellationToken? cancellationToken = null)
-            => _jSRuntime.InvokeAsync<string>("localStorage.key", cancellationToken ?? CancellationToken.None, index);
+        public ValueTask<string> KeyAsync(int index, CancellationToken cancellationToken = default)
+            => _jSRuntime.InvokeAsync<string>("localStorage.key", cancellationToken, index);
 
-        public ValueTask<bool> ContainKeyAsync(string key, CancellationToken? cancellationToken = null)
-            => _jSRuntime.InvokeAsync<bool>("localStorage.hasOwnProperty", cancellationToken ?? CancellationToken.None, key);
+        public ValueTask<bool> ContainKeyAsync(string key, CancellationToken cancellationToken = default)
+            => _jSRuntime.InvokeAsync<bool>("localStorage.hasOwnProperty", cancellationToken, key);
 
-        public ValueTask<int> LengthAsync(CancellationToken? cancellationToken = null)
-            => _jSRuntime.InvokeAsync<int>("eval", cancellationToken ?? CancellationToken.None, "localStorage.length");
+        public ValueTask<int> LengthAsync(CancellationToken cancellationToken = default)
+            => _jSRuntime.InvokeAsync<int>("eval", cancellationToken, "localStorage.length");
 
-        public ValueTask RemoveItemAsync(string key, CancellationToken? cancellationToken = null)
-            => _jSRuntime.InvokeVoidAsync("localStorage.removeItem", cancellationToken ?? CancellationToken.None, key);
+        public ValueTask RemoveItemAsync(string key, CancellationToken cancellationToken = default)
+            => _jSRuntime.InvokeVoidAsync("localStorage.removeItem", cancellationToken, key);
 
-        public ValueTask SetItemAsync(string key, string data, CancellationToken? cancellationToken = null)
-            => _jSRuntime.InvokeVoidAsync("localStorage.setItem", cancellationToken ?? CancellationToken.None, key, data);
+        public ValueTask SetItemAsync(string key, string data, CancellationToken cancellationToken = default)
+            => _jSRuntime.InvokeVoidAsync("localStorage.setItem", cancellationToken, key, data);
 
-        public ValueTask<IEnumerable<string>> KeysAsync(CancellationToken? cancellationToken = null)
-            => _jSRuntime.InvokeAsync<IEnumerable<string>>("eval", cancellationToken ?? CancellationToken.None, "Object.keys(localStorage)");
+        public ValueTask<IEnumerable<string>> KeysAsync(CancellationToken cancellationToken = default)
+            => _jSRuntime.InvokeAsync<IEnumerable<string>>("eval", cancellationToken, "Object.keys(localStorage)");
 
-        public ValueTask RemoveItemsAsync(IEnumerable<string> keys, CancellationToken? cancellationToken = null)
+        public ValueTask RemoveItemsAsync(IEnumerable<string> keys, CancellationToken cancellationToken = default)
         {
             if (keys != null)
             {
                 foreach (var key in keys)
                 {
-                    _jSRuntime.InvokeVoidAsync("localStorage.removeItem", cancellationToken ?? CancellationToken.None, key);
+                    _jSRuntime.InvokeVoidAsync("localStorage.removeItem", cancellationToken, key);
                 }
             }
 
