@@ -12,7 +12,7 @@ namespace Blazored.LocalStorage.TestExtensions
         public void Clear()
             => _dataStore.Clear();
 
-        public ValueTask ClearAsync(CancellationToken? cancellationToken = null)
+        public ValueTask ClearAsync(CancellationToken cancellationToken = default)
         {
             _dataStore.Clear();
             return new ValueTask(Task.CompletedTask);
@@ -21,19 +21,19 @@ namespace Blazored.LocalStorage.TestExtensions
         public bool ContainKey(string key)
             => _dataStore.ContainsKey(key);
 
-        public ValueTask<bool> ContainKeyAsync(string key, CancellationToken? cancellationToken = null)
+        public ValueTask<bool> ContainKeyAsync(string key, CancellationToken cancellationToken = default)
             => new ValueTask<bool>(ContainKey(key));
 
-        public string GetItem(string key) 
+        public string GetItem(string key)
             => _dataStore.ContainsKey(key) ? _dataStore[key] : default;
 
-        public ValueTask<string> GetItemAsync(string key, CancellationToken? cancellationToken = null)
+        public ValueTask<string> GetItemAsync(string key, CancellationToken cancellationToken = default)
             => new ValueTask<string>(GetItem(key));
 
         public string Key(int index)
             => index > _dataStore.Count - 1 ? default : _dataStore.ElementAt(index).Key;
 
-        public ValueTask<string> KeyAsync(int index, CancellationToken? cancellationToken = null)
+        public ValueTask<string> KeyAsync(int index, CancellationToken cancellationToken = default)
             => new ValueTask<string>(Key(index));
 
         public IEnumerable<string> Keys()
@@ -41,20 +41,20 @@ namespace Blazored.LocalStorage.TestExtensions
             return _dataStore.Keys.ToList();
         }
 
-        public ValueTask<IEnumerable<string>> KeysAsync(CancellationToken? cancellationToken = null)
+        public ValueTask<IEnumerable<string>> KeysAsync(CancellationToken cancellationToken = default)
             => new ValueTask<IEnumerable<string>>(_dataStore.Keys.ToList());
-        
+
 
         public int Length()
             => _dataStore.Count;
 
-        public ValueTask<int> LengthAsync(CancellationToken? cancellationToken = null)
+        public ValueTask<int> LengthAsync(CancellationToken cancellationToken = default)
             => new ValueTask<int>(Length());
 
         public void RemoveItem(string key)
             => _dataStore.Remove(key);
 
-        public ValueTask RemoveItemAsync(string key, CancellationToken? cancellationToken = null)
+        public ValueTask RemoveItemAsync(string key, CancellationToken cancellationToken = default)
         {
             RemoveItem(key);
             return new ValueTask(Task.CompletedTask);
@@ -68,7 +68,7 @@ namespace Blazored.LocalStorage.TestExtensions
             }
         }
 
-        public ValueTask RemoveItemsAsync(IEnumerable<string> keys, CancellationToken? cancellationToken = null)
+        public ValueTask RemoveItemsAsync(IEnumerable<string> keys, CancellationToken cancellationToken = default)
         {
             RemoveItems(keys);
 
@@ -87,7 +87,7 @@ namespace Blazored.LocalStorage.TestExtensions
             }
         }
 
-        public ValueTask SetItemAsync(string key, string data, CancellationToken? cancellationToken = null)
+        public ValueTask SetItemAsync(string key, string data, CancellationToken cancellationToken = default)
         {
             SetItem(key, data);
             return new ValueTask(Task.CompletedTask);
