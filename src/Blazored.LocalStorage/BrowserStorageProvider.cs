@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Blazored.LocalStorage.Exceptions;
 
 namespace Blazored.LocalStorage
 {
@@ -24,7 +25,17 @@ namespace Blazored.LocalStorage
             => _jSRuntime.InvokeAsync<string>("localStorage.getItem", cancellationToken ?? CancellationToken.None, key);
 
         public ValueTask<string> KeyAsync(int index, CancellationToken? cancellationToken = null)
-            => _jSRuntime.InvokeAsync<string>("localStorage.key", cancellationToken ?? CancellationToken.None, index);
+        {
+            try
+            {
+                return _jSRuntime.InvokeAsync<string>("localStorage.key", cancellationToken ?? CancellationToken.None, index);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
 
         public ValueTask<bool> ContainKeyAsync(string key, CancellationToken? cancellationToken = null)
             => _jSRuntime.InvokeAsync<bool>("localStorage.hasOwnProperty", cancellationToken ?? CancellationToken.None, key);
@@ -38,8 +49,18 @@ namespace Blazored.LocalStorage
         public ValueTask SetItemAsync(string key, string data, CancellationToken? cancellationToken = null)
             => _jSRuntime.InvokeVoidAsync("localStorage.setItem", cancellationToken ?? CancellationToken.None, key, data);
 
-        public ValueTask<IEnumerable<string>> KeysAsync(CancellationToken? cancellationToken = null)
-            => _jSRuntime.InvokeAsync<IEnumerable<string>>("eval", cancellationToken ?? CancellationToken.None, "Object.keys(localStorage)");
+        public async ValueTask<IEnumerable<string>> KeysAsync(CancellationToken? cancellationToken = null)
+        {
+            try
+            {
+                
+                return await _jSRuntime.InvokeAsync<IEnumerable<string>>("eval", cancellationToken ?? CancellationToken.None, "Object.keys(localStorage)");
+            }
+            catch (Exception e)
+            {
+                throw new BrowserStorageDisabledException("Unable to access the browser storage. This is most likely due to the browser settings.", e);
+            }
+        }
 
         public ValueTask RemoveItemsAsync(IEnumerable<string> keys, CancellationToken? cancellationToken = null)
         {
