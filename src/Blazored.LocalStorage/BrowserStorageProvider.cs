@@ -160,11 +160,6 @@ namespace Blazored.LocalStorage
         {
             try
             {
-                if (keys == null)
-                {
-                    return;
-                }
-                
                 foreach (var key in keys)
                 {
                     await _jSRuntime.InvokeVoidAsync("localStorage.removeItem", cancellationToken, key);

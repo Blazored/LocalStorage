@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net5.0</TargetFrameworks>
+    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
 
     <Authors>Chris Sainty</Authors>
-    <Company></Company>
+    <Company>Chris Sainty</Company>
     <Copyright>Copyright 2020 (c) Chris Sainty. All rights reserved.</Copyright>
     <Description>A testing library to provide helper extensions for Blazored.LocalStorage</Description>
     <IncludeSymbols>true</IncludeSymbols>
@@ -27,11 +27,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="..\..\src\Blazored.LocalStorage\icon.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="bunit.core" Version="1.6.4" />
+    <PackageReference Include="bunit.core" Version="1.12.6" />
   </ItemGroup>
 
   <ItemGroup>
@@ -49,14 +53,5 @@
   <ItemGroup>
     <None Include="..\Blazored.LocalStorage\Blazored.LocalStorage.snk" Link="Blazored.LocalStorage.snk" />
   </ItemGroup>
-
-   <!-- Microsoft.Extensions.Logging.Abstractions 6.0.0-preview.5.21301.5 introduced the analyzer which is not present
-       in .net5 or .netcore3.1 therefore we have to remove the analyzer otherwise the build will fail
-  -->
-  <Target Name="RemoveLoggingAnalyzer" BeforeTargets="CoreCompile" Condition="'$(TargetFramework)' != 'net6.0'">
-    <ItemGroup>
-      <Analyzer Remove="@(Analyzer)" Condition="%(FileName) == 'Microsoft.Extensions.Logging.Generators'" />
-    </ItemGroup>
-  </Target>
 
 </Project>
