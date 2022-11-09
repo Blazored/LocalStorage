@@ -47,7 +47,7 @@
 <div class="row">
     <div class="col-md-12">
         <h5>All keys in local storage:</h5>
-        @foreach (var key in keys)
+        @foreach (var key in Keys)
         {
             <span>@key &nbsp;</span>
         }
@@ -56,22 +56,22 @@
 
 @code {
 
-    string NameFromLocalStorage { get; set; }
+    string? NameFromLocalStorage { get; set; }
     int ItemsInLocalStorage { get; set; }
-    string Name { get; set; }
+    string? Name { get; set; }
     bool ItemExist { get; set; }
-    IEnumerable<string> keys { get; set; } = new List<string>();
+    IEnumerable<string> Keys { get; set; } = new List<string>();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        keys = await localStorage.KeysAsync();
+        Keys = await localStorage.KeysAsync();
 
         if (firstRender)
         {
             await GetNameFromLocalStorage();
             await GetLocalStorageLength();
 
-            localStorage.Changed += (sender, e) =>
+            localStorage.Changed += (_, e) =>
             {
                 Console.WriteLine($"Value for key {e.Key} changed from {e.OldValue} to {e.NewValue}");
             };
@@ -89,7 +89,7 @@
 
         Name = "";
 
-        keys = await localStorage.KeysAsync();
+        Keys = await localStorage.KeysAsync();
     }
 
     async Task GetNameFromLocalStorage()
