@@ -11,7 +11,7 @@ namespace Blazored.LocalStorage
         /// Clears all data from local storage.
         /// </summary>
         /// <returns>A <see cref="ValueTask"/> representing the completion of the operation.</returns>
-        ValueTask ClearAsync(CancellationToken? cancellationToken = null);
+        ValueTask ClearAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Retrieve the specified data from local storage and deseralise it to the specfied type.
@@ -22,7 +22,7 @@ namespace Blazored.LocalStorage
         /// (<see cref="JSRuntime.DefaultAsyncTimeout"/>) from being applied.
         /// </param>
         /// <returns>A <see cref="ValueTask"/> representing the completion of the operation.</returns>
-        ValueTask<T> GetItemAsync<T>(string key, CancellationToken? cancellationToken = null);
+        ValueTask<T> GetItemAsync<T>(string key, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Retrieve the specified data from local storage as a <see cref="string"/>.
@@ -33,7 +33,7 @@ namespace Blazored.LocalStorage
         /// (<see cref="JSRuntime.DefaultAsyncTimeout"/>) from being applied.
         /// </param>
         /// <returns>A <see cref="ValueTask"/> representing the completion of the operation.</returns>
-        ValueTask<string> GetItemAsStringAsync(string key, CancellationToken? cancellationToken = null);
+        ValueTask<string> GetItemAsStringAsync(string key, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Return the name of the key at the specified <paramref name="index"/>.
@@ -44,7 +44,7 @@ namespace Blazored.LocalStorage
         /// (<see cref="JSRuntime.DefaultAsyncTimeout"/>) from being applied.
         /// </param>
         /// <returns>A <see cref="ValueTask"/> representing the completion of the operation.</returns>
-        ValueTask<string> KeyAsync(int index, CancellationToken? cancellationToken = null);
+        ValueTask<string> KeyAsync(int index, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Returns a collection of strings representing the names of the keys in the local storage.
@@ -54,7 +54,7 @@ namespace Blazored.LocalStorage
         /// (<see cref="JSRuntime.DefaultAsyncTimeout"/>) from being applied.
         /// </param>
         /// <returns>A <see cref="ValueTask"/> representing the completion of the operation.</returns>
-        ValueTask<IEnumerable<string>> KeysAsync(CancellationToken? cancellationToken = null);
+        ValueTask<IEnumerable<string>> KeysAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Checks if the <paramref name="key"/> exists in local storage, but does not check its value.
@@ -65,13 +65,13 @@ namespace Blazored.LocalStorage
         /// (<see cref="JSRuntime.DefaultAsyncTimeout"/>) from being applied.
         /// </param>
         /// <returns>A <see cref="ValueTask"/> representing the completion of the operation.</returns>
-        ValueTask<bool> ContainKeyAsync(string key, CancellationToken? cancellationToken = null);
+        ValueTask<bool> ContainKeyAsync(string key, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// The number of items stored in local storage.
         /// </summary>
         /// <returns>A <see cref="ValueTask"/> representing the completion of the operation.</returns>
-        ValueTask<int> LengthAsync(CancellationToken? cancellationToken = null);
+        ValueTask<int> LengthAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Remove the data with the specified <paramref name="key"/>.
@@ -82,7 +82,7 @@ namespace Blazored.LocalStorage
         /// (<see cref="JSRuntime.DefaultAsyncTimeout"/>) from being applied.
         /// </param>
         /// <returns>A <see cref="ValueTask"/> representing the completion of the operation.</returns>
-        ValueTask RemoveItemAsync(string key, CancellationToken? cancellationToken = null);
+        ValueTask RemoveItemAsync(string key, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Removes a collection of <paramref name="keys"/>.
@@ -92,7 +92,7 @@ namespace Blazored.LocalStorage
         /// A cancellation token to signal the cancellation of the operation. Specifying this parameter will override any default cancellations such as due to timeouts
         /// (<see cref="JSRuntime.DefaultAsyncTimeout"/>) from being applied.
         /// </param>
-        ValueTask RemoveItemsAsync(IEnumerable<string> keys, CancellationToken? cancellationToken = null);
+        ValueTask RemoveItemsAsync(IEnumerable<string> keys, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Sets or updates the <paramref name="data"/> in local storage with the specified <paramref name="key"/>.
@@ -104,7 +104,7 @@ namespace Blazored.LocalStorage
         /// (<see cref="JSRuntime.DefaultAsyncTimeout"/>) from being applied.
         /// </param>
         /// <returns>A <see cref="ValueTask"/> representing the completion of the operation.</returns>
-        ValueTask SetItemAsync<T>(string key, T data, CancellationToken? cancellationToken = null);
+        ValueTask SetItemAsync<T>(string key, T data, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Sets or updates the <paramref name="data"/> in local storage with the specified <paramref name="key"/>. Does not serialize the value before storing.
@@ -116,7 +116,7 @@ namespace Blazored.LocalStorage
         /// (<see cref="JSRuntime.DefaultAsyncTimeout"/>) from being applied.
         /// </param>
         /// <returns></returns>
-        ValueTask SetItemAsStringAsync(string key, string data, CancellationToken? cancellationToken = null);
+        ValueTask SetItemAsStringAsync(string key, string data, CancellationToken cancellationToken = default);
 
         event EventHandler<ChangingEventArgs> Changing;
         event EventHandler<ChangedEventArgs> Changed;
