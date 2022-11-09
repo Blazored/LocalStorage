@@ -20,11 +20,11 @@ namespace Blazored.LocalStorage
             _jSInProcessRuntime = jSRuntime as IJSInProcessRuntime;
         }
 
-        public async ValueTask ClearAsync(CancellationToken? cancellationToken = null)
+        public async ValueTask ClearAsync(CancellationToken cancellationToken = default)
         {
             try
             {
-                await _jSRuntime.InvokeVoidAsync("localStorage.clear", cancellationToken ?? CancellationToken.None);
+                await _jSRuntime.InvokeVoidAsync("localStorage.clear", cancellationToken);
             }
             catch (Exception exception)
             {
@@ -37,11 +37,11 @@ namespace Blazored.LocalStorage
             }
         }
 
-        public async ValueTask<string> GetItemAsync(string key, CancellationToken? cancellationToken = null)
+        public async ValueTask<string> GetItemAsync(string key, CancellationToken cancellationToken = default)
         {
             try
             {
-                return await _jSRuntime.InvokeAsync<string>("localStorage.getItem", cancellationToken ?? CancellationToken.None, key);
+                return await _jSRuntime.InvokeAsync<string>("localStorage.getItem", cancellationToken, key);
             }
             catch (Exception exception)
             {
@@ -54,11 +54,11 @@ namespace Blazored.LocalStorage
             }
         }
 
-        public async ValueTask<string> KeyAsync(int index, CancellationToken? cancellationToken = null)
+        public async ValueTask<string> KeyAsync(int index, CancellationToken cancellationToken = default)
         {
             try
             {
-                return await _jSRuntime.InvokeAsync<string>("localStorage.key", cancellationToken ?? CancellationToken.None, index);
+                return await _jSRuntime.InvokeAsync<string>("localStorage.key", cancellationToken, index);
             }
             catch (Exception exception)
             {
@@ -71,11 +71,11 @@ namespace Blazored.LocalStorage
             }
         }
 
-        public async ValueTask<bool> ContainKeyAsync(string key, CancellationToken? cancellationToken = null)
+        public async ValueTask<bool> ContainKeyAsync(string key, CancellationToken cancellationToken = default)
         {
             try
             {
-                return await _jSRuntime.InvokeAsync<bool>("localStorage.hasOwnProperty", cancellationToken ?? CancellationToken.None, key);
+                return await _jSRuntime.InvokeAsync<bool>("localStorage.hasOwnProperty", cancellationToken, key);
             }
             catch (Exception exception)
             {
@@ -88,11 +88,11 @@ namespace Blazored.LocalStorage
             }
         }
 
-        public async ValueTask<int> LengthAsync(CancellationToken? cancellationToken = null)
+        public async ValueTask<int> LengthAsync(CancellationToken cancellationToken = default)
         {
             try
             {
-                return await _jSRuntime.InvokeAsync<int>("eval", cancellationToken ?? CancellationToken.None, "localStorage.length");
+                return await _jSRuntime.InvokeAsync<int>("eval", cancellationToken, "localStorage.length");
             }
             catch (Exception exception)
             {
@@ -105,11 +105,11 @@ namespace Blazored.LocalStorage
             }
         }
 
-        public async ValueTask RemoveItemAsync(string key, CancellationToken? cancellationToken = null)
+        public async ValueTask RemoveItemAsync(string key, CancellationToken cancellationToken = default)
         {
             try
             {
-                await _jSRuntime.InvokeVoidAsync("localStorage.removeItem", cancellationToken ?? CancellationToken.None, key);
+                await _jSRuntime.InvokeVoidAsync("localStorage.removeItem", cancellationToken, key);
             }
             catch (Exception exception)
             {
@@ -122,11 +122,11 @@ namespace Blazored.LocalStorage
             }
         }
 
-        public async ValueTask SetItemAsync(string key, string data, CancellationToken? cancellationToken = null)
+        public async ValueTask SetItemAsync(string key, string data, CancellationToken cancellationToken = default)
         {
             try
             {
-                await _jSRuntime.InvokeVoidAsync("localStorage.setItem", cancellationToken ?? CancellationToken.None, key, data);
+                await _jSRuntime.InvokeVoidAsync("localStorage.setItem", cancellationToken, key, data);
             }
             catch (Exception exception)
             {
@@ -139,11 +139,11 @@ namespace Blazored.LocalStorage
             }
         }
 
-        public async ValueTask<IEnumerable<string>> KeysAsync(CancellationToken? cancellationToken = null)
+        public async ValueTask<IEnumerable<string>> KeysAsync(CancellationToken cancellationToken = default)
         {
             try
             {
-                return await _jSRuntime.InvokeAsync<IEnumerable<string>>("eval", cancellationToken ?? CancellationToken.None, "Object.keys(localStorage)");
+                return await _jSRuntime.InvokeAsync<IEnumerable<string>>("eval", cancellationToken, "Object.keys(localStorage)");
             }
             catch (Exception exception)
             {
@@ -156,7 +156,7 @@ namespace Blazored.LocalStorage
             }
         }
 
-        public async ValueTask RemoveItemsAsync(IEnumerable<string> keys, CancellationToken? cancellationToken = null)
+        public async ValueTask RemoveItemsAsync(IEnumerable<string> keys, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -167,7 +167,7 @@ namespace Blazored.LocalStorage
                 
                 foreach (var key in keys)
                 {
-                    await _jSRuntime.InvokeVoidAsync("localStorage.removeItem", cancellationToken ?? CancellationToken.None, key);
+                    await _jSRuntime.InvokeVoidAsync("localStorage.removeItem", cancellationToken, key);
                 }
             }
             catch (Exception exception)
