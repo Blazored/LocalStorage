@@ -74,6 +74,19 @@ namespace Blazored.LocalStorage
             }
         }
 
+        public async ValueTask<T> GetItemAsync<T>(string key, T defaultValue, CancellationToken cancellationToken = default)
+        {
+            if (string.IsNullOrWhiteSpace(key))
+                throw new ArgumentNullException(nameof(key));
+
+            bool containsKey = await ContainKeyAsync(key, cancellationToken);
+            if (containsKey)
+            {
+                return await GetItemAsync<T>(key, cancellationToken);
+            }
+            return defaultValue;
+        }
+
         public ValueTask<string> GetItemAsStringAsync(string key, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(key))

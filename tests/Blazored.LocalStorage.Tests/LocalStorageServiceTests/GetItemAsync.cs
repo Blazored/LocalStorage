@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Blazored.LocalStorage.JsonConverters;
@@ -101,6 +101,28 @@ namespace Blazored.LocalStorage.Tests.LocalStorageServiceTests
 
             // Assert
             Assert.Equal(valueToSave, result);
+        }
+
+        [Fact]
+        public async Task ReturnsDefaultBooleanValue_When_KeyNotExists()
+        {
+            // Arrange / Act
+
+            var result = await _sut.GetItemAsync<bool>("NonExistentKey");
+
+            // Assert
+            Assert.False(result);
+        }
+
+        [Fact]
+        public async Task ReturnsSpecificDefaultBooleanValue_When_KeyNotExists()
+        {
+            // Arrange / Act
+
+            var result = await _sut.GetItemAsync<bool>("NonExistentKey", defaultValue: true);
+
+            // Assert
+            Assert.True(result);
         }
     }
 }
