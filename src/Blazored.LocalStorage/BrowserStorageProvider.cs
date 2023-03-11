@@ -24,7 +24,7 @@ namespace Blazored.LocalStorage
         {
             try
             {
-                await _jSRuntime.InvokeVoidAsync("localStorage.clear", cancellationToken);
+                await _jSRuntime.InvokeVoidAsync("window.localStorage.clear", cancellationToken);
             }
             catch (Exception exception)
             {
@@ -41,7 +41,7 @@ namespace Blazored.LocalStorage
         {
             try
             {
-                return await _jSRuntime.InvokeAsync<string>("localStorage.getItem", cancellationToken, key);
+                return await _jSRuntime.InvokeAsync<string>("window.localStorage.getItem", cancellationToken, key);
             }
             catch (Exception exception)
             {
@@ -58,7 +58,7 @@ namespace Blazored.LocalStorage
         {
             try
             {
-                return await _jSRuntime.InvokeAsync<string>("localStorage.key", cancellationToken, index);
+                return await _jSRuntime.InvokeAsync<string>("window.localStorage.key", cancellationToken, index);
             }
             catch (Exception exception)
             {
@@ -75,7 +75,7 @@ namespace Blazored.LocalStorage
         {
             try
             {
-                return await _jSRuntime.InvokeAsync<bool>("localStorage.hasOwnProperty", cancellationToken, key);
+                return await _jSRuntime.InvokeAsync<bool>("window.localStorage.hasOwnProperty", cancellationToken, key);
             }
             catch (Exception exception)
             {
@@ -92,7 +92,7 @@ namespace Blazored.LocalStorage
         {
             try
             {
-                return await _jSRuntime.InvokeAsync<int>("eval", cancellationToken, "localStorage.length");
+                return await _jSRuntime.InvokeAsync<int>("eval", cancellationToken, "window.localStorage.length");
             }
             catch (Exception exception)
             {
@@ -109,7 +109,7 @@ namespace Blazored.LocalStorage
         {
             try
             {
-                await _jSRuntime.InvokeVoidAsync("localStorage.removeItem", cancellationToken, key);
+                await _jSRuntime.InvokeVoidAsync("window.localStorage.removeItem", cancellationToken, key);
             }
             catch (Exception exception)
             {
@@ -126,7 +126,7 @@ namespace Blazored.LocalStorage
         {
             try
             {
-                await _jSRuntime.InvokeVoidAsync("localStorage.setItem", cancellationToken, key, data);
+                await _jSRuntime.InvokeVoidAsync("window.localStorage.setItem", cancellationToken, key, data);
             }
             catch (Exception exception)
             {
@@ -162,7 +162,7 @@ namespace Blazored.LocalStorage
             {
                 foreach (var key in keys)
                 {
-                    await _jSRuntime.InvokeVoidAsync("localStorage.removeItem", cancellationToken, key);
+                    await _jSRuntime.InvokeVoidAsync("window.localStorage.removeItem", cancellationToken, key);
                 }
             }
             catch (Exception exception)
@@ -181,7 +181,7 @@ namespace Blazored.LocalStorage
             CheckForInProcessRuntime();
             try
             {
-                _jSInProcessRuntime.InvokeVoid("localStorage.clear");
+                _jSInProcessRuntime.InvokeVoid("window.localStorage.clear");
             }
             catch (Exception exception)
             {
@@ -199,7 +199,7 @@ namespace Blazored.LocalStorage
             CheckForInProcessRuntime();
             try
             {
-                return _jSInProcessRuntime.Invoke<string>("localStorage.getItem", key);
+                return _jSInProcessRuntime.Invoke<string>("window.localStorage.getItem", key);
             }
             catch (Exception exception)
             {
@@ -217,7 +217,7 @@ namespace Blazored.LocalStorage
             CheckForInProcessRuntime();
             try
             {
-                return _jSInProcessRuntime.Invoke<string>("localStorage.key", index);
+                return _jSInProcessRuntime.Invoke<string>("window.localStorage.key", index);
             }
             catch (Exception exception)
             {
@@ -235,7 +235,7 @@ namespace Blazored.LocalStorage
             CheckForInProcessRuntime();
             try
             {
-                return _jSInProcessRuntime.Invoke<bool>("localStorage.hasOwnProperty", key);
+                return _jSInProcessRuntime.Invoke<bool>("window.localStorage.hasOwnProperty", key);
             }
             catch (Exception exception)
             {
@@ -253,7 +253,7 @@ namespace Blazored.LocalStorage
             CheckForInProcessRuntime();
             try
             {
-                return _jSInProcessRuntime.Invoke<int>("eval", "localStorage.length");
+                return _jSInProcessRuntime.Invoke<int>("eval", "window.localStorage.length");
             }
             catch (Exception exception)
             {
@@ -271,7 +271,7 @@ namespace Blazored.LocalStorage
             CheckForInProcessRuntime();
             try
             {
-                _jSInProcessRuntime.InvokeVoid("localStorage.removeItem", key);
+                _jSInProcessRuntime.InvokeVoid("window.localStorage.removeItem", key);
             }
             catch (Exception exception)
             {
@@ -291,7 +291,7 @@ namespace Blazored.LocalStorage
             {
                 foreach (var key in keys)
                 {
-                    _jSInProcessRuntime.InvokeVoid("localStorage.removeItem", key);
+                    _jSInProcessRuntime.InvokeVoid("window.localStorage.removeItem", key);
                 }
             }
             catch (Exception exception)
@@ -310,7 +310,7 @@ namespace Blazored.LocalStorage
             CheckForInProcessRuntime();
             try
             {
-                _jSInProcessRuntime.InvokeVoid("localStorage.setItem", key, data);
+                _jSInProcessRuntime.InvokeVoid("window.localStorage.setItem", key, data);
             }
             catch (Exception exception)
             {
