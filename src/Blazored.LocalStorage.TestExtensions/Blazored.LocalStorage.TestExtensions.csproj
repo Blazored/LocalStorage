@@ -2,7 +2,8 @@
 
   <PropertyGroup>
     <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
-
+    <Nullable>enable</Nullable>
+    
     <Authors>Chris Sainty</Authors>
     <Company>Chris Sainty</Company>
     <Copyright>Copyright 2020 (c) Chris Sainty. All rights reserved.</Copyright>

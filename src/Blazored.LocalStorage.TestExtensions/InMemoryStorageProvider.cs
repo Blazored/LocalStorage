@@ -24,17 +24,17 @@ namespace Blazored.LocalStorage.TestExtensions
         public ValueTask<bool> ContainKeyAsync(string key, CancellationToken cancellationToken = default)
             => new ValueTask<bool>(ContainKey(key));
 
-        public string GetItem(string key)
+        public string? GetItem(string key)
             => _dataStore.ContainsKey(key) ? _dataStore[key] : default;
 
-        public ValueTask<string> GetItemAsync(string key, CancellationToken cancellationToken = default)
-            => new ValueTask<string>(GetItem(key));
+        public ValueTask<string?> GetItemAsync(string key, CancellationToken cancellationToken = default)
+            => new ValueTask<string?>(GetItem(key));
 
-        public string Key(int index)
+        public string? Key(int index)
             => index > _dataStore.Count - 1 ? default : _dataStore.ElementAt(index).Key;
 
-        public ValueTask<string> KeyAsync(int index, CancellationToken cancellationToken = default)
-            => new ValueTask<string>(Key(index));
+        public ValueTask<string?> KeyAsync(int index, CancellationToken cancellationToken = default)
+            => new ValueTask<string?>(Key(index));
 
         public IEnumerable<string> Keys()
         {

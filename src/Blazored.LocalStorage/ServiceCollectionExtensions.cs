@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using Blazored.LocalStorage.JsonConverters;
 using Blazored.LocalStorage.Serialization;
@@ -13,7 +13,7 @@ namespace Blazored.LocalStorage
         public static IServiceCollection AddBlazoredLocalStorage(this IServiceCollection services)
             => AddBlazoredLocalStorage(services, null);
 
-        public static IServiceCollection AddBlazoredLocalStorage(this IServiceCollection services, Action<LocalStorageOptions> configure)
+        public static IServiceCollection AddBlazoredLocalStorage(this IServiceCollection services, Action<LocalStorageOptions>? configure)
         {
             return services
                 .AddScoped<IJsonSerializer, SystemTextJsonSerializer>()
@@ -42,7 +42,7 @@ namespace Blazored.LocalStorage
         /// <param name="services"></param>
         /// <param name="configure"></param>
         /// <returns></returns>
-        public static IServiceCollection AddBlazoredLocalStorageAsSingleton(this IServiceCollection services, Action<LocalStorageOptions> configure)
+        public static IServiceCollection AddBlazoredLocalStorageAsSingleton(this IServiceCollection services, Action<LocalStorageOptions>? configure)
         {
             return services
                 .AddSingleton<IJsonSerializer, SystemTextJsonSerializer>()

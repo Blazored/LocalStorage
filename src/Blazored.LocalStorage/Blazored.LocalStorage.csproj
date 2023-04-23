@@ -2,10 +2,11 @@
 
   <PropertyGroup>
     <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
-
+    <Nullable>enable</Nullable>
+    
     <Authors>Chris Sainty</Authors>
     <Company>Chris Sainty</Company>
-    <Copyright>Copyright 2020 (c) Chris Sainty. All rights reserved.</Copyright> 
+    <Copyright>Copyright 2020 (c) Chris Sainty. All rights reserved.</Copyright>
     <Description>A library to provide access to local storage in Blazor applications</Description>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>

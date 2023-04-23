@@ -15,7 +15,7 @@ namespace Bunit
         public static ILocalStorageService AddBlazoredLocalStorage(this TestContextBase context)
             => AddBlazoredLocalStorage(context, null);
 
-        public static ILocalStorageService AddBlazoredLocalStorage(this TestContextBase context, Action<LocalStorageOptions> configure)
+        public static ILocalStorageService AddBlazoredLocalStorage(this TestContextBase context, Action<LocalStorageOptions>? configure)
         {
             if (context is null)
                 throw new ArgumentNullException(nameof(context));
