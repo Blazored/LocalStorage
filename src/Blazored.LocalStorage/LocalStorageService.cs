@@ -201,7 +201,7 @@ namespace Blazored.LocalStorage
         public int Length()
             => _storageProvider.Length();
 
-        public string Key(int index)
+        public string? Key(int index)
             => _storageProvider.Key(index);
 
         public bool ContainKey(string key)

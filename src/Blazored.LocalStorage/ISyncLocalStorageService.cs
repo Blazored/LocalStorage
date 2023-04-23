@@ -29,7 +29,7 @@ namespace Blazored.LocalStorage
         /// </summary>
         /// <param name="index"></param>
         /// <returns>The name of the key at the specified <paramref name="index"/></returns>
-        string Key(int index);
+        string? Key(int index);
 
         /// <summary>
         /// Checks if the <paramref name="key"/> exists in local storage, but does not check its value.
