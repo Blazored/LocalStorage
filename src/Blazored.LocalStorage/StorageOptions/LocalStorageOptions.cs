@@ -4,6 +4,6 @@ namespace Blazored.LocalStorage.StorageOptions
 {
     public class LocalStorageOptions
     {
-        public JsonSerializerOptions JsonSerializerOptions { get; } = new JsonSerializerOptions();
+        public JsonSerializerOptions JsonSerializerOptions { get; set; } = new JsonSerializerOptions();
     }
 }
