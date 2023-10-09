@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using Blazored.LocalStorage.JsonConverters;
 using Blazored.LocalStorage.Serialization;
 using Blazored.LocalStorage.StorageOptions;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Blazored.LocalStorage
 {
@@ -15,18 +16,18 @@ namespace Blazored.LocalStorage
 
         public static IServiceCollection AddBlazoredLocalStorage(this IServiceCollection services, Action<LocalStorageOptions> configure)
         {
-            return services
-                .AddScoped<IJsonSerializer, SystemTextJsonSerializer>()
-                .AddScoped<IStorageProvider, BrowserStorageProvider>()
-                .AddScoped<ILocalStorageService, LocalStorageService>()
-                .AddScoped<ISyncLocalStorageService, LocalStorageService>()
-                .Configure<LocalStorageOptions>(configureOptions =>
-                {
-                    configure?.Invoke(configureOptions);
-                    configureOptions.JsonSerializerOptions.Converters.Add(new TimespanJsonConverter());
-                });
+            services.TryAddScoped<IJsonSerializer, SystemTextJsonSerializer>();
+            services.TryAddScoped<IStorageProvider, BrowserStorageProvider>();
+            services.TryAddScoped<ILocalStorageService, LocalStorageService>();
+            services.TryAddScoped<ISyncLocalStorageService, LocalStorageService>();
+            services.Configure<LocalStorageOptions>(configureOptions =>
+            {
+                configure?.Invoke(configureOptions);
+                configureOptions.JsonSerializerOptions.Converters.Add(new TimespanJsonConverter());
+            });
+            return services;
         }
-        
+
         /// <summary>
         /// Registers the Blazored LocalStorage services as singletons. This should only be used in Blazor WebAssembly applications.
         /// Using this in Blazor Server applications will cause unexpected and potentially dangerous behaviour. 
@@ -34,7 +35,7 @@ namespace Blazored.LocalStorage
         /// <returns></returns>
         public static IServiceCollection AddBlazoredLocalStorageAsSingleton(this IServiceCollection services)
             => AddBlazoredLocalStorageAsSingleton(services, null);
-        
+
         /// <summary>
         /// Registers the Blazored LocalStorage services as singletons. This should only be used in Blazor WebAssembly applications.
         /// Using this in Blazor Server applications will cause unexpected and potentially dangerous behaviour. 
@@ -44,16 +45,16 @@ namespace Blazored.LocalStorage
         /// <returns></returns>
         public static IServiceCollection AddBlazoredLocalStorageAsSingleton(this IServiceCollection services, Action<LocalStorageOptions> configure)
         {
-            return services
-                .AddSingleton<IJsonSerializer, SystemTextJsonSerializer>()
-                .AddSingleton<IStorageProvider, BrowserStorageProvider>()
-                .AddSingleton<ILocalStorageService, LocalStorageService>()
-                .AddSingleton<ISyncLocalStorageService, LocalStorageService>()
-                .Configure<LocalStorageOptions>(configureOptions =>
-                {
-                    configure?.Invoke(configureOptions);
-                    configureOptions.JsonSerializerOptions.Converters.Add(new TimespanJsonConverter());
-                });
+            services.TryAddSingleton<IJsonSerializer, SystemTextJsonSerializer>();
+            services.TryAddSingleton<IStorageProvider, BrowserStorageProvider>();
+            services.TryAddSingleton<ILocalStorageService, LocalStorageService>();
+            services.TryAddSingleton<ISyncLocalStorageService, LocalStorageService>();
+            services.Configure<LocalStorageOptions>(configureOptions =>
+            {
+                configure?.Invoke(configureOptions);
+                configureOptions.JsonSerializerOptions.Converters.Add(new TimespanJsonConverter());
+            });
+            return services;
         }
     }
 }
