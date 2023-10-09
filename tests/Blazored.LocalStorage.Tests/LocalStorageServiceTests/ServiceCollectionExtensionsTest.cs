@@ -1,7 +1,9 @@
 using System;
 using System.Linq;
 using Blazored.LocalStorage.Serialization;
+using Blazored.LocalStorage.StorageOptions;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Xunit;
 
 namespace Blazored.LocalStorage.Tests.LocalStorageServiceTests;
@@ -25,6 +27,7 @@ public class ServiceCollectionExtensionsTest
         AssertEqual(services, typeof(IStorageProvider), typeof(BrowserStorageProvider), ServiceLifetime.Scoped);
         AssertEqual(services, typeof(ILocalStorageService), typeof(LocalStorageService), ServiceLifetime.Scoped);
         AssertEqual(services, typeof(ISyncLocalStorageService), typeof(LocalStorageService), ServiceLifetime.Scoped);
+        AssertEqualConfigureOptions(services, typeof(IConfigureOptions<LocalStorageOptions>), ServiceLifetime.Singleton);
     }
 
     [Fact]
@@ -44,6 +47,7 @@ public class ServiceCollectionExtensionsTest
         AssertEqual(services, typeof(IStorageProvider), typeof(BrowserStorageProvider), ServiceLifetime.Singleton);
         AssertEqual(services, typeof(ILocalStorageService), typeof(LocalStorageService), ServiceLifetime.Singleton);
         AssertEqual(services, typeof(ISyncLocalStorageService), typeof(LocalStorageService), ServiceLifetime.Singleton);
+        AssertEqualConfigureOptions(services, typeof(IConfigureOptions<LocalStorageOptions>), ServiceLifetime.Singleton);
     }
 
 
@@ -59,6 +63,19 @@ public class ServiceCollectionExtensionsTest
         var descriptor = descriptors.Single();
         Assert.Equal(serviceType, descriptor.ServiceType);
         Assert.Equal(implementationType, descriptor.ImplementationType);
+        Assert.Equal(serviceLifetime, descriptor.Lifetime);
+    }
+
+    static void AssertEqualConfigureOptions(
+        IServiceCollection services,
+        Type serviceType,
+        ServiceLifetime serviceLifetime
+    )
+    {
+        var descriptors = services.Where(serviceDescriptor => serviceDescriptor.ServiceType == serviceType).ToArray();
+        Assert.Single(descriptors);
+        var descriptor = descriptors.Single();
+        Assert.Equal(serviceType, descriptor.ServiceType);
         Assert.Equal(serviceLifetime, descriptor.Lifetime);
     }
 }

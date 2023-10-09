@@ -1,10 +1,12 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Blazored.LocalStorage.JsonConverters;
 using Blazored.LocalStorage.Serialization;
 using Blazored.LocalStorage.StorageOptions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
 
 namespace Blazored.LocalStorage
 {
@@ -20,11 +22,15 @@ namespace Blazored.LocalStorage
             services.TryAddScoped<IStorageProvider, BrowserStorageProvider>();
             services.TryAddScoped<ILocalStorageService, LocalStorageService>();
             services.TryAddScoped<ISyncLocalStorageService, LocalStorageService>();
-            services.Configure<LocalStorageOptions>(configureOptions =>
+            if (services.All(serviceDescriptor => serviceDescriptor.ServiceType != typeof(IConfigureOptions<LocalStorageOptions>)))
             {
-                configure?.Invoke(configureOptions);
-                configureOptions.JsonSerializerOptions.Converters.Add(new TimespanJsonConverter());
-            });
+                services.Configure<LocalStorageOptions>(configureOptions =>
+                {
+                    configure?.Invoke(configureOptions);
+                    configureOptions.JsonSerializerOptions.Converters.Add(new TimespanJsonConverter());
+                });
+            }
+
             return services;
         }
 
@@ -49,11 +55,14 @@ namespace Blazored.LocalStorage
             services.TryAddSingleton<IStorageProvider, BrowserStorageProvider>();
             services.TryAddSingleton<ILocalStorageService, LocalStorageService>();
             services.TryAddSingleton<ISyncLocalStorageService, LocalStorageService>();
-            services.Configure<LocalStorageOptions>(configureOptions =>
+            if (services.All(serviceDescriptor => serviceDescriptor.ServiceType != typeof(IConfigureOptions<LocalStorageOptions>)))
             {
-                configure?.Invoke(configureOptions);
-                configureOptions.JsonSerializerOptions.Converters.Add(new TimespanJsonConverter());
-            });
+                services.Configure<LocalStorageOptions>(configureOptions =>
+                {
+                    configure?.Invoke(configureOptions);
+                    configureOptions.JsonSerializerOptions.Converters.Add(new TimespanJsonConverter());
+                });
+            }
             return services;
         }
     }
