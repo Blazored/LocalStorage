@@ -5,7 +5,7 @@ on:
     branches: [ main ]
 
 env:
-    NETCORE_VERSION: '8.0.0'
+    NETCORE_VERSION: '8.0.100'
     PROJECT_NAME: Blazored.LocalStorage
 
 jobs:
