@@ -22,7 +22,7 @@ namespace Blazored.LocalStorage
         /// (<see cref="JSRuntime.DefaultAsyncTimeout"/>) from being applied.
         /// </param>
         /// <returns>A <see cref="ValueTask"/> representing the completion of the operation.</returns>
-        ValueTask<T> GetItemAsync<T>(string key, CancellationToken cancellationToken = default);
+        ValueTask<T?> GetItemAsync<T>(string key, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Retrieve the specified data from local storage as a <see cref="string"/>.
@@ -33,7 +33,7 @@ namespace Blazored.LocalStorage
         /// (<see cref="JSRuntime.DefaultAsyncTimeout"/>) from being applied.
         /// </param>
         /// <returns>A <see cref="ValueTask"/> representing the completion of the operation.</returns>
-        ValueTask<string> GetItemAsStringAsync(string key, CancellationToken cancellationToken = default);
+        ValueTask<string?> GetItemAsStringAsync(string key, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Return the name of the key at the specified <paramref name="index"/>.
@@ -44,7 +44,7 @@ namespace Blazored.LocalStorage
         /// (<see cref="JSRuntime.DefaultAsyncTimeout"/>) from being applied.
         /// </param>
         /// <returns>A <see cref="ValueTask"/> representing the completion of the operation.</returns>
-        ValueTask<string> KeyAsync(int index, CancellationToken cancellationToken = default);
+        ValueTask<string?> KeyAsync(int index, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Returns a collection of strings representing the names of the keys in the local storage.

@@ -16,7 +16,7 @@ namespace Blazored.LocalStorage
         public static IServiceCollection AddBlazoredLocalStorage(this IServiceCollection services)
             => AddBlazoredLocalStorage(services, null);
 
-        public static IServiceCollection AddBlazoredLocalStorage(this IServiceCollection services, Action<LocalStorageOptions> configure)
+        public static IServiceCollection AddBlazoredLocalStorage(this IServiceCollection services, Action<LocalStorageOptions>? configure)
         {
             services.TryAddScoped<IJsonSerializer, SystemTextJsonSerializer>();
             services.TryAddScoped<IStorageProvider, BrowserStorageProvider>();
@@ -49,7 +49,7 @@ namespace Blazored.LocalStorage
         /// <param name="services"></param>
         /// <param name="configure"></param>
         /// <returns></returns>
-        public static IServiceCollection AddBlazoredLocalStorageAsSingleton(this IServiceCollection services, Action<LocalStorageOptions> configure)
+        public static IServiceCollection AddBlazoredLocalStorageAsSingleton(this IServiceCollection services, Action<LocalStorageOptions>? configure)
         {
             services.TryAddSingleton<IJsonSerializer, SystemTextJsonSerializer>();
             services.TryAddSingleton<IStorageProvider, BrowserStorageProvider>();

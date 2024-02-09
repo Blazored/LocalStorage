@@ -52,7 +52,7 @@ namespace Blazored.LocalStorage
             RaiseOnChanged(key, e.OldValue, data);
         }
 
-        public async ValueTask<T> GetItemAsync<T>(string key, CancellationToken cancellationToken = default)
+        public async ValueTask<T?> GetItemAsync<T>(string key, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(key))
                 throw new ArgumentNullException(nameof(key));
@@ -74,7 +74,7 @@ namespace Blazored.LocalStorage
             }
         }
 
-        public ValueTask<string> GetItemAsStringAsync(string key, CancellationToken cancellationToken = default)
+        public ValueTask<string?> GetItemAsStringAsync(string key, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(key))
                 throw new ArgumentNullException(nameof(key));
@@ -96,7 +96,7 @@ namespace Blazored.LocalStorage
         public ValueTask<int> LengthAsync(CancellationToken cancellationToken = default)
             => _storageProvider.LengthAsync(cancellationToken);
 
-        public ValueTask<string> KeyAsync(int index, CancellationToken cancellationToken = default)
+        public ValueTask<string?> KeyAsync(int index, CancellationToken cancellationToken = default)
             => _storageProvider.KeyAsync(index, cancellationToken);
 
         public ValueTask<IEnumerable<string>> KeysAsync(CancellationToken cancellationToken = default)
@@ -134,8 +134,7 @@ namespace Blazored.LocalStorage
             if (string.IsNullOrWhiteSpace(key))
                 throw new ArgumentNullException(nameof(key));
 
-            if (data is null)
-                throw new ArgumentNullException(nameof(data));
+            ArgumentNullException.ThrowIfNull(data);
 
             var e = RaiseOnChangingSync(key, data);
 
@@ -147,7 +146,7 @@ namespace Blazored.LocalStorage
             RaiseOnChanged(key, e.OldValue, data);
         }
 
-        public T GetItem<T>(string key)
+        public T? GetItem<T>(string key)
         {
             if (string.IsNullOrWhiteSpace(key))
                 throw new ArgumentNullException(nameof(key));
@@ -169,7 +168,7 @@ namespace Blazored.LocalStorage
             }
         }
 
-        public string GetItemAsString(string key)
+        public string? GetItemAsString(string key)
         {
             if (string.IsNullOrWhiteSpace(key))
                 throw new ArgumentNullException(nameof(key));
@@ -202,14 +201,14 @@ namespace Blazored.LocalStorage
         public int Length()
             => _storageProvider.Length();
 
-        public string Key(int index)
+        public string? Key(int index)
             => _storageProvider.Key(index);
 
         public bool ContainKey(string key)
             => _storageProvider.ContainKey(key);
 
-        public event EventHandler<ChangingEventArgs> Changing;
-        private async Task<ChangingEventArgs> RaiseOnChangingAsync(string key, object data)
+        public event EventHandler<ChangingEventArgs>? Changing;
+        private async Task<ChangingEventArgs> RaiseOnChangingAsync(string key, object? data)
         {
             var e = new ChangingEventArgs
             {
@@ -223,7 +222,7 @@ namespace Blazored.LocalStorage
             return e;
         }
 
-        private ChangingEventArgs RaiseOnChangingSync(string key, object data)
+        private ChangingEventArgs RaiseOnChangingSync(string key, object? data)
         {
             var e = new ChangingEventArgs
             {
@@ -237,7 +236,7 @@ namespace Blazored.LocalStorage
             return e;
         }
 
-        private async Task<T> GetItemInternalAsync<T>(string key, CancellationToken cancellationToken = default)
+        private async Task<T?> GetItemInternalAsync<T>(string key, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentNullException(nameof(key));
@@ -256,7 +255,7 @@ namespace Blazored.LocalStorage
             }
         }
 
-        private object GetItemInternal(string key)
+        private object? GetItemInternal(string key)
         {
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentNullException(nameof(key));
@@ -276,8 +275,8 @@ namespace Blazored.LocalStorage
             }
         }
 
-        public event EventHandler<ChangedEventArgs> Changed;
-        private void RaiseOnChanged(string key, object oldValue, object data)
+        public event EventHandler<ChangedEventArgs>? Changed;
+        private void RaiseOnChanged(string key, object? oldValue, object? data)
         {
             var e = new ChangedEventArgs
             {

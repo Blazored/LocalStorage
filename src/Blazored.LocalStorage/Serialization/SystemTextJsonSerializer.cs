@@ -18,7 +18,7 @@ namespace Blazored.LocalStorage.Serialization
             _options = localStorageOptions.JsonSerializerOptions;
         }
 
-        public T Deserialize<T>(string data) 
+        public T? Deserialize<T>(string data) 
             => JsonSerializer.Deserialize<T>(data, _options);
 
         public string Serialize<T>(T data)

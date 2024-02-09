@@ -7,7 +7,7 @@ namespace Blazored.LocalStorage.TestExtensions
 {
     internal class InMemoryStorageProvider : IStorageProvider
     {
-        private readonly Dictionary<string, string> _dataStore = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> _dataStore = new();
 
         public void Clear()
             => _dataStore.Clear();
@@ -22,34 +22,31 @@ namespace Blazored.LocalStorage.TestExtensions
             => _dataStore.ContainsKey(key);
 
         public ValueTask<bool> ContainKeyAsync(string key, CancellationToken cancellationToken = default)
-            => new ValueTask<bool>(ContainKey(key));
+            => new(ContainKey(key));
 
-        public string GetItem(string key)
+        public string? GetItem(string key)
             => _dataStore.ContainsKey(key) ? _dataStore[key] : default;
 
-        public ValueTask<string> GetItemAsync(string key, CancellationToken cancellationToken = default)
-            => new ValueTask<string>(GetItem(key));
+        public ValueTask<string?> GetItemAsync(string key, CancellationToken cancellationToken = default) 
+            => new(GetItem(key));
 
-        public string Key(int index)
+        public string? Key(int index)
             => index > _dataStore.Count - 1 ? default : _dataStore.ElementAt(index).Key;
 
-        public ValueTask<string> KeyAsync(int index, CancellationToken cancellationToken = default)
-            => new ValueTask<string>(Key(index));
+        public ValueTask<string?> KeyAsync(int index, CancellationToken cancellationToken = default) 
+            => new(Key(index));
 
-        public IEnumerable<string> Keys()
-        {
-            return _dataStore.Keys.ToList();
-        }
+        public IEnumerable<string> Keys() 
+            => _dataStore.Keys.ToList();
 
-        public ValueTask<IEnumerable<string>> KeysAsync(CancellationToken cancellationToken = default)
-            => new ValueTask<IEnumerable<string>>(_dataStore.Keys.ToList());
-
+        public ValueTask<IEnumerable<string>> KeysAsync(CancellationToken cancellationToken = default) 
+            => new(_dataStore.Keys.ToList());
 
         public int Length()
             => _dataStore.Count;
 
         public ValueTask<int> LengthAsync(CancellationToken cancellationToken = default)
-            => new ValueTask<int>(Length());
+            => new(Length());
 
         public void RemoveItem(string key)
             => _dataStore.Remove(key);
