@@ -1,0 +1,139 @@
+﻿@page "/"
+@inject ILocalStorageService LocalStorage
+
+<PageTitle>Blazored LocalStorage (Interactive Server)</PageTitle>
+
+<h1>Blazored LocalStorage Sample</h1>
+
+<hr class="mb-5" />
+
+<div class="row mb-5">
+    <div class="col-md-4">
+        <h5>Add Item to local storage</h5>
+        <div class="input-group">
+            <input class="form-control" type="text" placeholder="Enter a value" @bind="Name" />
+            <div class="input-group-append">
+                <button class="btn btn-primary" @onclick="SaveName">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <h5>Remove item from local storage</h5>
+        <button class="btn btn-primary" @onclick="RemoveName">Remove Item</button>
+    </div>
+
+    <div class="col-md-4">
+        <h5>Clear local storage</h5>
+        <button class="btn btn-primary" @onclick="ClearLocalStorage">Clear All</button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <h5>Value Read from local storage</h5>
+        @NameFromLocalStorage
+    </div>
+
+    <div class="col-md-4">
+        <h5>Items in local storage</h5>
+        @ItemsInLocalStorage
+    </div>
+    <div class="col-md-4">
+        <h5>Item exist in local storage</h5>@(ItemExist)
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h5>All keys in local storage:</h5>
+        @foreach (var key in Keys)
+        {
+            <span>@key &nbsp;</span>
+        }
+    </div>
+</div>
+
+@code {
+
+    string? NameFromLocalStorage { get; set; }
+    int ItemsInLocalStorage { get; set; }
+    string? Name { get; set; }
+    bool ItemExist { get; set; }
+    IEnumerable<string> Keys { get; set; } = new List<string>();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        Keys = await LocalStorage.KeysAsync();
+
+        if (firstRender)
+        {
+            await GetNameFromLocalStorage();
+            await GetLocalStorageLength();
+
+            LocalStorage.Changed += (_, e) =>
+            {
+                Console.WriteLine($"Value for key {e.Key} changed from {e.OldValue} to {e.NewValue}");
+            };
+            await TestTimespan();
+
+            StateHasChanged();
+        }
+    }
+
+    async Task SaveName()
+    {
+        await LocalStorage.SetItemAsync("name", Name);
+        await GetNameFromLocalStorage();
+        await GetLocalStorageLength();
+
+        Name = "";
+
+        Keys = await LocalStorage.KeysAsync();
+    }
+
+    async Task GetNameFromLocalStorage()
+    {
+        NameFromLocalStorage = await LocalStorage.GetItemAsync<string>("name");
+
+        if (string.IsNullOrEmpty(NameFromLocalStorage))
+        {
+            NameFromLocalStorage = "Nothing Saved";
+        }
+    }
+
+    async Task RemoveName()
+    {
+        await LocalStorage.RemoveItemAsync("name");
+        await GetNameFromLocalStorage();
+        await GetLocalStorageLength();
+    }
+
+    async Task ClearLocalStorage()
+    {
+        Console.WriteLine("Calling Clear...");
+        await LocalStorage.ClearAsync();
+        Console.WriteLine("Getting name from local storage...");
+        await GetNameFromLocalStorage();
+        Console.WriteLine("Calling Get Length...");
+        await GetLocalStorageLength();
+    }
+
+    async Task GetLocalStorageLength()
+    {
+        Console.WriteLine(await LocalStorage.LengthAsync());
+        ItemsInLocalStorage = await LocalStorage.LengthAsync();
+        ItemExist = await LocalStorage.ContainKeyAsync("name");
+    }
+
+    async Task TestTimespan()
+    {
+        var timespan = await LocalStorage.GetItemAsync<TimeSpan>("timespan");
+        if (timespan == TimeSpan.Zero)
+        {
+            await LocalStorage.SetItemAsync("timespan", new TimeSpan(0, 15, 0));
+            timespan = await LocalStorage.GetItemAsync<TimeSpan>("timespan");
+        }
+    }
+
+}
