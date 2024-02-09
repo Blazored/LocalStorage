@@ -1,13 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="$(DotNet7Version)" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="$(DotNet7Version)" PrivateAssets="all" />
-    <PackageReference Include="System.Net.Http.Json" Version="$(DotNet7Version)" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="$(DotNet8Version)" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="$(DotNet8Version)" PrivateAssets="all" />
+    <PackageReference Include="System.Net.Http.Json" Version="$(DotNet8Version)" />
   </ItemGroup>
 
   <ItemGroup>

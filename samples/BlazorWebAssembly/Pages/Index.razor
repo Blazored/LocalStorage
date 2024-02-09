@@ -1,5 +1,5 @@
 ﻿@page "/"
-@inject ILocalStorageService localStorage
+@inject ILocalStorageService LocalStorage
 
 <h1>Blazored LocalStorage Sample</h1>
 
@@ -55,10 +55,10 @@
 
 @code {
 
-    string NameFromLocalStorage { get; set; }
-    string StringFromLocalStorage { get; set; }
+    string? NameFromLocalStorage { get; set; }
+    string? StringFromLocalStorage { get; set; }
     int ItemsInLocalStorage { get; set; }
-    string Name { get; set; }
+    string? Name { get; set; }
     bool ItemExist { get; set; }
 
     protected override async Task OnInitializedAsync()
@@ -67,7 +67,7 @@
         await GetStringFromLocalStorage();
         await GetLocalStorageLength();
 
-        localStorage.Changed += (sender, e) =>
+        LocalStorage.Changed += (_, e) =>
         {
             Console.WriteLine($"Value for key {e.Key} changed from {e.OldValue} to {e.NewValue}");
         };
@@ -75,7 +75,7 @@
 
     async Task SaveName()
     {
-        await localStorage.SetItemAsync("name", Name);
+        await LocalStorage.SetItemAsync("name", Name);
         await GetNameFromLocalStorage();
         await GetStringFromLocalStorage();
         await GetLocalStorageLength();
@@ -87,7 +87,7 @@
     {
         try
         {
-            NameFromLocalStorage = await localStorage.GetItemAsync<string>("name");
+            NameFromLocalStorage = await LocalStorage.GetItemAsync<string>("name");
 
             if (string.IsNullOrEmpty(NameFromLocalStorage))
             {
@@ -103,7 +103,7 @@
 
     async Task GetStringFromLocalStorage()
     {
-        StringFromLocalStorage = await localStorage.GetItemAsStringAsync("name");
+        StringFromLocalStorage = await LocalStorage.GetItemAsStringAsync("name");
 
         if (string.IsNullOrEmpty(StringFromLocalStorage))
         {
@@ -113,7 +113,7 @@
 
     async Task RemoveName()
     {
-        await localStorage.RemoveItemAsync("name");
+        await LocalStorage.RemoveItemAsync("name");
         await GetNameFromLocalStorage();
         await GetStringFromLocalStorage();
         await GetLocalStorageLength();
@@ -122,7 +122,7 @@
     async Task ClearLocalStorage()
     {
         Console.WriteLine("Calling Clear...");
-        await localStorage.ClearAsync();
+        await LocalStorage.ClearAsync();
         Console.WriteLine("Getting name from local storage...");
         await GetNameFromLocalStorage();
         await GetStringFromLocalStorage();
@@ -132,9 +132,9 @@
 
     async Task GetLocalStorageLength()
     {
-        Console.WriteLine(await localStorage.LengthAsync());
-        ItemsInLocalStorage = await localStorage.LengthAsync();
-        ItemExist = await localStorage.ContainKeyAsync("name");
+        Console.WriteLine(await LocalStorage.LengthAsync());
+        ItemsInLocalStorage = await LocalStorage.LengthAsync();
+        ItemExist = await LocalStorage.ContainKeyAsync("name");
     }
 
 }
