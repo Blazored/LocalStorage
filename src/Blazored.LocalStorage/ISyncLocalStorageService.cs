@@ -15,21 +15,21 @@ namespace Blazored.LocalStorage
         /// </summary>
         /// <param name="key">A <see cref="string"/> value specifying the name of the local storage slot to use</param>
         /// <returns>The data from the specified <paramref name="key"/> as a <typeparamref name="T"/></returns>
-        T GetItem<T>(string key);
+        T? GetItem<T>(string key);
 
         /// <summary>
         /// Retrieve the specified data from local storage as a <see cref="string"/>.
         /// </summary>
         /// <param name="key">A <see cref="string"/> value specifying the name of the storage slot to use</param>
         /// <returns>The data associated with the specified <paramref name="key"/> as a <see cref="string"/></returns>
-        string GetItemAsString(string key);
+        string? GetItemAsString(string key);
 
         /// <summary>
         /// Return the name of the key at the specified <paramref name="index"/>.
         /// </summary>
         /// <param name="index"></param>
         /// <returns>The name of the key at the specified <paramref name="index"/></returns>
-        string Key(int index);
+        string? Key(int index);
 
         /// <summary>
         /// Checks if the <paramref name="key"/> exists in local storage, but does not check its value.

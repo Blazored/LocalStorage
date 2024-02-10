@@ -1,5 +1,5 @@
 ﻿@page "/sync"
-@inject ISyncLocalStorageService localStorage
+@inject ISyncLocalStorageService LocalStorage
 
 <h1>Non Async Local Storage</h1>
 
@@ -52,10 +52,10 @@
 
 @code {
 
-    string NameFromLocalStorage { get; set; }
-    string StringFromLocalStorage { get; set; }
+    string? NameFromLocalStorage { get; set; }
+    string? StringFromLocalStorage { get; set; }
     int ItemsInLocalStorage { get; set; }
-    string Name { get; set; }
+    string? Name { get; set; }
     bool ItemExist { get; set; }
 
     protected override void OnInitialized()
@@ -64,7 +64,7 @@
         GetStringFromLocalStorage();
         GetLocalStorageLength();
 
-        localStorage.Changed += (sender, e) =>
+        LocalStorage.Changed += (_, e) =>
         {
             Console.WriteLine($"Value for key {e.Key} changed from {e.OldValue} to {e.NewValue}");
         };
@@ -73,7 +73,7 @@
     void SaveName()
     {
         Console.WriteLine(Name);
-        localStorage.SetItem("name", Name);
+        LocalStorage.SetItem("name", Name);
         GetNameFromLocalStorage();
         GetStringFromLocalStorage();
         GetLocalStorageLength();
@@ -85,7 +85,7 @@
     {
         try
         {
-            NameFromLocalStorage = localStorage.GetItem<string>("name");
+            NameFromLocalStorage = LocalStorage.GetItem<string>("name");
 
             if (string.IsNullOrEmpty(NameFromLocalStorage))
             {
@@ -100,7 +100,7 @@
 
     void GetStringFromLocalStorage()
     {
-        StringFromLocalStorage = localStorage.GetItemAsString("name");
+        StringFromLocalStorage = LocalStorage.GetItemAsString("name");
 
         if (string.IsNullOrEmpty(StringFromLocalStorage))
         {
@@ -110,7 +110,7 @@
 
     void RemoveName()
     {
-        localStorage.RemoveItem("name");
+        LocalStorage.RemoveItem("name");
         GetNameFromLocalStorage();
         GetStringFromLocalStorage();
         GetLocalStorageLength();
@@ -119,7 +119,7 @@
     void ClearLocalStorage()
     {
         Console.WriteLine("Calling Clear...");
-        localStorage.Clear();
+        LocalStorage.Clear();
         Console.WriteLine("Getting name from local storage...");
         GetNameFromLocalStorage();
         GetStringFromLocalStorage();
@@ -129,9 +129,9 @@
 
     void GetLocalStorageLength()
     {
-        Console.WriteLine(localStorage.Length());
-        ItemsInLocalStorage = localStorage.Length();
-        ItemExist = localStorage.ContainKey("name");
+        Console.WriteLine(LocalStorage.Length());
+        ItemsInLocalStorage = LocalStorage.Length();
+        ItemExist = LocalStorage.ContainKey("name");
     }
 
 }

@@ -1,7 +1,7 @@
 ﻿@page "/"
-@inject ILocalStorageService localStorage
+@inject ILocalStorageService LocalStorage
 
-<PageTitle>Blazored LocalStorage (Server)</PageTitle>
+<PageTitle>Blazored LocalStorage (Interactive Server)</PageTitle>
 
 <h1>Blazored LocalStorage Sample</h1>
 
@@ -64,14 +64,14 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        Keys = await localStorage.KeysAsync();
+        Keys = await LocalStorage.KeysAsync();
 
         if (firstRender)
         {
             await GetNameFromLocalStorage();
             await GetLocalStorageLength();
 
-            localStorage.Changed += (_, e) =>
+            LocalStorage.Changed += (_, e) =>
             {
                 Console.WriteLine($"Value for key {e.Key} changed from {e.OldValue} to {e.NewValue}");
             };
@@ -83,18 +83,18 @@
 
     async Task SaveName()
     {
-        await localStorage.SetItemAsync("name", Name);
+        await LocalStorage.SetItemAsync("name", Name);
         await GetNameFromLocalStorage();
         await GetLocalStorageLength();
 
         Name = "";
 
-        Keys = await localStorage.KeysAsync();
+        Keys = await LocalStorage.KeysAsync();
     }
 
     async Task GetNameFromLocalStorage()
     {
-        NameFromLocalStorage = await localStorage.GetItemAsync<string>("name");
+        NameFromLocalStorage = await LocalStorage.GetItemAsync<string>("name");
 
         if (string.IsNullOrEmpty(NameFromLocalStorage))
         {
@@ -104,7 +104,7 @@
 
     async Task RemoveName()
     {
-        await localStorage.RemoveItemAsync("name");
+        await LocalStorage.RemoveItemAsync("name");
         await GetNameFromLocalStorage();
         await GetLocalStorageLength();
     }
@@ -112,7 +112,7 @@
     async Task ClearLocalStorage()
     {
         Console.WriteLine("Calling Clear...");
-        await localStorage.ClearAsync();
+        await LocalStorage.ClearAsync();
         Console.WriteLine("Getting name from local storage...");
         await GetNameFromLocalStorage();
         Console.WriteLine("Calling Get Length...");
@@ -121,18 +121,18 @@
 
     async Task GetLocalStorageLength()
     {
-        Console.WriteLine(await localStorage.LengthAsync());
-        ItemsInLocalStorage = await localStorage.LengthAsync();
-        ItemExist = await localStorage.ContainKeyAsync("name");
+        Console.WriteLine(await LocalStorage.LengthAsync());
+        ItemsInLocalStorage = await LocalStorage.LengthAsync();
+        ItemExist = await LocalStorage.ContainKeyAsync("name");
     }
 
     async Task TestTimespan()
     {
-        var timespan = await localStorage.GetItemAsync<TimeSpan>("timespan");
+        var timespan = await LocalStorage.GetItemAsync<TimeSpan>("timespan");
         if (timespan == TimeSpan.Zero)
         {
-            await localStorage.SetItemAsync("timespan", new TimeSpan(0, 15, 0));
-            timespan = await localStorage.GetItemAsync<TimeSpan>("timespan");
+            await LocalStorage.SetItemAsync("timespan", new TimeSpan(0, 15, 0));
+            timespan = await LocalStorage.GetItemAsync<TimeSpan>("timespan");
         }
     }
 

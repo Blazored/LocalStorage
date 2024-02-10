@@ -1,12 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+    <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+    <Nullable>enable</Nullable>
 
     <Authors>Chris Sainty</Authors>
     <Company>Chris Sainty</Company>
     <Copyright>Copyright 2020 (c) Chris Sainty. All rights reserved.</Copyright> 
     <Description>A library to provide access to local storage in Blazor applications</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
 
@@ -38,8 +40,13 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="$(DotNet7Version)" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="$(DotNet8Version)" />
+  </ItemGroup>
+
   <ItemGroup>
     <None Include="icon.png" Pack="true" PackagePath="\" />
+    <None Include="../../README.md" Pack="true" PackagePath="\"/>
   </ItemGroup>
 
   <ItemGroup>

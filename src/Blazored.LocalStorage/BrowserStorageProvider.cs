@@ -1,6 +1,7 @@
 using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Blazored.LocalStorage.Exceptions;
@@ -12,7 +13,7 @@ namespace Blazored.LocalStorage
         private const string StorageNotAvailableMessage = "Unable to access the browser storage. This is most likely due to the browser settings.";
         
         private readonly IJSRuntime _jSRuntime;
-        private readonly IJSInProcessRuntime _jSInProcessRuntime;
+        private readonly IJSInProcessRuntime? _jSInProcessRuntime;
 
         public BrowserStorageProvider(IJSRuntime jSRuntime)
         {
@@ -37,11 +38,11 @@ namespace Blazored.LocalStorage
             }
         }
 
-        public async ValueTask<string> GetItemAsync(string key, CancellationToken cancellationToken = default)
+        public async ValueTask<string?> GetItemAsync(string key, CancellationToken cancellationToken = default)
         {
             try
             {
-                return await _jSRuntime.InvokeAsync<string>("localStorage.getItem", cancellationToken, key);
+                return await _jSRuntime.InvokeAsync<string?>("localStorage.getItem", cancellationToken, key);
             }
             catch (Exception exception)
             {
@@ -54,11 +55,11 @@ namespace Blazored.LocalStorage
             }
         }
 
-        public async ValueTask<string> KeyAsync(int index, CancellationToken cancellationToken = default)
+        public async ValueTask<string?> KeyAsync(int index, CancellationToken cancellationToken = default)
         {
             try
             {
-                return await _jSRuntime.InvokeAsync<string>("localStorage.key", cancellationToken, index);
+                return await _jSRuntime.InvokeAsync<string?>("localStorage.key", cancellationToken, index);
             }
             catch (Exception exception)
             {
@@ -175,7 +176,7 @@ namespace Blazored.LocalStorage
                 throw;
             }
         }
-
+        
         public void Clear()
         {
             CheckForInProcessRuntime();
@@ -341,6 +342,7 @@ namespace Blazored.LocalStorage
             }
         }
 
+        [MemberNotNull(nameof(_jSInProcessRuntime))]
         private void CheckForInProcessRuntime()
         {
             if (_jSInProcessRuntime == null)
