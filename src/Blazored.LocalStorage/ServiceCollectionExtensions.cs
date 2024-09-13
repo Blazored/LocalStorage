@@ -18,8 +18,24 @@ namespace Blazored.LocalStorage
 
         public static IServiceCollection AddBlazoredLocalStorage(this IServiceCollection services, Action<LocalStorageOptions>? configure)
         {
-            services.TryAddScoped<IJsonSerializer, SystemTextJsonSerializer>();
             services.TryAddScoped<IStorageProvider, BrowserStorageProvider>();
+            AddServices(services, configure);
+            return services;
+        }
+
+        public static IServiceCollection AddBlazoredLocalStorageStreaming(this IServiceCollection services)
+            => AddBlazoredLocalStorageStreaming(services, null);
+
+        public static IServiceCollection AddBlazoredLocalStorageStreaming(this IServiceCollection services, Action<LocalStorageOptions>? configure)
+        {
+            services.TryAddScoped<IStorageProvider, BrowserStreamingStorageProvider>();
+            AddServices(services, configure);
+            return services;
+        }
+
+        private static void AddServices(IServiceCollection services, Action<LocalStorageOptions>? configure)
+        {
+            services.TryAddScoped<IJsonSerializer, SystemTextJsonSerializer>();
             services.TryAddScoped<ILocalStorageService, LocalStorageService>();
             services.TryAddScoped<ISyncLocalStorageService, LocalStorageService>();
             if (services.All(serviceDescriptor => serviceDescriptor.ServiceType != typeof(IConfigureOptions<LocalStorageOptions>)))
@@ -30,8 +46,6 @@ namespace Blazored.LocalStorage
                     configureOptions.JsonSerializerOptions.Converters.Add(new TimespanJsonConverter());
                 });
             }
-
-            return services;
         }
 
         /// <summary>
