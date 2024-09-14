@@ -79,6 +79,27 @@ builder.Services.AddBlazoredLocalStorageAsSingleton();
 
 This method will not work with Blazor Server applications as Blazor's JS interop services are registered as Scoped and cannot be injected into Singletons.
 
+### Using JS Interop Streaming
+When using interactive components in server-side apps JS Interop calls are limited to the configured SignalR message size (default: 32KB). 
+Therefore when attempting to store or retrieve an object larger than this in LocalStorage the call will fail with a SignalR exception. 
+
+The following streaming implementation can be used to remove this limit (you will still be limited by the browser).
+
+Register the streaming local storage service 
+
+```c#
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddBlazoredLocalStorageStreaming();
+}
+``` 
+
+Add the JavaScript file to your _App.razor_
+
+```html
+ <script src="_content/Blazored.LocalStorage/Blazored.LocalStorage.js"></script>
+```
+
 ## Usage (Blazor WebAssembly)
 To use Blazored.LocalStorage in Blazor WebAssembly, inject the `ILocalStorageService` per the example below.
 
