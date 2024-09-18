@@ -23,7 +23,7 @@ namespace Blazored.LocalStorage
             if (string.IsNullOrWhiteSpace(key))
                 throw new ArgumentNullException(nameof(key));
 
-            var e = await RaiseOnChangingAsync(key, data).ConfigureAwait(false);
+            var e = await RaiseOnChangingAsync<T>(key, data).ConfigureAwait(false);
 
             if (e.Cancel)
                 return;
@@ -42,7 +42,7 @@ namespace Blazored.LocalStorage
             if (data is null)
                 throw new ArgumentNullException(nameof(data));
 
-            var e = await RaiseOnChangingAsync(key, data).ConfigureAwait(false);
+            var e = await RaiseOnChangingAsync<string>(key, data).ConfigureAwait(false);
 
             if (e.Cancel)
                 return;
@@ -118,7 +118,7 @@ namespace Blazored.LocalStorage
             if (string.IsNullOrWhiteSpace(key))
                 throw new ArgumentNullException(nameof(key));
 
-            var e = RaiseOnChangingSync(key, data);
+            var e = RaiseOnChangingSync<T>(key, data);
 
             if (e.Cancel)
                 return;
@@ -136,7 +136,7 @@ namespace Blazored.LocalStorage
 
             ArgumentNullException.ThrowIfNull(data);
 
-            var e = RaiseOnChangingSync(key, data);
+            var e = RaiseOnChangingSync<string>(key, data);
 
             if (e.Cancel)
                 return;
@@ -208,12 +208,12 @@ namespace Blazored.LocalStorage
             => _storageProvider.ContainKey(key);
 
         public event EventHandler<ChangingEventArgs>? Changing;
-        private async Task<ChangingEventArgs> RaiseOnChangingAsync(string key, object? data)
+        private async Task<ChangingEventArgs> RaiseOnChangingAsync<T>(string key, object? data)
         {
             var e = new ChangingEventArgs
             {
                 Key = key,
-                OldValue = await GetItemInternalAsync<object>(key).ConfigureAwait(false),
+                OldValue = await GetItemInternalAsync<T>(key).ConfigureAwait(false),
                 NewValue = data
             };
 
@@ -222,12 +222,12 @@ namespace Blazored.LocalStorage
             return e;
         }
 
-        private ChangingEventArgs RaiseOnChangingSync(string key, object? data)
+        private ChangingEventArgs RaiseOnChangingSync<T>(string key, object? data)
         {
             var e = new ChangingEventArgs
             {
                 Key = key,
-                OldValue = GetItemInternal(key),
+                OldValue = GetItemInternal<T>(key),
                 NewValue = data
             };
 
@@ -255,7 +255,7 @@ namespace Blazored.LocalStorage
             }
         }
 
-        private object? GetItemInternal(string key)
+        private object? GetItemInternal<T>(string key)
         {
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentNullException(nameof(key));
@@ -267,7 +267,7 @@ namespace Blazored.LocalStorage
 
             try
             {
-                return _serializer.Deserialize<object>(serialisedData);
+                return _serializer.Deserialize<T>(serialisedData);
             }
             catch (JsonException)
             {
