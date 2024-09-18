@@ -11,7 +11,10 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.Replace(ServiceDescriptor.Scoped<IJsonSerializer, NewtonSoftJsonSerializer>());
+
 builder.Services.AddBlazoredLocalStorage();
+// Use the below to enable streaming of objects with local storage
+//builder.Services.AddBlazoredLocalStorageStreaming();
 
 var app = builder.Build();
 

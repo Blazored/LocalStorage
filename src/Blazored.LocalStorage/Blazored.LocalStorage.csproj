@@ -65,4 +65,8 @@
     </AssemblyAttribute>
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="wwwroot\Blazored.LocalStorage.js"></Content>
+  </ItemGroup>
+
 </Project>
